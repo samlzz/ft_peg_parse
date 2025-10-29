@@ -1,0 +1,77 @@
+# ===========================
+# Lexical rules (tokens)
+# ===========================
+
+_       <- ( [ \t\r\n] / "#" (!"\n" .)* )*
+NL      <- "\r\n" / "\n"
+BOOL    <- "on" / "off"
+INT     <- [0-9]+
+ALNUM   <- [A-Za-z0-9_-]+
+NAME    <- [A-Za-z0-9_\-\.]+
+STR     <- "\"" ( ("\\" .) / (!"\"" .) )* "\""
+PATH    <- "/" (![\r\n;}] .)*
+
+HOST    <- ALNUM ("." ALNUM)*
+PORT    <- INT
+CODE    <- [1-5][0-9][0-9]
+SIZE    <- INT ( "k" / "K" / "m" / "M" )?
+METHOD  <- "GET" / "POST" / "DELETE"
+
+# ===========================
+# Top-level configuration
+# ===========================
+
+@config <- _ ( server_block )+ _
+
+@server_block <- "server" _ "{" _ ( server_directive / location_block )* "}" _
+
+# ===========================
+# Server-level directives
+# ===========================
+
+server_directive <- listen
+                 / methods
+                 / root
+                 / index
+                 / autoindex
+                 / error_page
+                 / client_max_body_size
+                 / cgi_extension
+                 / return
+
+# ===========================
+# Location blocks
+# ===========================
+
+@location_block <- "location" _ PATH _ "{" _ location_directive* "}" _
+
+location_directive <- methods
+                   / root
+                   / index
+                   / autoindex
+                   / error_page
+                   / upload_enable
+                   / upload_store
+                   / cgi_pass
+                   / return
+
+# ===========================
+# Directives definitions
+# ===========================
+
+@listen                 <- "listen" _ ( HOST _ ":" _ PORT / PORT ) _ ";"
+@client_max_body_size   <- "client_max_body_size" _ SIZE _ ";"
+@cgi_extension          <- "cgi_extension" _ ( ("." ALNUM+) _ PATH )+ _ ";"
+
+@methods                <- "methods" _ METHOD+ _ ";"
+@root                   <- "root" _ PATH _ ";"
+@index                  <- "index" _ ( NAME / STR )+ _ ";"
+@autoindex              <- "autoindex" _ BOOL _ ";"
+@error_page             <- "error_page" _ (CODE ( _ CODE )* ) _ PATH _ ";"
+@return                 <- "return" _ CODE _ (STR / PATH)? _ ";"
+
+@upload_enable          <- "upload_enable" _ BOOL _ ";"
+@upload_store           <- "upload_store" _ PATH _ ";"
+
+@cgi_pass               <- "cgi_pass" _ PATH _ ";"
+
