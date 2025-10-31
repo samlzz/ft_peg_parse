@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 11:47:22 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 23:34:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,7 @@ public:
 		{}
 	};
 
-	PegLexer(const char *path);
-	PegLexer(const std::string &src);
+	PegLexer(const std::string &grammar_path);
 	~PegLexer();
 
 	void	setSrc(const std::string &src);
