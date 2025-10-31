@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 19:10:51 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 23:59:49 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "ast/AstNode.hpp"
+#include "peg/Expr.hpp"
 
 // *Constructors
 AstNode::AstNode(): _type(), _attrs(), _children(), _span()
@@ -23,6 +24,13 @@ AstNode::AstNode(): _type(), _attrs(), _children(), _span()
 AstNode::AstNode(const std::string &type):
 	_type(type), _attrs(), _children(), _span()
 {}
+
+AstNode::AstNode(std::vector<AstNode *> &childrens):
+	_type(), _attrs(), _children(), _span()
+{
+	_children.swap(childrens);
+	childrens.clear();
+}
 
 AstNode::AstNode(const AstNode& other):
 	_type(other.type()),
@@ -36,8 +44,7 @@ AstNode::AstNode(const AstNode& other):
 // *Destructor
 AstNode::~AstNode()
 {
-	for (size_t i = 0; i < _children.size(); ++i)
-		delete _children[i];
+	deleteAll(_children);
 }
 
 // *Operators
@@ -59,9 +66,7 @@ AstNode&	AstNode::operator=(const AstNode& other)
 
 void	AstNode::replaceChildren(const std::vector<AstNode *> &src)
 {
-	for (size_t i = 0; i < _children.size(); ++i)
-		delete _children[i];
-	_children.clear();
+	deleteAll(_children);
 	for (size_t i = 0; i < src.size(); ++i)
 	{
 		if (src[i])
@@ -73,6 +78,15 @@ void	AstNode::addChild(AstNode *child)
 {
 	if (child)
 		_children.push_back(child);
+}
+
+void	AstNode::stealChildren(AstNode &stolen)
+{
+	std::vector<AstNode *>tmp;
+
+	tmp.swap(stolen._children);
+	stolen._children.clear();
+	_children.insert(_children.end(), tmp.begin(), tmp.end());
 }
 
 void	AstNode::setAttr(const std::string &key, const std::string &val)
@@ -111,4 +125,10 @@ void	AstNode::setType(const std::string &type)
 const std::vector<AstNode *>	&AstNode::children(void) const
 {
 	return _children;
+}
+
+void	AstNode::setSpan(size_t start, size_t end)
+{
+	_span.start = start;
+	_span.end = end;
 }

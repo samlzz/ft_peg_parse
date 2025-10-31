@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 19:04:00 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 23:47:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,13 +75,15 @@ public:
 	// --- Construction / Destruction ---
 	AstNode();
 	AstNode(const std::string &type);
+	AstNode(std::vector<AstNode *> &childrens);
 	AstNode(const AstNode& other);
 	~AstNode();
 
 	AstNode& operator=(const AstNode& other);
 
 	// --- Tree Management ---
-	void		addChild(AstNode *child);
+	void	addChild(AstNode *child);
+	void	stealChildren(AstNode &stolen);
 
 	// --- Attribute Management ---
 	void		setAttr(const std::string &key, const std::string &val);
@@ -92,6 +94,7 @@ public:
 	const std::string				&type(void) const;
 	void							setType(const std::string &type);
 	const std::vector<AstNode *>	&children(void) const;
+	void							setSpan(size_t start, size_t end);
 };
 
 #endif
