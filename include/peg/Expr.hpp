@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 12:33:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 23:04:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,8 @@
 # include <string>
 # include <vector>
 
-# include "utils/Input.hpp"
-# include "ast/AstNode.hpp"
-
-# define PRINT_CALLER
+class PackratParser;
+class AstNode;
 
 class Expr {
 
@@ -46,7 +44,7 @@ public:
 	virtual ~Expr();
 
 	enum e_expr_kind	kind(void) const;
-	virtual bool		parse(Input &in, AstNode *&node) const = 0;
+	virtual bool		parse(PackratParser &parser, AstNode *&out) const = 0;
 
 protected:
 	const enum e_expr_kind	_kind;
@@ -57,6 +55,12 @@ protected:
 typedef std::vector<Expr *> 			ExprList;
 typedef std::map<std::string, Expr *>	ExprDict;
 
-void deleteAll(ExprList &list);
+template <typename T>
+void	deleteAll(std::vector<T *> &list)
+{
+	for (size_t i = 0; i < list.size(); ++i)
+		delete list[i];
+	list.clear();
+}
 
 #endif
