@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 12:46:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 15:03:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 15:42:39 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <string>
 
 #include "utils/Input.hpp"
-#include "utils/PegException.hpp"
 
 const char * Input::WHITESPACES = " \n\t\r";
 
@@ -30,24 +29,28 @@ Input::Input(): _data(), _pos(0)
 Input::Input(const std::string &text): _data(text), _pos(0)
 {}
 
-// ? Good practice to pass binary flag for open a file for portability
-Input::Input(const char *file_path): _data(), _pos(0)
+Input	Input::fromFile(const std::string &path)
 {
-	std::ifstream	file(file_path, std::ios::in | std::ios::binary);
+	std::ifstream	file(path.c_str(), std::ios::in | std::ios::binary);
 
 	if (!file.is_open())
-		throw PegException(
-			"Input: failed to open file '" + std::string(file_path) + "'"
+		throw FileOpenError(
+			"Input: failed to open file '" + std::string(path) + "'"
 		);
 	
 	std::ostringstream buf;
 	buf << file.rdbuf();
 	if (file.bad())
-		throw PegException(
-			"Input: error while reading file '" + std::string(file_path) + "'"
+		throw FileOpenError(
+			"Input: error while reading file '" + std::string(path) + "'"
 		);
 
-	_data = buf.str();
+	return Input(buf.str());
+}
+
+Input	Input::fromText(const std::string &text)
+{
+	return (Input(text));
 }
 
 Input::Input(const Input& other): _data(other._data), _pos(other._pos)
@@ -83,7 +86,7 @@ Input	&Input::operator++()
 
 bool		Input::eof(void) const
 {
-	return (_pos > _data.size());
+	return (_data.empty() || _pos >= _data.size());
 }
 
 bool		Input::match(const std::string &literal)

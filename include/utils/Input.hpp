@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:34:40 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 14:10:57 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 15:34:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,13 @@
 
 # include "./PegException.hpp"
 
-# define PRINT_CALLER
-
+/**
+ * Lightweight text reader used by the PEG parser.
+ * 
+ * Provides controlled random-access over a string or file input.
+ * Used by PegLexer and PackratParser to read and match characters.
+ * Only whitespaces present in member constant WHITESPACES (" \n\t\r" by default) are skipped.
+*/
 class Input {
 
 private:
@@ -29,7 +34,20 @@ private:
 
 	static const char	*WHITESPACES;
 
+	Input();
+	Input(const std::string &data);
+
 public:
+	// Exception thrown when unable to open file
+	class FileOpenError : public PegException {
+	public:
+		FileOpenError() : PegException("Input: unexpected EOF")
+		{}
+		FileOpenError(const std::string &msg) : PegException("Input: " + msg)
+		{}
+	};
+
+	// Exception thrown when reading past end of input
 	class InputUnexpectedEof : public PegException {
 	public:
 		InputUnexpectedEof() : PegException("Input: unexpected EOF")
@@ -38,21 +56,21 @@ public:
 		{}
 	};
 
-	Input();
-	Input(const std::string &text);
-	Input(const char *file_path);
+	// --- Construction ---
+	static Input	fromFile(const std::string &path);
+	static Input	fromText(const std::string &text);
 	Input(const Input& other);
 	~Input();
 
 	Input&	operator=(const Input& other);
-	char	operator*() const;
-	Input	&operator++();
+	char	operator*() const;			// Current char
+	Input	&operator++();				// Advance one char
 
-	bool		eof(void) const;
-
-	char		peek(void) const;
-	char		get(void);								/* in case of eof : throw an expection */
-	bool		match(const std::string &literal);		/* in case of eof: return '\0' */
+	// --- Core methods ---
+	bool	eof(void) const;			// End of input reached
+	char	peek(void) const;			// Look current char
+	char	get(void);					// Get current char or throw
+	bool	match(const std::string &literal);
 
 	size_t		pos(void) const;
 	void		setPos(size_t newPos);
@@ -62,8 +80,8 @@ public:
 	size_t		column(void) const;
 
 	std::string	substr(size_t start, size_t end) const;
-	std::string	context(size_t pos, size_t radius) const;
-	void		skipWhitespace(void);					/* Only skip ASCII whitespace (no support of LANG_C) */
+	std::string	context(size_t pos, size_t radius) const;	// Look text around pos
+	void		skipWhitespace(void);
 };
 
 #endif
