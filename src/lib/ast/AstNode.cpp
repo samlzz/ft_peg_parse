@@ -6,12 +6,15 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 18:41:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 19:10:51 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ast/AstNode.hpp"
+#include <cstddef>
 #include <string>
+#include <vector>
+
+#include "ast/AstNode.hpp"
 
 // *Constructors
 AstNode::AstNode(): _type(), _attrs(), _children(), _span()
@@ -24,9 +27,11 @@ AstNode::AstNode(const std::string &type):
 AstNode::AstNode(const AstNode& other):
 	_type(other.type()),
 	_attrs(other._attrs),
-	_children(other._children),
+	_children(),
 	_span(other._span)
-{}
+{
+	replaceChildren(other._children);
+}
 
 // *Destructor
 AstNode::~AstNode()
@@ -43,14 +48,26 @@ AstNode&	AstNode::operator=(const AstNode& other)
 	{
 		_type = other.type();
 		_attrs = other._attrs;
-		_children = other._children;
 		_span.start = other._span.start;
 		_span.end = other._span.end;
+		replaceChildren(other._children);
 	}
 	return *this;
 }
 
 //* Methods
+
+void	AstNode::replaceChildren(const std::vector<AstNode *> &src)
+{
+	for (size_t i = 0; i < _children.size(); ++i)
+		delete _children[i];
+	_children.clear();
+	for (size_t i = 0; i < src.size(); ++i)
+	{
+		if (src[i])
+			_children.push_back(new AstNode(*src[i]));
+	}
+}
 
 void	AstNode::addChild(AstNode *child)
 {

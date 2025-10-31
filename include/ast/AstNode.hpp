@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 18:41:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 19:04:00 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,8 @@ private:
 	std::map<std::string, std::string>	_attrs;
 	std::vector<AstNode *>				_children;		// < Owned
 	Span								_span;			// < Offset positions in input
+
+	void	replaceChildren(const std::vector<AstNode *> &src);
 
 public:
 
