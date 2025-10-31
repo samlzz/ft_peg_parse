@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 12:21:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 23:32:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,10 @@ public:
 	bool		eval(const Expr *expr, AstNode *&node);
 
 	const Diag	&diag(void) const;
+	Diag		&diag(void);
+	const Input	&input(void) const;
+	Input		&input(void);
+
 	void		resetDiag(void);
 	void		resetMemo(void);
 };
