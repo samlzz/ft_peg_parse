@@ -6,21 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 15:15:32 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 15:47:29 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/10/31 18:51:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <cassert>
 #include <string>
-#include "utils/Input.hpp"
 
-static void sep(const std::string &title)
-{
-	std::cout << "\n=== " << title << " ===" << std::endl;
-}
+#include "../test.h"
+#include "utils/Input.hpp"
 
 /**
  * Create a small file on disk for file reading tests
@@ -30,19 +26,6 @@ static void create_test_file()
 	std::ofstream f("input_test_file.txt");
 	f << "Hello File\nSecond Line\n";
 	f.close();
-}
-
-/**
- * Simple assert helper
- */
-static void check(bool condition, const std::string &msg)
-{
-	if (!condition)
-	{
-		std::cerr << "❌ FAIL: " << msg << std::endl;
-		std::exit(1);
-	}
-	std::cout << "✅ " << msg << std::endl;
 }
 
 /**
