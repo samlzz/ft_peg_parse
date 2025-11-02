@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:32:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:38:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,21 @@ private:
 	PackratParser(const PackratParser& other);
 	PackratParser& operator=(const PackratParser& other);
 
+	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *&out);
+
 public:
 	class ParseError : public PegException {
 	public:
 		ParseError(const std::string& rule)
-			: PegException("Parse failed on rule: " + rule)
+			: PegException("Parse failed: " + rule)
 		{}
 	};
 
 	PackratParser(Input &in, const Grammar &pegGrammar);
 	~PackratParser();
 
-	bool		parseRule(const std::string &rootRuleName, AstNode *&node);
-	bool		eval(const Expr *expr, AstNode *&node);
+	bool		parseRule(const std::string &rootRuleName, AstNode *&out);
+	bool		eval(const Expr *expr, AstNode *&out);
 
 	const Diag	&diag(void) const;
 	Diag		&diag(void);
