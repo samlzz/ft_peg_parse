@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 21:00:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:18:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,11 @@ public:
 	ExprUnary(enum e_expr_kind kind, Expr *inner)
 		: Expr(kind), _inner(inner)
 	{}
-	virtual ~ExprUnary() { delete _inner; }
+	virtual ~ExprUnary()		{ delete _inner; }
 
-	Expr*	inner() const		{ return _inner; }
-	void	setInner(Expr *e);
+	Expr*		inner()			{ return _inner; }
+	const Expr*	inner() const	{ return _inner; }
+	void		setInner(Expr *e);
 };
 
 class ZeroOrMore: public ExprUnary {

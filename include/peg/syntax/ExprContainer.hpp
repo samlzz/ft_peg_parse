@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 21:01:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:21:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,15 @@ public:
 	{}
 	virtual ~ExprContainer() { deleteAll(_elems); }
 
-	Expr	*operator[](size_t index)	{ return _elems[index]; }
+	Expr		*operator[](size_t index)		{ return _elems[index]; }
+	const Expr	*operator[](size_t index) const	{ return _elems[index]; }
 
 	const t_ExprList&	elems() const	{ return _elems; }
 	t_ExprList&			elems()			{ return _elems; }
 
 	size_t				size() const	{ return _elems.size(); }
 
-	void				add(Expr *e) { _elems.push_back(e); }
+	void				add(Expr *e) { if (e) _elems.push_back(e); }
 
 	t_ExprList::const_iterator begin() const { return _elems.begin(); }
 	t_ExprList::const_iterator end() const { return _elems.end(); }

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 21:49:04 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:23:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ bool PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 	out = NULL;
 	const Expr	*start = _grammar.get(rootRuleName);
 	if (!start)
-		throw ParseError("Unknown start rule: " + rootRuleName);
+		throw ParseError("at rule '" + rootRuleName + "': " + _err.formatError(_input, true));
 
 	const bool	ok = eval(start, out);
 	if (!ok)
