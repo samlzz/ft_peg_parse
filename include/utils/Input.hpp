@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:34:40 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 15:34:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:38:27 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ private:
 
 	static const char	*WHITESPACES;
 
-	Input();
-	Input(const std::string &data);
+	Input(): _data(), _pos(0) {}
+	Input(const std::string &data): _data(data), _pos(0) {}
 
 public:
 	// Exception thrown when unable to open file
@@ -59,21 +59,23 @@ public:
 	// --- Construction ---
 	static Input	fromFile(const std::string &path);
 	static Input	fromText(const std::string &text);
-	Input(const Input& other);
-	~Input();
+	Input(const Input& other): _data(other._data), _pos(other._pos)
+	{}
+	~Input() {}
 
 	Input&	operator=(const Input& other);
-	char	operator*() const;			// Current char
-	Input	&operator++();				// Advance one char
+	char	operator*() const;				// Current char
+	char	operator[](size_t index) const;	// Access char by index from curr pos
+	Input	&operator++();					// Advance one char
 
 	// --- Core methods ---
-	bool	eof(void) const;			// End of input reached
-	char	peek(void) const;			// Look current char
-	char	get(void);					// Get current char or throw
-	bool	match(const std::string &literal);
+	bool		eof(void) const;			// End of input reached
+	char		peek(void) const;			// Look current char
+	char		get(void);					// Get current char or throw
+	bool		match(const std::string &literal);
 
-	size_t		pos(void) const;
-	void		setPos(size_t newPos);
+	size_t		pos(void) const			{ return _pos; }
+	void		setPos(size_t newPos)	{ _pos = newPos; }
 
 	size_t		remaining(void) const;
 	size_t		line(void) const;

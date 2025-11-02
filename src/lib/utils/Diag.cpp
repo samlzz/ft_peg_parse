@@ -6,29 +6,18 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 17:51:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:33:15 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include "utils/Diag.hpp"
 #include "utils/Input.hpp"
 
-// * Constructors
-
-Diag::Diag(): _expected(), _farthest(0)
-{}
-
-Diag::Diag(const Diag& other) :
-	_expected(other.expected()), _farthest(other._farthest)
-{}
-// * Destructor
-Diag::~Diag() {
-}
-
-// * Operators
+// ---- Operators ----
 
 Diag& Diag::operator=(const Diag& other)
 {
@@ -40,7 +29,7 @@ Diag& Diag::operator=(const Diag& other)
 	return *this;
 }
 
-// * Methods
+// --- Update & combination ---
 
 void	Diag::concat_expectation(const std::string &same_far_expct)
 {
@@ -73,17 +62,7 @@ void	Diag::reset(void)
 	_expected.clear();
 }
 
-// Getters
-
-size_t	Diag::farthest(void) const
-{
-	return _farthest;
-}
-
-const std::string&	Diag::expected(void) const
-{
-	return _expected;
-}
+// --- Accessors ---
 
 std::string	Diag::formatError(const Input &in, bool with_ctx) const
 {

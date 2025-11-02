@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 18:06:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 17:51:06 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:33:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,17 @@ private:
 	std::string	_expected;
 	size_t		_farthest;
 
-	Diag(const Diag& other);
-	Diag& operator=(const Diag& other);
-
 	void	concat_expectation(const std::string &same_far_expct);
 
 public:
 	// --- Construction ---
-	Diag();
-	~Diag();
+	Diag(): _expected(), _farthest(0) {}
+	Diag(const Diag& other):
+		_expected(other._expected), _farthest(other._farthest)
+	{}
+	Diag& operator=(const Diag& other);
+
+	~Diag() {}
 
 	// --- Update & combination ---
 	void				update(size_t pos, const std::string &expected);
@@ -48,8 +50,8 @@ public:
 	void				reset(void);
 
 	// --- Accessors ---
-	size_t				farthest(void) const;
-	const std::string	&expected(void) const;
+	size_t				farthest(void) const	{ return _farthest; }
+	const std::string	&expected(void) const	{ return _expected; }
 	std::string			formatError(const Input& in, bool with_ctx) const;
 };
 

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 12:46:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 15:42:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:39:15 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,6 @@
 #include "utils/Input.hpp"
 
 const char * Input::WHITESPACES = " \n\t\r";
-
-// *Constructors
-Input::Input(): _data(), _pos(0)
-{}
-
-Input::Input(const std::string &text): _data(text), _pos(0)
-{}
 
 Input	Input::fromFile(const std::string &path)
 {
@@ -53,16 +46,10 @@ Input	Input::fromText(const std::string &text)
 	return (Input(text));
 }
 
-Input::Input(const Input& other): _data(other._data), _pos(other._pos)
-{}
-
-// *Destructor
-Input::~Input()
-{}
-
 // *Operators
 
-Input& Input::operator=(const Input& other) {
+Input& Input::operator=(const Input& other)
+{
 	if (this != &other)
 	{
 		_pos = other._pos;
@@ -74,6 +61,11 @@ Input& Input::operator=(const Input& other) {
 char	Input::operator*() const
 {
 	return peek();
+}
+
+char	Input::operator[](size_t index) const
+{
+	return _data[_pos + index];
 }
 
 Input	&Input::operator++()
@@ -113,16 +105,6 @@ char		Input::peek(void) const
 	if (eof())
 		return '\0';
 	return _data[_pos];
-}
-
-size_t		Input::pos(void) const
-{
-	return _pos;
-}
-
-void		Input::setPos(size_t newPos)
-{
-	_pos = newPos;
 }
 
 size_t		Input::remaining(void) const
