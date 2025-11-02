@@ -65,8 +65,8 @@ static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 		return;
 	case Expr::K_SEQUENCE:
 	case Expr::K_CHOICE: {
-		const ExprContainer	*list = static_cast<ExprContainer *>(expr);
-		for (t_ExprList::const_iterator it = list->begin(); it != list->end(); ++it)
+		const ExprContainer	*c = static_cast<ExprContainer *>(expr);
+		for (t_ExprList::const_iterator it = c->begin(); it != c->end(); ++it)
 			resolveExpr(*it, rules);
 		break;
 	}
@@ -75,7 +75,7 @@ static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 	case Expr::K_OPTIONAL:
 	case Expr::K_PREDICATE:
 	case Expr::K_CAPTURE: {
-		const ExprUnary *u = static_cast<ExprUnary *>(expr);
+		ExprUnary *u = static_cast<ExprUnary *>(expr);
 		resolveExpr(u->inner(), rules);
 		break;
 	}

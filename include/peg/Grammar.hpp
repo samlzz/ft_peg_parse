@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 20:31:47 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:07:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ class Grammar {
 private:
 	t_ExprDict	_rules;
 	std::string	_start;
+
+	Grammar(const Grammar &other);
 
 	// ? call by constructor
 	void	resolveRefs(void);
@@ -51,10 +53,9 @@ public:
 			: GrammarError("Left recursion detected in rule: " + rule) {}
 	};
 
-
+	Grammar() {}
 	// Consume rules or other._rules
 	Grammar(t_ExprDict &rules);
-	Grammar(Grammar& other) { *this = other; }
 	Grammar& operator=(Grammar& other);
 
 	~Grammar() { deleteVals(_rules); }
