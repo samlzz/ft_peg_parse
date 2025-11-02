@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 19:59:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 22:24:40 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,11 +70,9 @@ void	AstNode::addChild(AstNode *child)
 
 void	AstNode::stealChildren(AstNode &stolen)
 {
-	std::vector<AstNode *>tmp;
-
-	tmp.swap(stolen._children);
+	_children.insert(_children.end(),
+				stolen._children.begin(), stolen._children.end());
 	stolen._children.clear();
-	_children.insert(_children.end(), tmp.begin(), tmp.end());
 }
 
 void	AstNode::setAttr(const std::string &key, const std::string &val)
