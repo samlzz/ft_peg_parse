@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:47:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:02:33 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string>
 # include <vector>
 
+#include "peg/Expr.hpp"
 # include "utils/PegException.hpp"
 
 /**
@@ -73,11 +74,11 @@ public:
 	};
 
 	// --- Construction / Destruction ---
-	AstNode();
-	AstNode(const std::string &type);
+	AstNode() {}
+	AstNode(const std::string &type): _type(type) {}
 	AstNode(std::vector<AstNode *> &childrens);
 	AstNode(const AstNode& other);
-	~AstNode();
+	~AstNode() { deleteAll(_children); }
 
 	AstNode& operator=(const AstNode& other);
 
@@ -91,10 +92,12 @@ public:
 	std::string	getAttr(const std::string &key, const std::string &def) const;
 	
 	// --- Accessors ---
-	const std::string				&type(void) const;
-	void							setType(const std::string &type);
-	const std::vector<AstNode *>	&children(void) const;
-	void							setSpan(size_t start, size_t end);
+	const std::string	&type(void) const					{ return _type; }
+	void				setType(const std::string &type)	{ _type = type; }
+
+	void				setSpan(size_t start, size_t end);
+
+	const std::vector<AstNode *>	&children(void) const	{ return _children; }
 };
 
 #endif

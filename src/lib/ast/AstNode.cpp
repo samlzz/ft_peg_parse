@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:59:49 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 19:59:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,7 @@
 #include "ast/AstNode.hpp"
 #include "peg/Expr.hpp"
 
-// *Constructors
-AstNode::AstNode(): _type(), _attrs(), _children(), _span()
-{}
-
-AstNode::AstNode(const std::string &type):
-	_type(type), _attrs(), _children(), _span()
-{}
+// ---- Ctors ----
 
 AstNode::AstNode(std::vector<AstNode *> &childrens):
 	_type(), _attrs(), _children(), _span()
@@ -41,13 +35,7 @@ AstNode::AstNode(const AstNode& other):
 	replaceChildren(other._children);
 }
 
-// *Destructor
-AstNode::~AstNode()
-{
-	deleteAll(_children);
-}
-
-// *Operators
+// ---- Operators ----
 
 AstNode&	AstNode::operator=(const AstNode& other)
 {
@@ -62,7 +50,7 @@ AstNode&	AstNode::operator=(const AstNode& other)
 	return *this;
 }
 
-//* Methods
+// ---- Methods ----
 
 void	AstNode::replaceChildren(const std::vector<AstNode *> &src)
 {
@@ -110,21 +98,6 @@ std::string	AstNode::getAttr(const std::string &key, const std::string &def) con
 	if (it == _attrs.end())
 		return def;
 	return (it->second);
-}
-
-const std::string	&AstNode::type(void) const
-{
-	return _type;
-}
-
-void	AstNode::setType(const std::string &type)
-{
-	_type = type;
-}
-
-const std::vector<AstNode *>	&AstNode::children(void) const
-{
-	return _children;
 }
 
 void	AstNode::setSpan(size_t start, size_t end)
