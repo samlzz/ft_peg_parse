@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 19:34:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:52:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/01 01:00:00 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ bool Literal::parse(PackratParser &parser, AstNode *&out) const
 
 	if (in.eof())
 	{
-		parser.diag().update(in.pos(), "unexpected EOF (expected \"" + _value + "\"");
+		parser.diag().update(in.pos(), "unexpected EOF (expected \"" + _value + "\")");
 		return false;
 	}
 	if (!in.match(_value))
