@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:04:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:22:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ protected:
 	Expr(enum e_expr_kind kind);
 };
 
-typedef std::vector<Expr *> 			ExprList;
-typedef std::map<std::string, Expr *>	ExprDict;
+typedef std::vector<Expr *> 			t_ExprList;
+typedef std::map<std::string, Expr *>	t_ExprDict;
 
 template <typename T>
 void	deleteAll(std::vector<T *> &list)

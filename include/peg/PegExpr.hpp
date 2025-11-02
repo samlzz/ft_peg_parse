@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 18:56:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 21:12:06 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:22:30 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,14 @@ public:
 class Sequence: public Expr {
 
 private:
-	ExprList	_elems;
+	t_ExprList	_elems;
 
 	Sequence(const Sequence &other);
 	Sequence	&operator=(const Sequence &other);
 
 public:
 	Sequence();
-	Sequence(const ExprList &elements);
+	Sequence(const t_ExprList &elements);
 	virtual ~Sequence();
 
 	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
@@ -68,14 +68,14 @@ public:
 class Choice: public Expr {
 
 private:
-	ExprList	_opts;
+	t_ExprList	_opts;
 
 	Choice(const Choice &other);
 	Choice	&operator=(const Choice &other);
 
 public:
 	Choice();
-	Choice(const ExprList &options);
+	Choice(const t_ExprList &options);
 	virtual ~Choice();
 
 	virtual bool	parse(PackratParser &parser, AstNode *&out) const;

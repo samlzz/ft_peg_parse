@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 19:46:39 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:57:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:22:30 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 Choice::Choice(): Expr(K_CHOICE), _opts()
 {}
 
-Choice::Choice(const ExprList &options): Expr(K_CHOICE), _opts(options)
+Choice::Choice(const t_ExprList &options): Expr(K_CHOICE), _opts(options)
 {}
 
 Choice::~Choice()

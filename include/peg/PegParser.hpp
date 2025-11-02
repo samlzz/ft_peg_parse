@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 10:42:10 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:22:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class PegParser {
 private:
 	PegLexer						_lex;
 	std::vector<PegLexer::Token>	_tokens;
-	ExprDict						_rules;
+	t_ExprDict						_rules;
 	Diag							_err;
 
 	PegParser(const PegParser& other);

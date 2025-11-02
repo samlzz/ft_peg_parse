@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 19:42:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:39:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:22:30 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 Sequence::Sequence(): Expr(K_SEQUENCE), _elems()
 {}
 
-Sequence::Sequence(const ExprList &elements): Expr(K_SEQUENCE), _elems(elements)
+Sequence::Sequence(const t_ExprList &elements): Expr(K_SEQUENCE), _elems(elements)
 {}
 
 Sequence::~Sequence()

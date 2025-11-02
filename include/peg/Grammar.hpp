@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 12:37:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 17:22:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 class Grammar {
 
 private:
-	ExprDict	_rules;
+	t_ExprDict	_rules;
 	std::string	_start;
 
 	Grammar(const Grammar& other);
@@ -55,7 +55,7 @@ public:
 	};
 
 	// Consume rules
-	Grammar(ExprDict &rules);
+	Grammar(t_ExprDict &rules);
 	~Grammar();
 
 	Expr	*get(const std::string &name) const;
