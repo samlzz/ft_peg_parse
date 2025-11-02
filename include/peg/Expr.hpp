@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 17:22:41 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 20:57:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,15 +41,15 @@ public:
 		K_CAPTURE,
 	};
 
-	virtual ~Expr();
+	virtual ~Expr() {}
 
-	enum e_expr_kind	kind(void) const;
+	enum e_expr_kind	kind(void) const	{ return _kind; }
 	virtual bool		parse(PackratParser &parser, AstNode *&out) const = 0;
 
 protected:
 	const enum e_expr_kind	_kind;
 
-	Expr(enum e_expr_kind kind);
+	Expr(enum e_expr_kind kind): _kind(kind) {}
 };
 
 typedef std::vector<Expr *> 			t_ExprList;
@@ -61,6 +61,22 @@ void	deleteAll(std::vector<T *> &list)
 	for (size_t i = 0; i < list.size(); ++i)
 		delete list[i];
 	list.clear();
+}
+
+template <typename K, typename V>
+void	deleteVals(std::map<K, V*> &dict)
+{
+	typename std::map<K, V*>::iterator	it;
+
+	for (it = dict.begin(); it != dict.end(); ++it)
+	{
+		if (it->second)
+		{
+			delete it->second;
+			it->second = NULL;
+		}
+	}
+	dict.clear();
 }
 
 #endif
