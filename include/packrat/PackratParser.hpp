@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 17:38:42 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 21:48:54 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,21 @@ public:
 		{}
 	};
 
-	PackratParser(Input &in, const Grammar &pegGrammar);
-	~PackratParser();
+	PackratParser(Input &in, const Grammar &pegGrammar):
+		_input(in), _grammar(pegGrammar), _memo(), _err()
+	{}
+	~PackratParser() {};
 
 	bool		parseRule(const std::string &rootRuleName, AstNode *&out);
 	bool		eval(const Expr *expr, AstNode *&out);
 
-	const Diag	&diag(void) const;
-	Diag		&diag(void);
-	const Input	&input(void) const;
-	Input		&input(void);
+	const Diag	&diag(void) const	{ return _err; }
+	Diag		&diag(void)			{ return _err; }
+	const Input	&input(void) const	{ return _input; }
+	Input		&input(void)		{ return _input; }
 
-	void		resetDiag(void);
-	void		resetMemo(void);
+	void		resetDiag(void)		{ _err.reset(); }
+	void		resetMemo(void)		{ _memo.reset(); }
 };
 
 #endif

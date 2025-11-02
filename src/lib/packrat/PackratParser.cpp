@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 17:40:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 21:49:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,33 +14,6 @@
 #include "peg/Expr.hpp"
 #include "ast/AstNode.hpp"
 #include <cstddef>
-
-// ---- Ctors / Dtor ----
-
-PackratParser::PackratParser(Input &in, const Grammar &pegGrammar):
-	_input(in), _grammar(pegGrammar), _memo(), _err()
-{}
-
-PackratParser::~PackratParser() {}
-
-// ---- Methods ----
-
-// ---- Accessors
-const Diag&		PackratParser::diag()	const		{ return _err; }
-Diag&			PackratParser::diag()				{ return _err; }
-
-const Input&	PackratParser::input()	const		{ return _input; }
-Input&			PackratParser::input()				{ return _input; }
-
-// ---- Resets
-void PackratParser::resetDiag()
-{
-	_err.reset();
-}
-void PackratParser::resetMemo()
-{
-	_memo.reset();
-}
 
 // ---- parseRule: public entry point
 bool PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
@@ -88,4 +61,3 @@ bool PackratParser::eval(const Expr *expr, AstNode *&out)
 		delete tmp;
 	return ok;
 }
-
