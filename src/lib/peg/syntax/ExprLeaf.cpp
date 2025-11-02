@@ -1,33 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   CharRange.cpp                                      :+:      :+:    :+:   */
+/*   ExprLeaf.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/31 19:45:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 23:56:41 by sliziard         ###   ########.fr       */
+/*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/02 19:39:26 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <string>
-
 #include "packrat/PackratParser.hpp"
-#include "peg/Expr.hpp"
-#include "peg/PegExpr.hpp"
+#include "peg/syntax/ExprLeaf.hpp"
 
-// * Constructors
+bool Literal::parse(PackratParser &parser, AstNode *&out) const
+{
+	if (_value.empty())
+		throw PackratParser::ParseError("Empty literal not allowed");
+	Input &in = parser.input();
+	out = NULL;
 
-CharRange::CharRange(): Expr(K_CHARRANGE), _charset()
-{}
-
-CharRange::CharRange(const std::string &charset):
-	Expr(K_CHARRANGE), _charset(charset)
-{}
-
-CharRange::~CharRange() {}
-
-// * Parsing
+	if (in.eof())
+	{
+		parser.diag().update(in.pos(), "unexpected EOF (expected \"" + _value + "\")");
+		return false;
+	}
+	if (!in.match(_value))
+	{
+		parser.diag().update(in.pos(), "expected \"" + _value + "\"");
+		return false;
+	}
+	return true;
+}
 
 bool CharRange::parse(PackratParser &parser, AstNode *&out) const
 {
@@ -38,16 +42,16 @@ bool CharRange::parse(PackratParser &parser, AstNode *&out) const
 	{
 		parser.diag().update(
 			in.pos(),
-			"unexpected EOF (expected [" + _charset + "])"
+			"unexpected EOF (expected [" + _value + "])"
 		);
 		return false;
 	}
 	char c = in.peek();
-	if (_charset.find(c) == std::string::npos)
+	if (_value.find(c) == std::string::npos)
 	{
 		parser.diag().update(
 			in.pos(),
-			std::string("unexpected '") + c + "' (expected [" + _charset + "])"
+			std::string("unexpected '") + c + "' (expected [" + _value + "])"
 		);
 		return false;
 	}

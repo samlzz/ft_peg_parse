@@ -1,36 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Sequence.cpp                                       :+:      :+:    :+:   */
+/*   ExprContainer.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/31 19:42:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 17:22:30 by sliziard         ###   ########.fr       */
+/*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/02 19:39:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstddef>
-
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
-#include "peg/Expr.hpp"
-#include "peg/PegExpr.hpp"
-
-// * Constructors
-
-Sequence::Sequence(): Expr(K_SEQUENCE), _elems()
-{}
-
-Sequence::Sequence(const t_ExprList &elements): Expr(K_SEQUENCE), _elems(elements)
-{}
-
-Sequence::~Sequence()
-{
-	deleteAll(_elems);
-}
-
-// * Parsing
+#include "peg/syntax/ExprContainer.hpp"
 
 bool Sequence::parse(PackratParser &parser, AstNode *&out) const
 {
@@ -54,4 +36,25 @@ bool Sequence::parse(PackratParser &parser, AstNode *&out) const
 
 	out = new AstNode(childrens);
 	return true;
+}
+
+bool Choice::parse(PackratParser &parser, AstNode *&out) const
+{
+	Input	&in = parser.input();
+	size_t	start = in.pos();
+	AstNode	*child;
+
+	for (size_t i = 0; i < _elems.size(); ++i)
+	{
+		in.setPos(start);
+		child = NULL;
+		if (parser.eval(_elems[i], child))
+		{
+			out = child;
+			return true;
+		}
+	}
+	parser.diag().update(start, "expected at least one valid choice");
+	out = NULL;
+	return false;
 }
