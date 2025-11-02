@@ -6,10 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 20:55:46 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/02 21:58:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstddef>
 
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
@@ -56,10 +57,12 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *&out) const
 	Input	&in = parser.input();
 	size_t	last = in.pos();
 	AstNode	*child = NULL;
+	size_t	occ = 0;
 	std::vector<AstNode *>	childrens;
 
 	while (parser.eval(_inner, child))
 	{
+		occ++;
 		if (child)
 			childrens.push_back(child);
 		child = NULL;
@@ -67,13 +70,16 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *&out) const
 			break;
 		last = in.pos();
 	}
-	if (childrens.empty())
+	if (!occ)
 	{
 		parser.diag().update(in.pos(), "expected one or more repetitions");
 		out = NULL;
 		return false;
 	}
-	out = new AstNode(childrens);
+	if (childrens.empty())
+		out = NULL;
+	else
+		out = new AstNode(childrens);
 	return true;
 }
 
