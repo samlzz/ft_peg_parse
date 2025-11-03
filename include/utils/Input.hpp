@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:34:40 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:38:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 01:51:05 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,7 @@ public:
 
 	std::string	substr(size_t start, size_t end) const;
 	std::string	context(size_t pos, size_t radius) const;	// Look text around pos
-	void		skipWhitespace(void);
+	void		skipUntil(bool (*until)(char c), std::string *skipped = NULL);
 };
 
 #endif

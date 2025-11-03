@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 12:46:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:39:15 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 01:51:25 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,16 +160,13 @@ std::string	Input::context(size_t pos, size_t radius) const
 	return substr(start, end);
 }
 
-void		Input::skipWhitespace(void)
+void	Input::skipUntil(bool (*until)(char), std::string *skipped)
 {
-	uint8_t	c;
-
 	while (!eof())
 	{
-		c = _data[_pos];
-		if (std::strchr(WHITESPACES, c))
-			_pos++;
-		else
-			break ;
+		if (until(peek()))
+			break;
+		if (skipped)
+			skipped += get();
 	}
 }
