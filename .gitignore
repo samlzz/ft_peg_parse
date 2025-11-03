@@ -12,3 +12,5 @@ build/*
 *.bak
 .clang*
 compile_commands.json
+
+.cache/
