@@ -81,6 +81,8 @@ static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 	}
 	case Expr::K_RULEREF: {
 		RuleRef *r = static_cast<RuleRef *>(expr);
+		if (r->resolved())
+			break;
 		t_ExprDict::const_iterator it = rules.find(r->name());
 		if (it == rules.end())
 			throw Grammar::GrammarResolutionError(r->name());

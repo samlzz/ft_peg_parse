@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 17:22:41 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 16:37:19 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,25 @@ private:
 	PegParser(const PegParser& other);
 	PegParser& operator=(const PegParser& other);
 
-	Expr	*parseRule(void);
-	Expr	*parseExpression(void);
+	void	parseRule(void);
+	Expr	*parseChoice(void);
 	Expr	*parseSequence(void);
 	Expr	*parsePrefix(void);
+	Expr	*parseSuffix(void);
 	Expr	*parsePrimary(void);
 
 public:
+
+	class PegParserError : public PegException {
+	public:
+		PegParserError(const std::string& msg) : PegException("Grammar parser: " + msg)
+		{}
+	};
+
 	PegParser(const std::string &grammar_path);
 	~PegParser();
 
-	Grammar	parseGrammar(void);
+	void	parseGrammar(Grammar &out);
 };
 
 #endif
