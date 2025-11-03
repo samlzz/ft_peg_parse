@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 21:58:42 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:47:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,8 @@ bool ZeroOrMore::parse(PackratParser &parser, AstNode *&out) const
 			break;
 		last = in.pos();
 	}
-	if (childrens.empty())
-	{
-		out = NULL;
-		return true;
-	}
-
-	out = new AstNode(childrens);
+	if (!childrens.empty())
+		appendNode(new AstNode(childrens), out);
 	return true;
 }
 
@@ -73,26 +68,20 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *&out) const
 	if (!occ)
 	{
 		parser.diag().update(in.pos(), "expected one or more repetitions");
-		out = NULL;
 		return false;
 	}
-	if (childrens.empty())
-		out = NULL;
-	else
-		out = new AstNode(childrens);
+	if (!childrens.empty())
+		appendNode(new AstNode(childrens), out);
 	return true;
 }
 
 bool Optional::parse(PackratParser &parser, AstNode *&out) const
 {
-	AstNode *child = NULL;
+	AstNode	*child = NULL;
 
-	if (!parser.eval(_inner, child))
-	{
-		out = NULL;
-		return true;
-	}
-	out = child;
+	parser.eval(_inner, child);
+	if (child)
+		appendNode(child, out);
 	return true;
 }
 
@@ -104,10 +93,9 @@ bool Predicate::parse(PackratParser &parser, AstNode *&out) const
 
 	bool	ok = parser.eval(_inner, child);
 	if (child)
-		delete child;
+		appendNode(child, out);
 
 	in.setPos(start);
-	out = NULL;
 	return _isAnd ? ok : !ok;
 }
 
@@ -119,12 +107,19 @@ bool Capture::parse(PackratParser &parser, AstNode *&out) const
 	AstNode	*me = NULL;
 
 	if (!parser.eval(_inner, innerNode))
-	{
-		if (innerNode) delete innerNode;
-		out = NULL;
 		return false;
-	}
 
+	if (_isProp)
+	{
+		if (!out)
+			throw PackratParser::ParseError("Propretie outside of a node context");
+		bool	hasChilds = (innerNode && !innerNode->children().empty());
+		delete innerNode;
+		if (hasChilds)
+			throw PackratParser::ParseError("A property cannot have subnodes");
+		out->setAttr(_tag, in.substr(start, in.pos()));
+		return (true);
+	}
 	me = new AstNode(_tag);
 	if (innerNode)
 	{
@@ -137,7 +132,7 @@ bool Capture::parse(PackratParser &parser, AstNode *&out) const
 			me->addChild(innerNode);
 	}
 	me->setSpan(start, in.pos());
-
+	appendNode(me, out);
 	out = me;
 	return true;
 }

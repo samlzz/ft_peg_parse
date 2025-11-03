@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:18:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 03:23:06 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,16 +85,18 @@ class Capture: public ExprUnary {
 
 private:
 	std::string	_tag;
+	bool		_isProp;
 
 public:
-	Capture(Expr *inner, const std::string &tag):
-		ExprUnary(K_CAPTURE, inner), _tag(tag)
+	Capture(Expr *inner, const std::string &tag, bool isPropertie = false):
+		ExprUnary(K_CAPTURE, inner), _tag(tag), _isProp(isPropertie)
 	{}
 	virtual ~Capture() {}
 
-	const std::string	&tag(void) const { return _tag; }
+	const std::string	&tag(void) const		{ return _tag; }
+	bool				isPropertie(void) const	{ return _isProp; }
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool		parse(PackratParser &parser, AstNode *&out) const;
 };
 
 
