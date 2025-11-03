@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:24:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:28:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,4 +102,12 @@ void	AstNode::setSpan(size_t start, size_t end)
 {
 	_span.start = start;
 	_span.end = end;
+}
+
+void	appendNode(AstNode *node, AstNode *&out)
+{
+	if (out)
+		out->addChild(node);
+	else
+		out = node;
 }

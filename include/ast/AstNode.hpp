@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 20:02:33 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:28:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,5 +99,8 @@ public:
 
 	const std::vector<AstNode *>	&children(void) const	{ return _children; }
 };
+
+
+void	appendNode(AstNode *node, AstNode *&out);
 
 #endif
