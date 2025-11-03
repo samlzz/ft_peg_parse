@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:23:29 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:35:13 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,20 @@ bool PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 		throw ParseError("at rule '" + rootRuleName + "': " + _err.formatError(_input, true));
 
 	const bool	ok = eval(start, out);
-	if (!ok)
+	if (!ok || !_input.eof())
 		throw ParseError(_err.formatError(_input, true));
 	return ok;
 }
 
-// ---- private helpers method for eval
+// ---- privates helpers
+
 bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *&out)
 {
 	PackratCache::MemoEntry m = _memo.get(e, pos);
 
 	_input.setPos(m.nextPos());
 	if (m.node())
-		out = new AstNode(*m.node());
+		appendNode(new AstNode(*m.node()), out);
 	return m.ok();
 }
 
@@ -56,8 +57,8 @@ bool PackratParser::eval(const Expr *expr, AstNode *&out)
 	_memo.set(expr, pos, store);
 
 	if (ok)
-		out = tmp;
-	else if (tmp)
+		appendNode(tmp, out);
+	else
 		delete tmp;
 	return ok;
 }

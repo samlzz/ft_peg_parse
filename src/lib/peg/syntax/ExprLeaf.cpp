@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 19:39:26 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:31:38 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ bool Literal::parse(PackratParser &parser, AstNode *&out) const
 	if (_value.empty())
 		throw PackratParser::ParseError("Empty literal not allowed");
 	Input &in = parser.input();
-	out = NULL;
+	(void)out;
 
 	if (in.eof())
 	{
@@ -36,7 +36,7 @@ bool Literal::parse(PackratParser &parser, AstNode *&out) const
 bool CharRange::parse(PackratParser &parser, AstNode *&out) const
 {
 	Input &in = parser.input();
-	out = NULL;
+	(void)out;
 
 	if (in.eof())
 	{

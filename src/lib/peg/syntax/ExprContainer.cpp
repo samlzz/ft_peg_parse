@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 19:39:21 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/03 15:36:38 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ bool Sequence::parse(PackratParser &parser, AstNode *&out) const
 	AstNode *child = NULL;
 	std::vector<AstNode*> childrens;
 
-	out = NULL;
 	for (size_t i = 0; i < _elems.size(); ++i)
 	{
 		if (!parser.eval(_elems[i], child))
@@ -34,7 +33,7 @@ bool Sequence::parse(PackratParser &parser, AstNode *&out) const
 	if (childrens.empty())
 		return true;
 
-	out = new AstNode(childrens);
+	appendNode(new AstNode(childrens), out);
 	return true;
 }
 
@@ -50,11 +49,10 @@ bool Choice::parse(PackratParser &parser, AstNode *&out) const
 		child = NULL;
 		if (parser.eval(_elems[i], child))
 		{
-			out = child;
+			appendNode(child, out);
 			return true;
 		}
 	}
 	parser.diag().update(start, "expected at least one valid choice");
-	out = NULL;
 	return false;
 }
