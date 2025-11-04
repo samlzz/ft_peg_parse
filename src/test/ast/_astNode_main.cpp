@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ast/AstNode.hpp"
 #include "test.h"
+#include "utils/Debug.hpp"
 
 int main() {
 	sep("AstNode - basic tree and attributes");
@@ -21,6 +22,7 @@ int main() {
 	check(copy.children().size() == 2, "copy constructor deep-copies children");
 	check(copy.getAttr("name", "") == "server", "attributes copied correctly");
 
+	printAstTree(root);
 	delete root;
 	std::cout << "✅ AstNode tests done\n";
 	return 0;
