@@ -13,7 +13,19 @@ OBJ_DIR   = build/
 BIN_DIR   =
 
 ### UFILES_START ###
-FILES     ?= 
+FILES =	lib/ast/AstNode.cpp \
+		lib/packrat/PackratCache.cpp \
+		lib/packrat/PackratParser.cpp \
+		lib/peg/Grammar.cpp \
+		lib/peg/PegLexer.cpp \
+		lib/peg/PegParser.cpp \
+		lib/peg/syntax/ExprContainer.cpp \
+		lib/peg/syntax/ExprLeaf.cpp \
+		lib/peg/syntax/ExprUnary.cpp \
+		lib/peg/syntax/RuleRef.cpp \
+		lib/utils/Diag.cpp \
+		lib/utils/Input.cpp \
+		test/helpers.cpp
 ### END ###
 ifeq ($(FILES),)
     $(error FILES is empty: please define source files)
@@ -29,9 +41,12 @@ CC        = cc
 CFLAGS    = -Wall -Wextra -Werror
 
 CXX       = c++
-CXXFLAGS  = -Wall -Wextra -Werror -std=c++98
+CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
 
-INCL_DIRS =
+INCL_DIRS = include
+ifneq (,$(filter test,$(MAKECMDGOALS)))
+	INCL_DIRS += src/test
+endif
 # ? Directories & Libraries to link against
 LIB_DIRS  =
 LIB_FILES =
@@ -56,7 +71,7 @@ CYAN = $(ESC)0;96m
 UNDERLINE = $(ESC)4m
 
 define clr_print
-	@printf "$(1)$(2)$(NC)\n"
+	printf "$(1)$(2)$(NC)\n"
 endef
 
 # =============================================================================
@@ -113,18 +128,18 @@ ifneq ($(suffix $(NAME)), .a)
 else
 	$(LD) $(OUT) $(OBJS)
 endif
-	$(call clr_print,$(GREEN)$(UNDERLINE),$(NAME) compiled !)
+	@$(call clr_print,$(GREEN)$(UNDERLINE),$(NAME) compiled !)
 
 $(O_DIRS):
 	$(P)$(MD) $@
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c
 	$(P)$(CC) $(CFLAGS) -MMD $(CPPFLAGS) -c $< -o $@
-	$(call clr_print, $(YELLOW),Compiling C: $<)
+	@$(call clr_print, $(YELLOW),Compiling C: $<)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 	$(P)$(CXX) $(CXXFLAGS) -MMD $(CPPFLAGS) -c $< -o $@
-	$(call clr_print, $(YELLOW),Compiling C++: $<)
+	@$(call clr_print, $(YELLOW),Compiling C++: $<)
 
 -include $(DEPS)
 
@@ -132,12 +147,12 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 clean:
 	$(P)$(RM) $(OBJS) $(DEPS)
 	$(P)$(RM) -r $(OBJ_DIR)
-	$(call clr_print,$(BLUE),$(NAME) object files cleaned!)
+	@$(call clr_print,$(BLUE),$(NAME) object files cleaned!)
 
 .PHONY: fclean
 fclean: clean
 	$(P)$(RM) $(OUT)
-	$(call clr_print,$(CYAN),executables files cleaned!)
+	@$(call clr_print,$(CYAN),executables files cleaned!)
 
 .PHONY: re
 re: fclean all
@@ -149,3 +164,45 @@ ifneq ($(suffix $(NAME)), .a)
 else
 	@echo "Nothing to run for a static library: $(OUT)"
 endif
+
+# =============================================================================
+# >> TESTING
+# =============================================================================
+
+TEST_DIR := src/test
+TEST_OBJ_DIR := build/test
+TEST_BIN_DIR := test_bin
+TEST_FILES := $(wildcard $(TEST_DIR)/*/*_main.cpp $(TEST_DIR)/*_main.cpp)
+
+TEST_BINS := $(patsubst %_main.cpp,$(TEST_BIN_DIR)/%,$(notdir $(TEST_FILES)))
+
+.PHONY: test
+test: run_all_tests
+
+test_%: $(TEST_BIN_DIR)/_%
+	@$(call clr_print, $(CYAN),Running test $* ...)
+	$(P)./$< || { $(call clr_print, $(RED),❌ Test failed: $<); exit 1; }
+
+.PHONY: run_all_tests
+run_all_tests: $(TEST_BINS)
+	$(P)for bin in $^; do \
+		$(call clr_print, $(CYAN),Running $$bin ...); \
+		./$$bin || { $(call clr_print, $(RED),❌ $$bin failed); exit 1; } \
+	done
+
+$(TEST_BIN_DIR)/%: $(TEST_DIR)/*/%_main.cpp $(OUT)
+	@mkdir -p $(dir $@)
+	$(P)$(CXX) $(CXXFLAGS) $(CPPFLAGS) $< -o $@ $(OUT)
+	@$(call clr_print, $(YELLOW),Compiling test: $<)
+
+.PHONY: test_list
+test_list:
+	$(P)for t in $(TEST_BIN_DIR)/*; do \
+		name="$$(basename "$$t")"; \
+		printf "%s\n" "$${name/_/}"; \
+	done
+
+.PHONY: test_clean
+test_clean:
+	$(P)$(RM) -r $(TEST_BIN_DIR)
+	@$(call clr_print, $(BLUE),Test binaries cleaned!)

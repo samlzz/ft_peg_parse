@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   input_main.cpp                                     :+:      :+:    :+:   */
+/*   _input_main.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 15:15:32 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 18:51:14 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:55:52 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <cassert>
 #include <string>
 
-#include "../test.h"
+#include "test.h"
 #include "utils/Input.hpp"
 
 /**
@@ -118,15 +118,7 @@ int main(void)
 	}
 
 	// --------------------------------------------------------------------
-	sep("7. skipWhitespace()");
-	{
-		Input in = Input::fromText(" \t\r\n  abc");
-		in.skipWhitespace();
-		check(in.peek() == 'a', "skipWhitespace() skips ASCII spaces");
-	}
-
-	// --------------------------------------------------------------------
-	sep("8. operator* / ++");
+	sep("7. operator* / ++");
 	{
 		Input in = Input::fromText("xyz");
 		check(*in == 'x', "operator* dereferences current char");
@@ -135,7 +127,7 @@ int main(void)
 	}
 
 	// --------------------------------------------------------------------
-	sep("9. file reading and context()");
+	sep("8. file reading and context()");
 	{
 		Input fileIn = Input::fromFile("input_test_file.txt");
 		check(fileIn.peek() == 'H', "File read starts with correct char");

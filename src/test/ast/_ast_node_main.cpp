@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ast_node_main.cpp                                  :+:      :+:    :+:   */
+/*   _ast_node_main.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 19:12:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/10/31 18:51:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 09:50:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <iostream>
 #include <cassert>
 
-#include "../test.h"
+#include "test.h"
 #include "ast/AstNode.hpp"
 
 /**
