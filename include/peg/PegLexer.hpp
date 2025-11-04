@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 14:43:28 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:53:46 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ public:
 		T_SLASH, T_STAR, T_PLUS, T_QMARK,
 		T_AND, T_NOT,
 		T_LPAREN, T_RPAREN,
+		T_CHARRANGE,
 		T_COLON, T_ASSIGN,
 		T_END
 	};
@@ -65,6 +66,7 @@ private:
 
 	Token	lexLiteral(void);
 	Token	lexIdentifier(void);
+	Token	lexCharRange(void);
 	Token	lexOp(char c);
 	Token	lexOne(void);
 };

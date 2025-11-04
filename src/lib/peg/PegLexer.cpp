@@ -25,10 +25,11 @@ PegLexer::PegLexer(const std::string &grammar_path):
 
 PegLexer::~PegLexer() {}
 
-static bool	_until_ln(char c)	{ return c == '\n'; }
+static bool	_until_ln(char c)			{ return c == '\n'; }
+static bool	_until_eobracket(char c)	{ return c == ']'; }
 static bool	_until_eoid(char c)
 {
-	return !(c == '@' || c == '_' || std::isalpha(static_cast<uint8_t>(c)));
+	return !(c == '_' || std::isalnum(static_cast<uint8_t>(c)));
 }
 
 void	PegLexer::skipWhitespaces(void)
@@ -41,7 +42,11 @@ void	PegLexer::skipWhitespaces(void)
 		if (std::isspace(c))
 			++_input;
 		else if (c == '#')
+		{
 			_input.skipUntil(_until_ln);
+			if (_input.peek() == '\n')
+				++_input;
+		}
 		else
 			break;
 	}
@@ -67,11 +72,22 @@ PegLexer::Token	PegLexer::lexIdentifier(void)
 	return (Token){T_ID, val};
 }
 
+PegLexer::Token	PegLexer::lexCharRange(void)
+{
+	_input.get();
+	std::string buf;
+
+	_input.skipUntil(_until_eobracket, &buf);
+	if (_input.eof())
+		throw PegLexerError("Unterminated character class: missing ']'");
+	return (Token){T_CHARRANGE, buf};
+}
+
 PegLexer::Token	PegLexer::lexOp(char c)
 {
 	switch (c)
 	{
-		case '/': ++_input; return (Token){T_SLASH, "/"}; 
+		case '/': ++_input; return (Token){T_SLASH, "/"};
 		case '*': ++_input; return (Token){T_STAR, "*"};
 		case '+': ++_input; return (Token){T_PLUS, "+"};
 		case '?': ++_input; return (Token){T_QMARK, "?"};
@@ -79,6 +95,7 @@ PegLexer::Token	PegLexer::lexOp(char c)
 		case '&': ++_input; return (Token){T_AND, "&"};
 		case '(': ++_input; return (Token){T_LPAREN, "("};
 		case ')': ++_input; return (Token){T_RPAREN, ")"};
+		case '[': ++_input; return lexCharRange();
 		case ':': ++_input; return (Token){T_COLON, ":"};
 		case '<': {
 			if (_input[1] == '-')

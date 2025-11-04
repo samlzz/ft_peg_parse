@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 19:26:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:33:09 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ public:
 	ExprLeaf(enum e_expr_kind kind, const std::string &value)
 		: Expr(kind), _value(value)
 	{}
-
 	virtual ~ExprLeaf() {}
 
 	const std::string&	value() const					{ return _value; }
@@ -49,10 +48,11 @@ public:
 class CharRange: public ExprLeaf {
 
 private:
-	void	expandCharset(void);
+	static std::string	expandCharset(const std::string &raw);
 
 public:
-	CharRange(const std::string &charset): ExprLeaf(K_CHARRANGE, charset)
+	CharRange(const std::string &charset):
+		ExprLeaf(K_CHARRANGE, expandCharset(charset))
 	{}
 
 	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
