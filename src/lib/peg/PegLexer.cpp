@@ -86,10 +86,12 @@ PegLexer::Token	PegLexer::lexOp(char c)
 				++_input; ++_input;
 				return (Token){T_ASSIGN, "<-"};
 			}
+			break;
 		}
 		default:
-			throw PegLexerError(std::string("Unexpected character: ") + c);
+			break;
 	}
+	throw PegLexerError(std::string("Unexpected character: ") + c);
 }
 
 PegLexer::Token	PegLexer::lexOne(void)
@@ -101,7 +103,7 @@ PegLexer::Token	PegLexer::lexOne(void)
 
 	if (c == '"' || c == '\'')
 		return lexLiteral();
-	else if (std::isalpha(static_cast<uint8_t>(c)) || c == '_')
+	else if (c == '@' || c == '_' || std::isalpha(static_cast<uint8_t>(c)))
 		return lexIdentifier();
 	else
 		return lexOp(c);

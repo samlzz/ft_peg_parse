@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 12:46:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 01:51:25 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 12:40:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,11 +162,15 @@ std::string	Input::context(size_t pos, size_t radius) const
 
 void	Input::skipUntil(bool (*until)(char), std::string *skipped)
 {
+	char	c;
+
 	while (!eof())
 	{
-		if (until(peek()))
+		c = peek();
+		if (until(c))
 			break;
 		if (skipped)
-			skipped += get();
+			*skipped += c;
+		get();
 	}
 }
