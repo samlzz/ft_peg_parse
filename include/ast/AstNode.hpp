@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 15:28:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:55:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,7 @@ public:
 	void				setSpan(size_t start, size_t end);
 
 	const std::vector<AstNode *>	&children(void) const	{ return _children; }
+	const std::map<std::string, std::string>	&attrs(void) const { return _attrs; }
 };
 
 

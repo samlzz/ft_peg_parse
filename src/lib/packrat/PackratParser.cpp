@@ -6,13 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 15:35:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 14:31:54 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "packrat/PackratParser.hpp"
 #include "peg/Expr.hpp"
 #include "ast/AstNode.hpp"
+#include "utils/Debug.hpp"
 #include <cstddef>
 
 // ---- parseRule: public entry point
@@ -48,13 +49,19 @@ bool PackratParser::eval(const Expr *expr, AstNode *&out)
 	const size_t pos = _input.pos();
 
 	if (_memo.has(expr, pos))
+	{
+		printCacheHit(expr, pos);
 		return retrieveExpr(expr, pos, out);
+	}
 
+	printEvalTrace(expr, pos, true);
 	AstNode					*tmp = NULL;
 	const bool				ok = expr->parse(*this, tmp);
 	PackratCache::MemoEntry	store(ok, _input.pos(), tmp);
+	printEvalTrace(expr, _input.pos(), false);
 
 	_memo.set(expr, pos, store);
+	printCacheSet(expr, pos, ok, _input.pos());
 
 	if (ok)
 		appendNode(tmp, out);

@@ -23,6 +23,7 @@ FILES =	lib/ast/AstNode.cpp \
 		lib/peg/syntax/ExprLeaf.cpp \
 		lib/peg/syntax/ExprUnary.cpp \
 		lib/peg/syntax/RuleRef.cpp \
+		lib/utils/Debug.cpp \
 		lib/utils/Diag.cpp \
 		lib/utils/Input.cpp \
 		test/helpers.cpp
@@ -42,11 +43,9 @@ CFLAGS    = -Wall -Wextra -Werror
 
 CXX       = c++
 CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
+DEBUG     ?= 0
 
 INCL_DIRS = include
-ifneq (,$(filter test,$(MAKECMDGOALS)))
-	INCL_DIRS += src/test
-endif
 # ? Directories & Libraries to link against
 LIB_DIRS  =
 LIB_FILES =
@@ -108,10 +107,19 @@ endif
 
 OUT := $(if $(BIN_DIR),$(BIN_DIR),./)$(NAME)
 
-export VERBOSE    := false
+export VERBOSE    ?= false
 export P := @
 ifeq ($(VERBOSE),true)
 	P :=
+endif
+
+# ? Tests and Debug adjustement
+ifneq (,$(filter test%,$(MAKECMDGOALS)))
+	INCL_DIRS += src/test
+	ifeq ($(DEBUG),0)
+		DEBUG=1
+	endif
+	CXXFLAGS += -DDEBUG_LEVEL=$(DEBUG)
 endif
 
 # =============================================================================

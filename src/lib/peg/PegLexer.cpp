@@ -1,19 +1,20 @@
 /* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   PegLexer.cpp									   :+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: sliziard <sliziard@student.42.fr>		  +#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2025/11/03 00:45:15 by sliziard		  #+#	#+#			 */
-/*   Updated: 2025/11/03 01:19:07 by sliziard		 ###   ########.fr	   */
-/*																			*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   PegLexer.cpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/04 15:35:07 by sliziard         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include <cctype>
 #include <string>
 
 #include "peg/PegLexer.hpp"
+#include "utils/Debug.hpp"
 #include "utils/Input.hpp"
 
 // ---- Ctor / Dtor ----
@@ -134,6 +135,7 @@ PegLexer::Token	PegLexer::next()
 		return _peeked;
 	}
 	_peeked = lexOne();
+	printToken(_peeked);
 	return _peeked;
 }
 
@@ -142,6 +144,7 @@ PegLexer::Token	PegLexer::peek(void)
 	if (!_hasPeeked)
 	{
 		_peeked = lexOne();
+		printToken(_peeked);
 		_hasPeeked = true;
 	}
 	return _peeked;
