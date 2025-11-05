@@ -6,13 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 14:17:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 14:49:02 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 11:45:48 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef DEBUG_HPP
 #define DEBUG_HPP
 
+#include "ast/AstNode.hpp"
 # ifndef DEBUG_LEVEL
 #  define DEBUG_LEVEL 0
 # endif
@@ -50,7 +51,7 @@ static inline void dbg_print(e_debug_level lvl, const std::string &prefix, const
 
 void printToken(const class PegLexer::Token &tk);
 void printExprTree(const class Expr *e, int depth = 0);
-void printEvalTrace(const class Expr *e, size_t pos, bool entering);
+void printEvalTrace(const Expr* e, const AstNode *parent, size_t pos, bool entering);
 void printCacheHit(const class Expr *e, size_t pos);
 void printCacheSet(const class Expr *e, size_t pos, bool ok, size_t next);
 void printAstTree(const class AstNode *node, int depth = 0);
@@ -61,7 +62,7 @@ void printAstTree(const class AstNode *node, int depth = 0);
 
 inline void printToken(const struct PegLexer::Token &) {}
 inline void printExprTree(const class Expr *, int = 0) {}
-inline void printEvalTrace(const class Expr *, size_t, bool) {}
+inline void printEvalTrace(const class Expr *, const class AstNode *, size_t, bool) {}
 inline void printCacheHit(const class Expr *, size_t) {}
 inline void printCacheSet(const class Expr *, size_t, bool, size_t) {}
 inline void printAstTree(const class AstNode *, int = 0) {}

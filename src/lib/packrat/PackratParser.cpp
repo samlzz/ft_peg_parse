@@ -6,18 +6,19 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 14:31:54 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 14:59:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <cstddef>
 
 #include "packrat/PackratParser.hpp"
 #include "peg/Expr.hpp"
 #include "ast/AstNode.hpp"
 #include "utils/Debug.hpp"
-#include <cstddef>
 
 // ---- parseRule: public entry point
-bool PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
+void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 {
 	out = NULL;
 	const Expr	*start = _grammar.get(rootRuleName);
@@ -27,7 +28,6 @@ bool PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 	const bool	ok = eval(start, out);
 	if (!ok || !_input.eof())
 		throw ParseError(_err.formatError(_input, true));
-	return ok;
 }
 
 // ---- privates helpers
@@ -45,8 +45,7 @@ bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *&out)
 // ----- eval: main of packrat logic (memo + dispatch)
 bool PackratParser::eval(const Expr *expr, AstNode *&out)
 {
-	out = NULL;
-	const size_t pos = _input.pos();
+	const size_t	pos = _input.pos();
 
 	if (_memo.has(expr, pos))
 	{
@@ -54,18 +53,27 @@ bool PackratParser::eval(const Expr *expr, AstNode *&out)
 		return retrieveExpr(expr, pos, out);
 	}
 
-	printEvalTrace(expr, pos, true);
-	AstNode					*tmp = NULL;
-	const bool				ok = expr->parse(*this, tmp);
-	PackratCache::MemoEntry	store(ok, _input.pos(), tmp);
-	printEvalTrace(expr, _input.pos(), false);
+	printEvalTrace(expr, out, pos, true);
 
+	AstNode					*local = out;
+	const bool				ok = expr->parse(*this, local);
+
+	printEvalTrace(expr, out, _input.pos(), false);
+
+	PackratCache::MemoEntry	store(ok, _input.pos(), local);
 	_memo.set(expr, pos, store);
 	printCacheSet(expr, pos, ok, _input.pos());
 
 	if (ok)
-		appendNode(tmp, out);
+	{
+		if (local && local != out)
+			appendNode(local, out);
+	}
 	else
-		delete tmp;
+	{
+		_input.setPos(pos);
+		if (local && local != out)
+			delete local;
+	}
 	return ok;
 }

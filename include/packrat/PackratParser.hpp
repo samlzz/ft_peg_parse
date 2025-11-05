@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 15:29:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 14:59:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ public:
 	{}
 	~PackratParser() {};
 
-	bool		parseRule(const std::string &rootRuleName, AstNode *&out);
+	void		parseRule(const std::string &rootRuleName, AstNode *&out);
 	bool		eval(const Expr *expr, AstNode *&out);
 
 	const Diag	&diag(void) const	{ return _err; }
