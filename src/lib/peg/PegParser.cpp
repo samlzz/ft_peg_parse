@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 14:27:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:05:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,8 @@
 #include "utils/Debug.hpp"
 
 PegParser::PegParser(const std::string &grammar_path):
-	_lex(grammar_path), _tokens(), _rules(), _err()
+	_lex(grammar_path), _rules()
 {}
-PegParser::~PegParser() {}
 
 Expr	*PegParser::parsePrimary(void)
 {
@@ -104,6 +103,7 @@ Expr	*PegParser::parseSequence(void)
 		PegLexer::Token	tk = _lex.peek();
 		if (tk.type == PegLexer::T_RPAREN
 			|| tk.type == PegLexer::T_SLASH
+			|| tk.type == PegLexer::T_EOL
 			|| tk.type == PegLexer::T_END)
 			break;
 		seq.push_back(parsePrefix());
@@ -140,14 +140,17 @@ void	PegParser::parseRule(void)
 	Expr *expr = parseChoice();
 	if (captureRule)
 		expr = new Capture(expr, ruleName);
-	if (_rules.find(ruleName) == _rules.end())
-		_rules[ruleName] = expr;
-	else
+
+	if (_rules.find(ruleName) != _rules.end())
 	{
 		delete expr;
 		throw PegParserError("Duplicate rule for identifier '" + ruleName + "'");
 	}
-	dbg_print(DBG_INFO, "[PEG] Parsed rule: ", id.val);
+	_rules[ruleName] = expr;
+	if (!_lex.match(PegLexer::T_EOL) && !_lex.match(PegLexer::T_END))
+		throw PegParserError("Expected newline or EOF after rule '" + ruleName + "'");
+
+	dbg_print(DBG_INFO, "[PEG] Parsed rule: ", ruleName);
 	printExprTree(expr, 1);
 }
 
@@ -156,7 +159,11 @@ void	PegParser::parseGrammar(Grammar &out)
 	PegLexer::Token	tk;
 
 	while ((tk = _lex.peek()).type != PegLexer::T_END)
+	{
+		if (_lex.match(PegLexer::T_EOL))
+			continue;
 		parseRule();
+	}
 	if (_rules.empty())
 		throw PegParserError("Empty grammar file");
 	Grammar	tmp(_rules);

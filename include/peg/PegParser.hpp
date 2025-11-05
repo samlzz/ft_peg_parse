@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 16:37:19 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:05:56 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 # include "./PegLexer.hpp"
 # include "./Expr.hpp"
 # include "peg/Grammar.hpp"
-# include "utils/Diag.hpp"
 
 # define PRINT_CALLER
 
@@ -26,9 +25,7 @@ class PegParser {
 
 private:
 	PegLexer						_lex;
-	std::vector<PegLexer::Token>	_tokens;
 	t_ExprDict						_rules;
-	Diag							_err;
 
 	PegParser(const PegParser& other);
 	PegParser& operator=(const PegParser& other);
@@ -49,7 +46,7 @@ public:
 	};
 
 	PegParser(const std::string &grammar_path);
-	~PegParser();
+	~PegParser() { deleteVals(_rules); }
 
 	void	parseGrammar(Grammar &out);
 };

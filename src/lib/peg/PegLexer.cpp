@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 15:35:07 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:29:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,6 @@ PegLexer::PegLexer(const std::string &grammar_path):
 	_hasPeeked(false)
 {}
 
-PegLexer::~PegLexer() {}
-
 static bool	_until_ln(char c)			{ return c == '\n'; }
 static bool	_until_eobracket(char c)	{ return c == ']'; }
 static bool	_until_eoid(char c)
@@ -40,14 +38,10 @@ void	PegLexer::skipWhitespaces(void)
 	while (!_input.eof())
 	{
 		c = _input.peek();
-		if (std::isspace(c))
+		if (std::isspace(c) && c != '\n')
 			++_input;
 		else if (c == '#')
-		{
 			_input.skipUntil(_until_ln);
-			if (_input.peek() == '\n')
-				++_input;
-		}
 		else
 			break;
 	}
@@ -59,7 +53,11 @@ PegLexer::Token	PegLexer::lexLiteral(void)
 	std::string	val;
 
 	while (!_input.eof() && _input.peek() != quote)
+	{
+		if (_input.peek() == '\n')
+			throw PegLexerError("Unexpected newline in string literal");
 		val += _input.get();
+	}
 	if (_input.eof())
 		throw PegLexerError("Unterminated string literal");
 	_input.get();
@@ -68,18 +66,18 @@ PegLexer::Token	PegLexer::lexLiteral(void)
 
 PegLexer::Token	PegLexer::lexIdentifier(void)
 {
-	std::string	val;
+	std::string	val(1, _input.get());
+
 	_input.skipUntil(_until_eoid, &val);
 	return (Token){T_ID, val};
 }
 
 PegLexer::Token	PegLexer::lexCharRange(void)
 {
-	_input.get();
 	std::string buf;
 
 	_input.skipUntil(_until_eobracket, &buf);
-	if (_input.eof())
+	if (!_input.match("]"))
 		throw PegLexerError("Unterminated character class: missing ']'");
 	return (Token){T_CHARRANGE, buf};
 }
@@ -117,6 +115,8 @@ PegLexer::Token	PegLexer::lexOne(void)
 	skipWhitespaces();
 	if (_input.eof())
 		return (Token){T_END, ""};
+	if (_input.match("\n"))
+		return (Token){T_EOL, "\n"};
 	char	c = _input.peek();
 
 	if (c == '"' || c == '\'')

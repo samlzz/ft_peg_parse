@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 12:53:46 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 16:12:54 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ public:
 		T_LPAREN, T_RPAREN,
 		T_CHARRANGE,
 		T_COLON, T_ASSIGN,
-		T_END
+		T_EOL, T_END
 	};
 
 	struct Token {
@@ -46,7 +46,7 @@ public:
 	};
 
 	PegLexer(const std::string &grammar_path);
-	~PegLexer();
+	~PegLexer() {}
 
 	Token	peek(void);
 	Token	next(void);
