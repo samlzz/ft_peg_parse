@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:33:15 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/04 18:04:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,9 @@ std::string	Diag::formatError(const Input &in, bool with_ctx) const
 	Input				tmp(in);
 
 	tmp.setPos(_farthest);
-	oss << "Parse error at line " << tmp.line() << ", column " << tmp.column();
+	oss << "error at line " << tmp.line() << ", column " << tmp.column();
 	if (!_expected.empty())
-		oss << ": expected " << _expected;
+		oss << " " << _expected;
 
 	if (with_ctx)
 	{
