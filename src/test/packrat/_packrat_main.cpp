@@ -3,6 +3,7 @@
 #include "packrat/PackratParser.hpp"
 #include "peg/Grammar.hpp"
 #include "ast/AstNode.hpp"
+#include "utils/Debug.hpp"
 #include "utils/Input.hpp"
 #include "helper_TmpFile.hpp"
 #include "test.h"
@@ -19,7 +20,7 @@ int main() {
 	PegParser parser(file.path());
 	parser.parseGrammar(grammar);
 
-	Input input = Input::fromText("hello world");
+	Input input = Input::fromText("helloworld");
 	PackratParser exec(input, grammar);
 	AstNode *ast = NULL;
 
@@ -34,6 +35,7 @@ int main() {
 		return 1;
 	}
 	std::cout << "✅ Packrat full test done\n";
+	printAstTree(ast);
 	return 0;
 }
 

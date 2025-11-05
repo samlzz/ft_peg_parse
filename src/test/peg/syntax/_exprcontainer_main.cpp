@@ -17,9 +17,9 @@ int main() {
 	Expr *a = new Literal("a");
 	Expr *b = new Literal("b");
 
-	ZeroOrMore repA(a);
+	ZeroOrMore* repA = new ZeroOrMore(a);
 	Sequence seq;
-	seq.add(&repA);
+	seq.add(repA);
 	seq.add(b);
 
 	check(seq.parse(parser, node), "Sequence + ZeroOrMore parses 'aaab'");
