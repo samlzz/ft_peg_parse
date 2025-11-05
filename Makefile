@@ -122,6 +122,10 @@ ifneq (,$(filter test%,$(MAKECMDGOALS)))
 	CXXFLAGS += -DDEBUG_LEVEL=$(DEBUG)
 endif
 
+ifneq (DEBUG,0)
+	CXXFLAGS += -DDEBUG_LEVEL=$(DEBUG)
+endif
+
 # =============================================================================
 # >> RULES
 # =============================================================================
