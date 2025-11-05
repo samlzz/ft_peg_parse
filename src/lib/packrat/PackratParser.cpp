@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 14:59:04 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 17:29:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,10 @@ bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *&out)
 
 	_input.setPos(m.nextPos());
 	if (m.node())
-		appendNode(new AstNode(*m.node()), out);
+	{
+		AstNode	*clone = new AstNode(*m.node());
+		appendNode(clone, out);
+	}
 	return m.ok();
 }
 
@@ -55,25 +58,24 @@ bool PackratParser::eval(const Expr *expr, AstNode *&out)
 
 	printEvalTrace(expr, out, pos, true);
 
-	AstNode					*local = out;
-	const bool				ok = expr->parse(*this, local);
+	AstNode		*produced = NULL;
+	const bool	ok = expr->parse(*this, produced);
 
-	printEvalTrace(expr, out, _input.pos(), false);
-
-	PackratCache::MemoEntry	store(ok, _input.pos(), local);
+	PackratCache::MemoEntry	store(ok, _input.pos(), produced);
 	_memo.set(expr, pos, store);
 	printCacheSet(expr, pos, ok, _input.pos());
 
+	printEvalTrace(expr, out, _input.pos(), false);
+
 	if (ok)
 	{
-		if (local && local != out)
-			appendNode(local, out);
+		if (produced)
+			appendNode(produced, out);
 	}
 	else
 	{
 		_input.setPos(pos);
-		if (local && local != out)
-			delete local;
+		delete produced;
 	}
 	return ok;
 }
