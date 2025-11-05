@@ -99,40 +99,41 @@ bool Predicate::parse(PackratParser &parser, AstNode *&out) const
 	return _isAnd ? ok : !ok;
 }
 
-bool Capture::parse(PackratParser &parser, AstNode *&out) const
+bool	Capture::parseProperty(PackratParser &parser, AstNode *parent) const
 {
+	if (!parent)
+		throw PackratParser::ParseError("Proprety outside of a node context");
 	Input	&in = parser.input();
 	size_t	start = in.pos();
-	AstNode	*innerNode = NULL;
-	AstNode	*me = NULL;
+	AstNode	*dummy = NULL;
 
-	if (!parser.eval(_inner, innerNode))
+	if (!parser.eval(_inner, dummy))
 		return false;
-
-	if (_isProp)
-	{
-		if (!out)
-			throw PackratParser::ParseError("Propretie outside of a node context");
-		bool	hasChilds = (innerNode && !innerNode->children().empty());
-		delete innerNode;
+	bool	hasChilds = (dummy && (!dummy->children().empty() || !dummy->type().empty()));
+	delete dummy;
 		if (hasChilds)
 			throw PackratParser::ParseError("A property cannot have subnodes");
-		out->setAttr(_tag, in.substr(start, in.pos()));
+
+	parent->setAttr(_tag, in.substr(start, in.pos()));
 		return (true);
 	}
-	me = new AstNode(_tag);
-	if (innerNode)
-	{
-		if (innerNode->type().empty())
+
+bool Capture::parse(PackratParser &parser, AstNode *&out) const
+{
+	if (_isProp)
+		return parseProperty(parser, out);
+
+	Input	&in = parser.input();
+	size_t	start = in.pos();
+	AstNode	*me = new AstNode(_tag);
+
+	if (!parser.eval(_inner, me))
 		{
-			me->stealChildren(*innerNode);
-			delete innerNode;
-		}
-		else
-			me->addChild(innerNode);
+		in.setPos(start);
+		delete me;
+		return false;
 	}
 	me->setSpan(start, in.pos());
 	appendNode(me, out);
-	out = me;
 	return true;
 }
