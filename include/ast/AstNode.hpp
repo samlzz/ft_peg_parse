@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 14:55:04 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 15:10:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ public:
 	// --- Construction / Destruction ---
 	AstNode() {}
 	AstNode(const std::string &type): _type(type) {}
-	AstNode(std::vector<AstNode *> &childrens);
 	AstNode(const AstNode& other);
 	~AstNode() { deleteAll(_children); }
 

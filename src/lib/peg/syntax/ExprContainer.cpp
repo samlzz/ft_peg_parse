@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/03 15:36:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 12:37:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,11 @@
 
 bool Sequence::parse(PackratParser &parser, AstNode *&out) const
 {
-	AstNode *child = NULL;
-	std::vector<AstNode*> childrens;
-
 	for (size_t i = 0; i < _elems.size(); ++i)
 	{
-		if (!parser.eval(_elems[i], child))
-		{
-			deleteAll(childrens);
+		if (!parser.eval(_elems[i], out))
 			return false;
-		}
-		if (child)
-			childrens.push_back(child);
-		child = NULL;
 	}
-	if (childrens.empty())
-		return true;
-
-	appendNode(new AstNode(childrens), out);
 	return true;
 }
 
@@ -41,17 +28,12 @@ bool Choice::parse(PackratParser &parser, AstNode *&out) const
 {
 	Input	&in = parser.input();
 	size_t	start = in.pos();
-	AstNode	*child;
 
 	for (size_t i = 0; i < _elems.size(); ++i)
 	{
 		in.setPos(start);
-		child = NULL;
-		if (parser.eval(_elems[i], child))
-		{
-			appendNode(child, out);
+		if (parser.eval(_elems[i], out))
 			return true;
-		}
 	}
 	parser.diag().update(start, "expected at least one valid choice");
 	return false;

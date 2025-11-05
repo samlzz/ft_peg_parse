@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 13:32:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 10:57:38 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ bool Literal::parse(PackratParser &parser, AstNode *&out) const
 	return true;
 }
 
-static inline void	appendRange(std::string &dst, char beg, char end)
+static inline void	_appendRange(std::string &dst, char beg, char end)
 {
 	if (static_cast<uint8_t>(beg) <= static_cast<uint8_t>(end))
 	{
@@ -57,7 +57,7 @@ std::string CharRange::expandCharset(const std::string &raw)
 		c = raw[i];
 		if (i + 2 < raw.size() && raw[i + 1] == '-')
 		{
-			appendRange(resp, c, raw[i + 2]);
+			_appendRange(resp, c, raw[i + 2]);
 			i += 2;
 		}
 		else
