@@ -1,0 +1,13 @@
+@config <- @server_block+
+
+@server_block <- "server" "{" @directive* "}"
+@directive <- @listen / @root / @index
+
+@listen <- "listen" @port ";"
+@root <- "root" @path ";"
+@index <- "index" @file ";"
+
+@port <- [0-9]+
+@path <- [a-zA-Z0-9_/.-]+
+@file <- [a-zA-Z0-9_.-]+
+
