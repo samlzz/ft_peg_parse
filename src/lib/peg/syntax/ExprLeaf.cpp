@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 10:57:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/05 15:43:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,11 +36,30 @@ bool Literal::parse(PackratParser &parser, AstNode *&out) const
 	return true;
 }
 
+inline char unescapeChar(const std::string &s, size_t &i)
+{
+	if (s[i] != '\\' || i + 1 >= s.size())
+		return s[i];
+
+	char c = s[++i];
+	switch (c)
+	{
+		case 'n': return '\n';
+		case 't': return '\t';
+		case 'r': return '\r';
+		case '\\': return '\\';
+		case '\'': return '\'';
+		case '"': return '"';
+		case '0': return '\0';
+		default:  return c; // Si non reconnu, on retourne le caractère tel quel
+	}
+}
+
 static inline void	_appendRange(std::string &dst, char beg, char end)
 {
 	if (static_cast<uint8_t>(beg) <= static_cast<uint8_t>(end))
 	{
-		for (char ch = beg; ch <= end; ++ch)
+		for (uint8_t ch = beg; ch <= end; ++ch)
 			dst += ch;
 	}
 	else
@@ -54,11 +73,12 @@ std::string CharRange::expandCharset(const std::string &raw)
 
 	for (size_t i = 0; i < raw.size(); ++i)
 	{
-		c = raw[i];
-		if (i + 2 < raw.size() && raw[i + 1] == '-')
+		c = unescapeChar(raw, i);
+		if (i + 2 < raw.size()
+			&& raw[i + 1] == '-' && (!i || raw[i - 1] != '\\'))
 		{
-			_appendRange(resp, c, raw[i + 2]);
 			i += 2;
+			_appendRange(resp, c, unescapeChar(raw, i));
 		}
 		else
 			resp += c;

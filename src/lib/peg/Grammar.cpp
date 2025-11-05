@@ -83,9 +83,12 @@ static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 		RuleRef *r = static_cast<RuleRef *>(expr);
 		if (r->resolved())
 			break;
-		t_ExprDict::const_iterator it = rules.find(r->name());
+		std::string	ruleName = r->name();
+		if (ruleName[0] == '@')
+			ruleName = ruleName.substr(1);
+		t_ExprDict::const_iterator it = rules.find(ruleName);
 		if (it == rules.end())
-			throw Grammar::GrammarResolutionError(r->name());
+			throw Grammar::GrammarResolutionError(ruleName);
 		r->resolve(it->second);
 		break;
 	}
