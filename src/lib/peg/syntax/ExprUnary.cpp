@@ -6,11 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 16:33:22 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:48:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstddef>
+#include <string>
 
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
@@ -26,12 +27,12 @@ void	ExprUnary::setInner(Expr *e)
 	}
 }
 
-bool ZeroOrMore::parse(PackratParser &parser, AstNode *&out) const
+bool ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
 	size_t	last = in.pos();
 
-	while (parser.eval(_inner, out))
+	while (parser.eval(_inner, parent))
 	{
 		if (in.pos() == last)
 			break;
@@ -40,13 +41,13 @@ bool ZeroOrMore::parse(PackratParser &parser, AstNode *&out) const
 	return true;
 }
 
-bool OneOrMore::parse(PackratParser &parser, AstNode *&out) const
+bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
 	size_t	last = in.pos();
 	size_t	occ = 0;
 
-	while (parser.eval(_inner, out))
+	while (parser.eval(_inner, parent))
 	{
 		occ++;
 		if (in.pos() == last)
@@ -61,18 +62,18 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *&out) const
 	return true;
 }
 
-bool Optional::parse(PackratParser &parser, AstNode *&out) const
+bool Optional::parse(PackratParser &parser, AstNode *parent) const
 {
-	parser.eval(_inner, out);
+	parser.eval(_inner, parent);
 	return true;
 }
 
-bool Predicate::parse(PackratParser &parser, AstNode *&out) const
+bool Predicate::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
 	size_t	start = in.pos();
 
-	const bool	ok = parser.eval(_inner, out);
+	const bool	ok = parser.eval(_inner, parent);
 	in.setPos(start);
 	return _isAnd ? ok : !ok;
 }
@@ -80,39 +81,36 @@ bool Predicate::parse(PackratParser &parser, AstNode *&out) const
 bool	Capture::parseProperty(PackratParser &parser, AstNode *parent) const
 {
 	if (!parent)
-		throw PackratParser::ParseError("Proprety outside of a node context");
+		throw PackratParser::ParseError("Proprety parentside of a node context");
 	Input	&in = parser.input();
 	size_t	start = in.pos();
-	AstNode	*dummy = NULL;
-
-	if (!parser.eval(_inner, dummy))
-		return false;
-	bool	hasChilds = (dummy && (!dummy->children().empty() || !dummy->type().empty()));
-	delete dummy;
-	if (hasChilds)
-		throw PackratParser::ParseError("A property cannot have subnodes");
-
+	
+	{
+		AstNode	tmp;
+		if (!parser.eval(_inner, &tmp))
+			return false;
+		parent->stealChildren(tmp);
+	}
 	parent->setAttr(_tag, in.substr(start, in.pos()));
 	return (true);
 }
 
-bool Capture::parse(PackratParser &parser, AstNode *&out) const
+bool Capture::parse(PackratParser &parser, AstNode *parent) const
 {
 	if (_isProp)
-		return parseProperty(parser, out);
+		return parseProperty(parser, parent);
 
 	Input	&in = parser.input();
 	size_t	start = in.pos();
 	AstNode	*me = new AstNode(_tag);
-	AstNode	*childCtx = me;
 
-	if (!parser.eval(_inner, childCtx))
+	if (!parser.eval(_inner, me))
 	{
 		in.setPos(start);
 		delete me;
 		return false;
 	}
 	me->setSpan(start, in.pos());
-	out = me;
+	parent->addChild(me);
 	return true;
 }

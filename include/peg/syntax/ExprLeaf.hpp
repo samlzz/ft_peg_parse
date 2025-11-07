@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 13:33:09 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:32:26 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ public:
 	Literal(const std::string &val): ExprLeaf(K_LITERAL, val)
 	{}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 class CharRange: public ExprLeaf {
@@ -55,7 +55,7 @@ public:
 		ExprLeaf(K_CHARRANGE, expandCharset(charset))
 	{}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 20:57:42 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:32:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ public:
 	virtual ~Expr() {}
 
 	enum e_expr_kind	kind(void) const	{ return _kind; }
-	virtual bool		parse(PackratParser &parser, AstNode *&out) const = 0;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const = 0;
 
 protected:
 	const enum e_expr_kind	_kind;

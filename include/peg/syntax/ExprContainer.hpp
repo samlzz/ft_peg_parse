@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:21:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:32:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ public:
 	{}
 	virtual ~Sequence() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 class Choice: public ExprContainer {
@@ -69,7 +69,7 @@ public:
 	{}
 	virtual ~Choice() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 #endif

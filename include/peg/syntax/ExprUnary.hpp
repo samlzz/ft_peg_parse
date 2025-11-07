@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 15:05:37 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:32:33 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ public:
 	{}
 	virtual ~ZeroOrMore() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 class OneOrMore: public ExprUnary {
@@ -52,7 +52,7 @@ public:
 	{}
 	virtual ~OneOrMore() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 class Optional: public ExprUnary {
@@ -62,7 +62,7 @@ public:
 	{}
 	virtual ~Optional() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 class Predicate: public ExprUnary {
@@ -78,7 +78,7 @@ public:
 
 	bool	isAnd(void) const { return _isAnd; }
 
-	virtual bool	parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
 class Capture: public ExprUnary {
@@ -98,7 +98,7 @@ public:
 	const std::string	&tag(void) const		{ return _tag; }
 	bool				isProperty(void) const	{ return _isProp; }
 
-	virtual bool		parse(PackratParser &parser, AstNode *&out) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 };
 
 

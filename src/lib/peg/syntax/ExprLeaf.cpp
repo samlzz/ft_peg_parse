@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 15:43:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:35:03 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,12 @@
 #include "packrat/PackratParser.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
 
-bool Literal::parse(PackratParser &parser, AstNode *&out) const
+bool Literal::parse(PackratParser &parser, AstNode *parent) const
 {
 	if (_value.empty())
 		throw PackratParser::ParseError("Empty literal not allowed");
 	Input &in = parser.input();
-	(void)out;
+	(void)parent;
 
 	if (in.eof())
 	{
@@ -86,10 +86,10 @@ std::string CharRange::expandCharset(const std::string &raw)
 	return resp;
 }
 
-bool CharRange::parse(PackratParser &parser, AstNode *&out) const
+bool CharRange::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input &in = parser.input();
-	(void)out;
+	(void)parent;
 
 	if (in.eof())
 	{
