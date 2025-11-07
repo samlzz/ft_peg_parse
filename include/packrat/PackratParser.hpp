@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 14:59:12 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:32:05 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ private:
 	PackratParser(const PackratParser& other);
 	PackratParser& operator=(const PackratParser& other);
 
-	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *&out);
+	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *parent);
 
 public:
 	class ParseError : public PegException {
@@ -51,7 +51,7 @@ public:
 	~PackratParser() {};
 
 	void		parseRule(const std::string &rootRuleName, AstNode *&out);
-	bool		eval(const Expr *expr, AstNode *&out);
+	bool		eval(const Expr *expr, AstNode *parent);
 
 	const Diag	&diag(void) const	{ return _err; }
 	Diag		&diag(void)			{ return _err; }

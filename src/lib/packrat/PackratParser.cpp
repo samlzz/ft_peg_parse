@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 17:29:12 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:03:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,26 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 	if (!start)
 		throw ParseError("at rule '" + rootRuleName + "': " + _err.formatError(_input, true));
 
-	const bool	ok = eval(start, out);
+	AstNode	*root = new AstNode(rootRuleName);
+	const bool	ok = eval(start, root);
 	if (!ok || !_input.eof())
+	{
+		delete root;
 		throw ParseError(_err.formatError(_input, true));
+	}
+	if (root->children().size() < 2)
+	{
+		if (root->children().size() == 1)
+			out = root->popChild();
+		delete root;
+	}
+	else
+		out = root;
 }
 
 // ---- privates helpers
 
-bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *&out)
+bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *parent)
 {
 	PackratCache::MemoEntry m = _memo.get(e, pos);
 
@@ -40,42 +52,25 @@ bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *&out)
 	if (m.node())
 	{
 		AstNode	*clone = new AstNode(*m.node());
-		appendNode(clone, out);
+		parent->addChild(clone);
 	}
 	return m.ok();
 }
 
 // ----- eval: main of packrat logic (memo + dispatch)
-bool PackratParser::eval(const Expr *expr, AstNode *&out)
+bool PackratParser::eval(const Expr *expr, AstNode *parent)
 {
 	const size_t	pos = _input.pos();
 
-	if (_memo.has(expr, pos))
-	{
-		printCacheHit(expr, pos);
-		return retrieveExpr(expr, pos, out);
-	}
+	// TODO: retrive from cache
+	printEvalTrace(expr, parent, pos, true);
 
-	printEvalTrace(expr, out, pos, true);
+	const bool	ok = expr->parse(*this, parent);
 
-	AstNode		*produced = NULL;
-	const bool	ok = expr->parse(*this, produced);
+	// TODO: append to cache
+	printEvalTrace(expr, parent, _input.pos(), false);
 
-	PackratCache::MemoEntry	store(ok, _input.pos(), produced);
-	_memo.set(expr, pos, store);
-	printCacheSet(expr, pos, ok, _input.pos());
-
-	printEvalTrace(expr, out, _input.pos(), false);
-
-	if (ok)
-	{
-		if (produced)
-			appendNode(produced, out);
-	}
-	else
-	{
+	if (!ok)
 		_input.setPos(pos);
-		delete produced;
-	}
 	return ok;
 }
