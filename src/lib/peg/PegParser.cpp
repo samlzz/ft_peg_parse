@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 18:05:42 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:44:01 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,11 @@ Expr	*PegParser::parsePrimary(void)
 		return new CharRange(tk.val);
 	case PegLexer::T_ID: {
 		if (_lex.match(PegLexer::T_COLON))
-			return new Capture(parseChoice(), tk.val, true);
+		{
+			if (_lex.peek().type != PegLexer::T_ID)
+				throw PegParserError("Malformed property capture, expected an Identifier");
+			return new Capture(new RuleRef(_lex.next().val), tk.val, true);
+		}
 		return new RuleRef(tk.val);
 	}
 	case PegLexer::T_LPAREN: {
