@@ -3,8 +3,8 @@ _ <- [ \n\t\r]*
 @config <- @server+
 
 @server <- _ "server" _ "{" _ @directive+ _ "}" _
-@directive <- @name ":" _ @value _ ";"
+@directive <- _ name:name _ ":" _ value:value _ ";"
 
-@name <- _ [a-zA-Z_]+ _
-@value <- [a-zA-Z0-9_./]+
+name <- [a-zA-Z_]+
+value <- [a-zA-Z0-9_./]+
 

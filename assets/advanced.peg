@@ -1,13 +1,16 @@
+_ <- [ \n\t\r]*
+
 @config <- @server_block+
 
-@server_block <- "server" "{" @directive* "}"
-@directive <- @listen / @root / @index
+@server_block <- "server" _ "{" _ directive_list _ "}" _
+directive_list <- directive+
+directive <- _ (listen / root / index) _
 
-@listen <- "listen" @port ";"
-@root <- "root" @path ";"
-@index <- "index" @file ";"
+listen <- "listen" _ listen:port ";"
+root <- "root" _ root:path ";"
+index <- "index" _ index:file ";"
 
-@port <- [0-9]+
-@path <- [a-zA-Z0-9_/.-]+
-@file <- [a-zA-Z0-9_.-]+
+port <- [0-9]+
+path <- [a-zA-Z0-9_/.-]+
+file <- [a-zA-Z0-9_.-]+
 

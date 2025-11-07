@@ -1,9 +1,11 @@
-@config <- @entry+
+_ <- [ \n\t\r]*
 
-@entry <- @pair / @flag
-@pair <- @key "=" @value ";"
-@flag <- @key ";"
+config <- entry+
 
-@key <- [a-zA-Z_]+
-@value <- [a-zA-Z0-9_./]+
+@entry <- pair / flag
+pair <- _ id:key _ "=" _ val:value _ ";" _
+flag <- _ flag:key _ ";" _
+
+key <- [a-zA-Z_]+
+value <- [a-zA-Z0-9_./]+
 
