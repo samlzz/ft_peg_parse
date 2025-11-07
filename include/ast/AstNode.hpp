@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 15:10:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/06 17:55:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ public:
 
 	// --- Tree Management ---
 	void	addChild(AstNode *child);
+	AstNode	*popChild(void);
 	void	stealChildren(AstNode &stolen);
 
 	// --- Attribute Management ---
@@ -100,7 +101,5 @@ public:
 	const std::map<std::string, std::string>	&attrs(void) const { return _attrs; }
 };
 
-
-void	appendNode(AstNode *node, AstNode *&out);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 15:09:49 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 19:39:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,20 @@ void	AstNode::addChild(AstNode *child)
 		_children.push_back(child);
 }
 
+AstNode	*AstNode::popChild()
+{
+	AstNode *resp = _children[0];
+
+	_children.erase(_children.begin());
+	return resp;
+}
+
 void	AstNode::stealChildren(AstNode &stolen)
 {
+	_attrs.insert(stolen._attrs.begin(), stolen._attrs.end());
+	stolen._attrs.clear();
+	if (!stolen._children.size())
+		return;
 	_children.insert(_children.end(),
 				stolen._children.begin(), stolen._children.end());
 	stolen._children.clear();
@@ -95,14 +107,4 @@ void	AstNode::setSpan(size_t start, size_t end)
 {
 	_span.start = start;
 	_span.end = end;
-}
-
-void	appendNode(AstNode *node, AstNode *&out)
-{
-	if (!node)
-		return ;
-	if (out)
-		out->addChild(node);
-	else
-		out = node;
 }
