@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:32:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:24:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ public:
 	enum e_expr_kind {
 		K_LITERAL,
 		K_CHARRANGE,
+		K_ANY,
 		K_SEQUENCE,
 		K_CHOICE,
 		K_ZERO_OR_MORE,

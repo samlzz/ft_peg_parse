@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 16:12:54 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:27:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ public:
 		T_SLASH, T_STAR, T_PLUS, T_QMARK,
 		T_AND, T_NOT,
 		T_LPAREN, T_RPAREN,
-		T_CHARRANGE,
+		T_CHARRANGE, T_DOT,
 		T_COLON, T_ASSIGN,
 		T_EOL, T_END
 	};

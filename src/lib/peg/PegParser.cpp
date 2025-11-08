@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:44:01 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:29:09 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ Expr	*PegParser::parsePrimary(void)
 		return new Literal(tk.val);
 	case PegLexer::T_CHARRANGE:
 		return new CharRange(tk.val);
+	case PegLexer::T_DOT:
+		return new Any();
 	case PegLexer::T_ID: {
 		if (_lex.match(PegLexer::T_COLON))
 		{

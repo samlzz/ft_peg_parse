@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 16:29:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:28:26 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@ PegLexer::Token	PegLexer::lexOp(char c)
 		case '(': ++_input; return (Token){T_LPAREN, "("};
 		case ')': ++_input; return (Token){T_RPAREN, ")"};
 		case '[': ++_input; return lexCharRange();
+		case '.': ++_input; return (Token){T_DOT, "."};
 		case ':': ++_input; return (Token){T_COLON, ":"};
 		case '<': {
 			if (_input[1] == '-')

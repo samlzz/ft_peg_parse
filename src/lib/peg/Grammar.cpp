@@ -62,6 +62,7 @@ static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 	{
 	case Expr::K_LITERAL:
 	case Expr::K_CHARRANGE:
+	case Expr::K_ANY:
 		return;
 	case Expr::K_SEQUENCE:
 	case Expr::K_CHOICE: {

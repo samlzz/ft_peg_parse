@@ -111,3 +111,21 @@ bool CharRange::parse(PackratParser &parser, AstNode *parent) const
 	in.get();
 	return true;
 }
+
+bool Any::parse(PackratParser &parser, AstNode *parent) const
+{
+	Input &in = parser.input();
+	(void)parent;
+
+	if (in.eof())
+	{
+		parser.diag().update(
+			in.pos(),
+			"unexpected EOF (expected any character)"
+		);
+		return false;
+	}
+
+	in.get();
+	return true;
+}

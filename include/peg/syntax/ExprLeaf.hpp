@@ -58,5 +58,13 @@ public:
 	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
 };
 
+class Any: public Expr {
+
+public:
+	Any(): Expr(K_ANY) {}
+
+	virtual bool parse(PackratParser &parser, AstNode *parent) const;
+};
+
 #endif
 

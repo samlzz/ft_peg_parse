@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:39:45 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/05 11:46:58 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/07 20:38:31 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ const char* tokenName(PegLexer::e_tk_type type)
 		case PegLexer::T_LPAREN: return "LPAREN";
 		case PegLexer::T_RPAREN: return "RPAREN";
 		case PegLexer::T_CHARRANGE: return "CHARRANGE";
+		case PegLexer::T_DOT: return "DOT";
 		case PegLexer::T_COLON: return "COLON";
 		case PegLexer::T_ASSIGN: return "ASSIGN";
 		case PegLexer::T_EOL: return "EOL";
@@ -67,6 +68,7 @@ const char* exprKindName(Expr::e_expr_kind k)
 	{
 		case Expr::K_LITERAL: return "Literal";
 		case Expr::K_CHARRANGE: return "CharRange";
+		case Expr::K_ANY: return "Any";
 		case Expr::K_SEQUENCE: return "Sequence";
 		case Expr::K_CHOICE: return "Choice";
 		case Expr::K_ZERO_OR_MORE: return "ZeroOrMore";
@@ -88,6 +90,8 @@ const std::string exprValue(const Expr *e)
 		case Expr::K_LITERAL:
 		case Expr::K_CHARRANGE:
 			return static_cast<const ExprLeaf *>(e)->value();
+		case Expr::K_ANY:
+			return ".";
 		case Expr::K_SEQUENCE:
 		case Expr::K_CHOICE:
 		{
@@ -122,25 +126,48 @@ void printExprTree(const Expr* e, int depth = 0)
 	if (!e) return;
 	std::string indent(depth * 2, ' ');
 	std::cerr << indent << "- " << exprKindName(e->kind());
-	if (e->kind() == Expr::K_LITERAL || e->kind() == Expr::K_CHARRANGE)
-		std::cerr << " \"" << static_cast<const Literal*>(e)->value() << "\"";
-	else if (e->kind() == Expr::K_RULEREF)
-		std::cerr << " -> " << static_cast<const RuleRef*>(e)->name();
-	else if (e->kind() == Expr::K_CAPTURE)
-		std::cerr << " (" << static_cast<const Capture *>(e)->tag() << ")";
-	std::cerr << std::endl;
-
-	if (e->kind() == Expr::K_SEQUENCE || e->kind() == Expr::K_CHOICE)
+	switch (e->kind())
 	{
-		const ExprContainer* c = static_cast<const ExprContainer*>(e);
-		for (size_t i = 0; i < c->size(); ++i)
-			printExprTree((*c)[i], depth + 1);
-	}
-	else if (e->kind() == Expr::K_ZERO_OR_MORE || e->kind() == Expr::K_ONE_OR_MORE ||
-			e->kind() == Expr::K_OPTIONAL || e->kind() == Expr::K_PREDICATE || e->kind() == Expr::K_CAPTURE)
-	{
-		const ExprUnary* u = static_cast<const ExprUnary*>(e);
-		printExprTree(u->inner(), depth + 1);
+		case Expr::K_LITERAL:
+		case Expr::K_CHARRANGE:
+		{
+			std::cerr << " \"" << static_cast<const Literal*>(e)->value() << "\"" << std::endl;
+			break;
+		}
+		case Expr::K_ANY:
+		{
+			std::cerr << " (any char)" << std::endl;
+			break;
+		}
+		case Expr::K_RULEREF:
+		{
+			std::cerr << " -> " << static_cast<const RuleRef*>(e)->name() << std::endl;
+			break;
+		}
+		case Expr::K_CAPTURE:
+		{
+			const Capture *c = static_cast<const Capture *>(e);
+			std::cerr << " (" << c->tag() << ")" << std::endl;
+			printExprTree(c->inner(), depth + 1);
+			break;
+		}
+		case Expr::K_SEQUENCE:
+		case Expr::K_CHOICE:
+		{
+			const ExprContainer* c = static_cast<const ExprContainer*>(e);
+			for (size_t i = 0; i < c->size(); ++i)
+				printExprTree((*c)[i], depth + 1);
+			break;
+		}
+		case Expr::K_ZERO_OR_MORE:
+		case Expr::K_ONE_OR_MORE:
+		case Expr::K_OPTIONAL:
+		case Expr::K_PREDICATE:
+		{
+			const ExprUnary* u = static_cast<const ExprUnary*>(e);
+			printExprTree(u->inner(), depth + 1);
+			break;
+		}
 	}
 }
 
