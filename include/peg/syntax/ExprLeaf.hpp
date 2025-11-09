@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:32:26 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 11:25:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include <string>
 
 # include "peg/Expr.hpp"
+#include "utils/StringUtils.hpp"
 
 class ExprLeaf : public Expr {
 private:
@@ -39,7 +40,8 @@ public:
 class Literal: public ExprLeaf {
 
 public:
-	Literal(const std::string &val): ExprLeaf(K_LITERAL, val)
+	Literal(const std::string &escaped):
+		ExprLeaf(K_LITERAL, unescapeString(escaped))
 	{}
 
 	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
@@ -47,12 +49,9 @@ public:
 
 class CharRange: public ExprLeaf {
 
-private:
-	static std::string	expandCharset(const std::string &raw);
-
 public:
 	CharRange(const std::string &charset):
-		ExprLeaf(K_CHARRANGE, expandCharset(charset))
+		ExprLeaf(K_CHARRANGE, expandCharSet(charset))
 	{}
 
 	virtual bool	parse(PackratParser &parser, AstNode *parent) const;

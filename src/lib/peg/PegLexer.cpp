@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 20:28:26 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 11:17:46 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,17 @@ void	PegLexer::skipWhitespaces(void)
 PegLexer::Token	PegLexer::lexLiteral(void)
 {
 	char		quote = _input.get();
+	char		c;
 	std::string	val;
 
 	while (!_input.eof() && _input.peek() != quote)
 	{
 		if (_input.peek() == '\n')
 			throw PegLexerError("Unexpected newline in string literal");
-		val += _input.get();
+		c = _input.get();
+		val += c;
+		if (c == '\\' && !_input.eof())
+			val += _input.get();
 	}
 	if (_input.eof())
 		throw PegLexerError("Unterminated string literal");
