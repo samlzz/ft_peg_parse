@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/09 11:17:46 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 11:58:44 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,15 @@
 #include "utils/Debug.hpp"
 #include "utils/Input.hpp"
 
-// ---- Ctor / Dtor ----
+// ---- Ctors ----
 
 PegLexer::PegLexer(const std::string &grammar_path):
 	_input(Input::fromFile(grammar_path)),
 	_hasPeeked(false)
+{}
+
+PegLexer::PegLexer(const PegLexer &other):
+	_input(other._input), _peeked(other._peeked), _hasPeeked(other._hasPeeked)
 {}
 
 static bool	_until_ln(char c)			{ return c == '\n'; }

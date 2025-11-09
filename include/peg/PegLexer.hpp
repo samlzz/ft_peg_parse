@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 20:27:35 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 11:57:27 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ public:
 	};
 
 	PegLexer(const std::string &grammar_path);
+	PegLexer(const PegLexer& other);
 	~PegLexer() {}
 
 	Token	peek(void);
@@ -61,7 +62,6 @@ private:
 	Token	_peeked;
 	bool	_hasPeeked;
 
-	PegLexer(const PegLexer& other);
 	PegLexer& operator=(const PegLexer& other);
 
 	Token	lexLiteral(void);
