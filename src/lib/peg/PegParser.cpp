@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 20:29:09 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:05:59 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,17 @@ PegParser::PegParser(const std::string &grammar_path):
 	_lex(grammar_path), _rules()
 {}
 
+static inline bool _isRuleBegin(PegLexer lex)
+{
+	PegLexer::Token	tk = lex.next();
+
+	return (lex.peek().type == PegLexer::T_ASSIGN);
+}
+
 Expr	*PegParser::parsePrimary(void)
 {
+	if (_isRuleBegin(_lex))
+		return NULL;
 	PegLexer::Token	tk = _lex.next();
 
 	switch (tk.type)
@@ -64,7 +73,9 @@ Expr	*PegParser::parsePrimary(void)
 Expr	*PegParser::parseSuffix(void)
 {
 	Expr	*expr = parsePrimary();
-	
+	if (!expr)
+		return NULL;
+
 	while (true)
 	{
 		PegLexer::Token	tk = _lex.peek();
@@ -102,6 +113,7 @@ Expr	*PegParser::parsePrefix(void)
 Expr	*PegParser::parseSequence(void)
 {
 	t_ExprList		seq;
+	Expr			*e;
 	PegLexer::Token	tk;
 
 	while (true)
@@ -109,10 +121,14 @@ Expr	*PegParser::parseSequence(void)
 		PegLexer::Token	tk = _lex.peek();
 		if (tk.type == PegLexer::T_RPAREN
 			|| tk.type == PegLexer::T_SLASH
-			|| tk.type == PegLexer::T_EOL
 			|| tk.type == PegLexer::T_END)
 			break;
-		seq.push_back(parsePrefix());
+		if (_lex.match(PegLexer::T_EOL))
+			continue;
+		e = parsePrefix();
+		if (!e)
+			break;
+		seq.push_back(e);
 	}
 	if (seq.size() == 1)
 		return seq[0];
@@ -153,8 +169,6 @@ void	PegParser::parseRule(void)
 		throw PegParserError("Duplicate rule for identifier '" + ruleName + "'");
 	}
 	_rules[ruleName] = expr;
-	if (!_lex.match(PegLexer::T_EOL) && !_lex.match(PegLexer::T_END))
-		throw PegParserError("Expected newline or EOF after rule '" + ruleName + "'");
 
 	dbg_print(DBG_INFO, "[PEG] Parsed rule: ", ruleName);
 	printExprTree(expr, 1);
