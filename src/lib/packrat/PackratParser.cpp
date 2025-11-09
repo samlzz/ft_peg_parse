@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 20:03:24 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:26:15 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "packrat/PackratParser.hpp"
 #include "peg/Expr.hpp"
 #include "ast/AstNode.hpp"
-#include "utils/Debug.hpp"
 
 // ---- parseRule: public entry point
 void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
@@ -63,12 +62,10 @@ bool PackratParser::eval(const Expr *expr, AstNode *parent)
 	const size_t	pos = _input.pos();
 
 	// TODO: retrive from cache
-	printEvalTrace(expr, parent, pos, true);
 
 	const bool	ok = expr->parse(*this, parent);
 
 	// TODO: append to cache
-	printEvalTrace(expr, parent, _input.pos(), false);
 
 	if (!ok)
 		_input.setPos(pos);

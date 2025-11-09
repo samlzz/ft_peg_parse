@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/09 12:05:59 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/09 12:26:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
 #include "peg/syntax/RuleRef.hpp"
-#include "utils/Debug.hpp"
 
 PegParser::PegParser(const std::string &grammar_path):
 	_lex(grammar_path), _rules()
@@ -169,9 +168,6 @@ void	PegParser::parseRule(void)
 		throw PegParserError("Duplicate rule for identifier '" + ruleName + "'");
 	}
 	_rules[ruleName] = expr;
-
-	dbg_print(DBG_INFO, "[PEG] Parsed rule: ", ruleName);
-	printExprTree(expr, 1);
 }
 
 void	PegParser::parseGrammar(Grammar &out)
