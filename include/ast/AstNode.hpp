@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/29 21:40:26 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:55:36 by sliziard         ###   ########.fr       */
+/*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/16 20:07:31 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,15 @@
 # define ASTNODE_HPP
 
 # include <cstddef>
+# include <iostream>
 # include <map>
 # include <stdint.h>
 # include <string>
 # include <vector>
 
-#include "peg/Expr.hpp"
+# include "peg/Expr.hpp"
 # include "utils/PegException.hpp"
+# include "utils/DebugConfig.hpp"
 
 /**
  * @struct Span
@@ -86,20 +88,53 @@ public:
 	AstNode	*popChild(void);
 	void	stealChildren(AstNode &stolen);
 
-	// --- Attribute Management ---
-	void		setAttr(const std::string &key, const std::string &val);
-	bool		hasAttr(const std::string &key) const;
-	std::string	getAttr(const std::string &key, const std::string &def) const;
-	
 	// --- Accessors ---
 	const std::string	&type(void) const					{ return _type; }
 	void				setType(const std::string &type)	{ _type = type; }
 
 	void				setSpan(size_t start, size_t end);
 
-	const std::vector<AstNode *>	&children(void) const	{ return _children; }
-	const std::map<std::string, std::string>	&attrs(void) const { return _attrs; }
+	// --- Attribute Management ---
+	void		setAttr(const std::string &key, const std::string &val);
+	bool		hasAttr(const std::string &key) const;
+	std::string	getAttr(const std::string &key, const std::string &def) const;
+
+	const std::vector<AstNode *>				&children(void) const	{ return _children; }
+	const std::map<std::string, std::string>	&attrs(void) const		{ return _attrs; }
+
+// ---- Debug ----
+# ifdef PEG_DEBUG_AST
+	struct PrintOptions {
+		bool showSpan;
+		bool showAttributes;
+		bool compactMode;
+		int maxDepth;
+		std::string indentStr;
+		
+		PrintOptions() :
+			showSpan(true),
+			showAttributes(true),
+			compactMode(false),
+			maxDepth(-1),
+			indentStr("  ") {}
+	};
+	
+	void		print(std::ostream& os = std::cerr,
+				const PrintOptions& opts = PrintOptions()) const;
+	
+	static void	PrintTree(const AstNode *root, std::ostream& os = std::cerr,
+					const PrintOptions& opts = PrintOptions(), int currentDepth = 0);
+	
+	size_t		nodeCount(void) const;
+	size_t		maxDepth(void) const;
+	void		collectStats(std::map<std::string, size_t>& typeCount) const;
+
+# endif
 };
+
+# ifdef PEG_DEBUG_AST
+	std::ostream& operator<<(std::ostream& os, const AstNode& node);
+# endif
 
 
 #endif

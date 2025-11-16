@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 19:39:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/14 08:37:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void	AstNode::stealChildren(AstNode &stolen)
 				stolen._children.begin(), stolen._children.end());
 	stolen._children.clear();
 }
+
+// ---- Accessors ----
 
 void	AstNode::setAttr(const std::string &key, const std::string &val)
 {
