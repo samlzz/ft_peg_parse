@@ -6,12 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:22:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:31:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRUNARY_HPP
 # define EXPRUNARY_HPP
+
+# include <cstddef>
 
 # include "peg/Expr.hpp"
 
@@ -28,12 +30,14 @@ public:
 	ExprUnary(enum e_expr_kind kind, Expr *inner)
 		: Expr(kind), _inner(inner)
 	{}
-	virtual ~ExprUnary()		{ delete _inner; }
+	virtual ~ExprUnary()	{ delete _inner; }
 
-	Expr*				inner()			{ return _inner; }
-	const Expr*			inner() const	{ return _inner; }
+	Expr*				inner()				{ return _inner; }
+	const Expr*			inner() const		{ return _inner; }
 	void				setInner(Expr *e);
 
+	virtual size_t		childCount(void) const		{ return _inner ? 1 : 0; }
+	virtual Expr		*child(size_t idx) const	{ return idx == 0 ? _inner : NULL; }
 # if PEG_DEBUG_LEVEL > 0
 	virtual std::string	debugValue(void) const;
 protected:

@@ -6,16 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:32:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:24:14 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:33:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RULEREF_HPP
 # define RULEREF_HPP
 
-#include <string>
+# include <cstddef>
+# include <string>
 
-#include "peg/Expr.hpp"
+# include "peg/Expr.hpp"
 
 class RuleRef: public Expr {
 
@@ -39,6 +40,9 @@ public:
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor& visitor) const;
+
+	virtual size_t		childCount(void) const		{ return _resolved ? 1 : 0; }
+	virtual const Expr	*child(size_t idx) const	{ return idx == 0 ? _resolved : NULL; }
 # if PEG_DEBUG_LEVEL > 0
 	virtual std::string	debugName(void) const	{ return "RuleRef"; }
 	virtual std::string debugValue(void) const	{ return _name; }

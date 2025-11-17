@@ -6,13 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:29:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:31:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRCONTAINER_HPP
 # define EXPRCONTAINER_HPP
 
+# include <cstddef>
 # include <vector>
 
 # include "peg/Expr.hpp"
@@ -38,13 +39,15 @@ public:
 	Expr		*operator[](size_t index)		{ return _elems[index]; }
 	const Expr	*operator[](size_t index) const	{ return _elems[index]; }
 
+	virtual size_t		childCount() const			{ return _elems.size(); }
+	virtual const Expr	*child(size_t index) const	{ return _elems[index]; }
+
 	const t_ExprList&			elems() const	{ return _elems; }
 	t_ExprList&					elems()			{ return _elems; }
 
-	size_t						size() const	{ return _elems.size(); }
 	t_ExprList::const_iterator	begin() const	{ return _elems.begin(); }
 	t_ExprList::const_iterator	end() const		{ return _elems.end(); }
-	
+
 	void						add(Expr *e) { if (e) _elems.push_back(e); }
 
 # if PEG_DEBUG_LEVEL > 0

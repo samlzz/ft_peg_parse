@@ -6,16 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:41:16 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:31:40 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPR_HPP
 # define EXPR_HPP
 
-#include <iostream>
+# include <cstddef>
+# include <iostream>
 # include <map>
-#include <ostream>
+# include <ostream>
 # include <stdint.h>
 # include <string>
 # include <vector>
@@ -58,6 +59,9 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const = 0;
 
 	virtual void		accept(IExprVisitor &visitor) const = 0;
+
+	virtual size_t			childCount(void) const	{ return 0; }
+	virtual const Expr *	child(size_t) const		{ return NULL; }
 
 # if PEG_DEBUG_LEVEL > 0
 	virtual std::string	debugName(void) const = 0;
