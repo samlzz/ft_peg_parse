@@ -6,16 +6,18 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 19:48:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:37:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstddef>
+#include <sstream>
 #include <string>
 
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
 #include "peg/syntax/ExprUnary.hpp"
+#include "peg/syntax/IExprVisitor.hpp"
 #include "utils/Input.hpp"
 
 void	ExprUnary::setInner(Expr *e)
@@ -25,6 +27,19 @@ void	ExprUnary::setInner(Expr *e)
 		delete _inner;
 		_inner = e;
 	}
+}
+
+std::string ExprUnary::debugValue(void) const
+{
+	std::ostringstream oss;
+
+	oss << debugUnaryRepr() << "-> " << (_inner ? _inner->debugName() : "NULL") << ")";
+	return oss.str();
+}
+
+void ZeroOrMore::accept(IExprVisitor &visitor) const
+{
+	visitor.visitZeroOrMore(*this);
 }
 
 bool ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
@@ -39,6 +54,11 @@ bool ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
 		last = in.pos();
 	}
 	return true;
+}
+
+void OneOrMore::accept(IExprVisitor &visitor) const
+{
+	visitor.visitOneOrMore(*this);
 }
 
 bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
@@ -62,10 +82,21 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
 	return true;
 }
 
+
+void Optional::accept(IExprVisitor &visitor) const
+{
+	visitor.visitOptional(*this);
+}
+
 bool Optional::parse(PackratParser &parser, AstNode *parent) const
 {
 	parser.eval(_inner, parent);
 	return true;
+}
+
+void Predicate::accept(IExprVisitor &visitor) const
+{
+	visitor.visitPredicate(*this);
 }
 
 bool Predicate::parse(PackratParser &parser, AstNode *parent) const
@@ -76,6 +107,11 @@ bool Predicate::parse(PackratParser &parser, AstNode *parent) const
 	const bool	ok = parser.eval(_inner, parent);
 	in.setPos(start);
 	return _isAnd ? ok : !ok;
+}
+
+void Capture::accept(IExprVisitor &visitor) const
+{
+	visitor.visitCapture(*this);
 }
 
 bool	Capture::parseProperty(PackratParser &parser, AstNode *parent) const

@@ -6,13 +6,29 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 18:03:19 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:37:48 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <sstream>
+
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
+#include "peg/syntax/IExprVisitor.hpp"
 #include "peg/syntax/ExprContainer.hpp"
+
+std::string ExprContainer::debugValue(void) const
+{
+	std::ostringstream	oss;
+
+	oss << "(" << _elems.size() << " elem" << (_elems.size() > 1 ? "s" : "") << ")";
+	return oss.str();
+}
+
+void Sequence::accept(IExprVisitor &visitor) const
+{
+	visitor.visitSequence(*this);
+}
 
 bool Sequence::parse(PackratParser &parser, AstNode *parent) const
 {
@@ -22,6 +38,11 @@ bool Sequence::parse(PackratParser &parser, AstNode *parent) const
 			return false;
 	}
 	return true;
+}
+
+void Choice::accept(IExprVisitor &visitor) const
+{
+	visitor.visitChoice(*this);
 }
 
 bool Choice::parse(PackratParser &parser, AstNode *parent) const

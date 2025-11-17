@@ -6,14 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:32:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:29:27 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRCONTAINER_HPP
 # define EXPRCONTAINER_HPP
 
-#include <cstddef>
 # include <vector>
 
 # include "peg/Expr.hpp"
@@ -39,15 +38,18 @@ public:
 	Expr		*operator[](size_t index)		{ return _elems[index]; }
 	const Expr	*operator[](size_t index) const	{ return _elems[index]; }
 
-	const t_ExprList&	elems() const	{ return _elems; }
-	t_ExprList&			elems()			{ return _elems; }
+	const t_ExprList&			elems() const	{ return _elems; }
+	t_ExprList&					elems()			{ return _elems; }
 
-	size_t				size() const	{ return _elems.size(); }
+	size_t						size() const	{ return _elems.size(); }
+	t_ExprList::const_iterator	begin() const	{ return _elems.begin(); }
+	t_ExprList::const_iterator	end() const		{ return _elems.end(); }
+	
+	void						add(Expr *e) { if (e) _elems.push_back(e); }
 
-	void				add(Expr *e) { if (e) _elems.push_back(e); }
-
-	t_ExprList::const_iterator begin() const { return _elems.begin(); }
-	t_ExprList::const_iterator end() const { return _elems.end(); }
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugValue(void) const;
+# endif
 };
 
 class Sequence: public ExprContainer {
@@ -58,7 +60,11 @@ public:
 	{}
 	virtual ~Sequence() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const	{ return "Sequence"; }
+# endif
 };
 
 class Choice: public ExprContainer {
@@ -69,7 +75,11 @@ public:
 	{}
 	virtual ~Choice() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const	{ return "Choice"; }
+# endif
 };
 
 #endif

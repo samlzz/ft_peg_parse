@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:32:33 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:22:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,15 @@ public:
 	{}
 	virtual ~ExprUnary()		{ delete _inner; }
 
-	Expr*		inner()			{ return _inner; }
-	const Expr*	inner() const	{ return _inner; }
-	void		setInner(Expr *e);
+	Expr*				inner()			{ return _inner; }
+	const Expr*			inner() const	{ return _inner; }
+	void				setInner(Expr *e);
+
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugValue(void) const;
+protected:
+	virtual std::string debugUnaryRepr(void) const = 0;
+# endif
 };
 
 class ZeroOrMore: public ExprUnary {
@@ -42,7 +48,13 @@ public:
 	{}
 	virtual ~ZeroOrMore() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const		{ return "ZeroOrMore"; }
+protected:
+	virtual std::string debugUnaryRepr(void) const	{ return "*"; }
+# endif
 };
 
 class OneOrMore: public ExprUnary {
@@ -52,7 +64,13 @@ public:
 	{}
 	virtual ~OneOrMore() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const		{ return "OneOrMore"; }
+protected:
+	virtual std::string debugUnaryRepr(void) const	{ return "+"; }
+# endif
 };
 
 class Optional: public ExprUnary {
@@ -62,7 +80,13 @@ public:
 	{}
 	virtual ~Optional() {}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const		{ return "Optional"; }
+protected:
+	virtual std::string debugUnaryRepr(void) const	{ return "?"; }
+# endif
 };
 
 class Predicate: public ExprUnary {
@@ -78,7 +102,13 @@ public:
 
 	bool	isAnd(void) const { return _isAnd; }
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const		{ return "Predicate"; }
+protected:
+	virtual std::string debugUnaryRepr(void) const	{ return _isAnd ? "&" : "!"; }
+# endif
 };
 
 class Capture: public ExprUnary {
@@ -99,6 +129,12 @@ public:
 	bool				isProperty(void) const	{ return _isProp; }
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const		{ return "Capture"; }
+protected:
+	virtual std::string debugUnaryRepr(void) const	{ return _tag + (_isProp ? " (prop)" : ""); }
+# endif
 };
 
 

@@ -6,14 +6,20 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/09 10:38:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:34:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 
 #include "packrat/PackratParser.hpp"
+#include "peg/syntax/IExprVisitor.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
+
+void Literal::accept(IExprVisitor &visitor) const
+{
+	visitor.visitLiteral(*this);
+}
 
 bool Literal::parse(PackratParser &parser, AstNode *parent) const
 {
@@ -33,6 +39,11 @@ bool Literal::parse(PackratParser &parser, AstNode *parent) const
 		return false;
 	}
 	return true;
+}
+
+void CharRange::accept(IExprVisitor &visitor) const
+{
+	visitor.visitCharRange(*this);
 }
 
 bool CharRange::parse(PackratParser &parser, AstNode *parent) const
@@ -59,6 +70,11 @@ bool CharRange::parse(PackratParser &parser, AstNode *parent) const
 	}
 	in.get();
 	return true;
+}
+
+void Any::accept(IExprVisitor &visitor) const
+{
+	visitor.visitAny(*this);
 }
 
 bool Any::parse(PackratParser &parser, AstNode *parent) const

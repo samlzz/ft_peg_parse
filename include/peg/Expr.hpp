@@ -6,20 +6,23 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/07 20:24:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 19:41:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPR_HPP
 # define EXPR_HPP
 
+#include <iostream>
 # include <map>
+#include <ostream>
 # include <stdint.h>
 # include <string>
 # include <vector>
 
 class PackratParser;
 class AstNode;
+class IExprVisitor;
 
 class Expr {
 
@@ -42,15 +45,30 @@ public:
 		K_CAPTURE,
 	};
 
+protected:
+	const enum e_expr_kind	_kind;
+
+	Expr(enum e_expr_kind kind): _kind(kind) {}
+
+public:
+
 	virtual ~Expr() {}
 
 	enum e_expr_kind	kind(void) const	{ return _kind; }
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const = 0;
 
-protected:
-	const enum e_expr_kind	_kind;
+	virtual void		accept(IExprVisitor &visitor) const = 0;
 
-	Expr(enum e_expr_kind kind): _kind(kind) {}
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const = 0;
+	virtual std::string	debugValue(void) const { return ""; }
+
+	std::string			debugRepr(void) const
+		{ return debugName() + ": " + debugValue(); }
+
+	friend std::ostream& operator<<(std::ostream& os, const Expr& e)
+		{ return os << e.debugRepr(); }
+# endif
 };
 
 typedef std::vector<Expr *> 			t_ExprList;

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/09 11:25:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 18:55:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,9 @@
 # include <string>
 
 # include "peg/Expr.hpp"
-#include "utils/StringUtils.hpp"
+# include "utils/StringUtils.hpp"
 
 class ExprLeaf : public Expr {
-private:
-	ExprLeaf();
-	ExprLeaf(const ExprLeaf &other);
-	ExprLeaf &operator=(const ExprLeaf &other);
-
 protected:
 	std::string _value;
 
@@ -35,6 +30,14 @@ public:
 
 	const std::string&	value() const					{ return _value; }
 	void				setValue(const std::string &v)	{ _value = v; }
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugValue(void) const			{ return _value; }
+# endif
+
+private:
+	ExprLeaf();
+	ExprLeaf(const ExprLeaf &other);
+	ExprLeaf &operator=(const ExprLeaf &other);
 };
 
 class Literal: public ExprLeaf {
@@ -44,7 +47,11 @@ public:
 		ExprLeaf(K_LITERAL, unescapeString(escaped))
 	{}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const	{ return "Literal"; }
+# endif
 };
 
 class CharRange: public ExprLeaf {
@@ -54,7 +61,11 @@ public:
 		ExprLeaf(K_CHARRANGE, expandCharSet(charset))
 	{}
 
-	virtual bool	parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const	{ return "CharRange"; }
+# endif
 };
 
 class Any: public Expr {
@@ -62,8 +73,12 @@ class Any: public Expr {
 public:
 	Any(): Expr(K_ANY) {}
 
-	virtual bool parse(PackratParser &parser, AstNode *parent) const;
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor& visitor) const;
+# if PEG_DEBUG_LEVEL > 0
+	virtual std::string	debugName(void) const	{ return "CharAny"; }
+	virtual std::string	debugValue(void) const	{ return "."; }
+# endif
 };
 
 #endif
-
