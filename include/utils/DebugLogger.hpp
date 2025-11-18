@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 07:59:53 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/16 19:53:08 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 23:47:58 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,31 @@
 
 # if PEG_DEBUG_LEVEL > 0
 
-#  include <sstream>
 #  include <iostream>
 #  include <string>
 #  include <stdint.h>
 
 namespace PegDebug {
+
+#define COLOR_RESET			"\033[0m"
+#define COLOR_BOLD			"\033[1m"
+#define COLOR_DIM			"\033[2m"
+
+#define COLOR_RED			"\033[31m"
+#define COLOR_GREEN			"\033[32m"
+#define COLOR_YELLOW		"\033[33m"
+#define COLOR_BLUE			"\033[34m"
+#define COLOR_MAGENTA		"\033[35m"
+#define COLOR_CYAN			"\033[36m"
+#define COLOR_WHITE			"\033[37m"
+
+#define COLOR_BOLD_RED		"\033[1;31m"
+#define COLOR_BOLD_GREEN	"\033[1;32m"
+#define COLOR_BOLD_YELLOW	"\033[1;33m"
+#define COLOR_BOLD_BLUE		"\033[1;34m"
+#define COLOR_BOLD_MAGENTA	"\033[1;35m"
+#define COLOR_BOLD_CYAN		"\033[1;36m"
+#define COLOR_BOLD_WHITE	"\033[1;37m"
 
 enum LogLevel {
 	LOG_ERROR = PEG_DBG_ERROR,
@@ -59,14 +78,6 @@ public:
 	ScopedIndent()	{ Logger::indent(); }
 	~ScopedIndent()	{ Logger::unindent(); }
 };
-
-template <typename T>
-std::string toString(T value)
-{
-	std::ostringstream	oss;
-	oss << value;
-	return oss.str();
-}
 
 }
 

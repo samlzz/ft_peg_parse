@@ -6,13 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/09 10:38:51 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/17 20:47:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRINGUTILS_HPP
 # define STRINGUTILS_HPP
 
+# include <sstream>
 # include <stdint.h>
 # include <cstddef>
 # include <string>
@@ -74,6 +75,14 @@ inline std::string expandCharSet(const std::string &raw)
 			resp += c;
 	}
 	return resp;
+}
+
+template <typename T>
+std::string toString(T value)
+{
+	std::ostringstream	oss;
+	oss << value;
+	return oss.str();
 }
 
 #endif
