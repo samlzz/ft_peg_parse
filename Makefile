@@ -129,11 +129,11 @@ ifneq (,$(filter test%,$(MAKECMDGOALS)))
 	ifeq ($(DEBUG),0)
 		DEBUG=1
 	endif
-	CXXFLAGS += -DDEBUG_LEVEL=$(DEBUG)
+	CXXFLAGS += -DPEG_DEBUG_LEVEL=$(DEBUG)
 endif
 
 ifneq (DEBUG,0)
-	CXXFLAGS += -DDEBUG_LEVEL=$(DEBUG)
+	CXXFLAGS += -DPEG_DEBUG_LEVEL=$(DEBUG)
 endif
 
 # =============================================================================
