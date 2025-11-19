@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 20:47:20 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:25:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,31 @@
 # include <stdint.h>
 # include <cstddef>
 # include <string>
+
+inline std::string	escapeStringDisplay(const std::string &str, size_t maxLen = 40)
+{
+	std::string	result;
+	size_t		len = 0;
+	
+	for (size_t i = 0; i < str.size() && len < maxLen; ++i, ++len)
+	{
+		switch (str[i]) {
+			case '\n': result += "\\n"; break;
+			case '\r': result += "\\r"; break;
+			case '\t': result += "\\t"; break;
+			case '\\': result += "\\\\"; break;
+			case '"':  result += "\\\""; break;
+			default:
+				result += str[i];
+				break;
+		}
+	}
+	
+	if (str.size() > maxLen)
+		result += "...";
+	
+	return result;
+}
 
 inline char unescapeChar(const std::string &s, size_t &i)
 {

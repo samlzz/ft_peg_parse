@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:52:25 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/18 01:44:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:25:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "peg/syntax/ExprUnary.hpp"
 # include "peg/syntax/RuleRef.hpp"
 # include "utils/DebugLogger.hpp"
+# include "utils/StringUtils.hpp"
 
 namespace ExprDebug {
 
@@ -53,31 +54,6 @@ static const char	*_kindColor(Expr::e_expr_kind k)
 	}
 }
 
-static std::string	_escapeStringDisplay(const std::string &str, size_t maxLen = 40)
-{
-	std::string	result;
-	size_t		len = 0;
-	
-	for (size_t i = 0; i < str.size() && len < maxLen; ++i, ++len)
-	{
-		switch (str[i]) {
-			case '\n': result += "\\n"; break;
-			case '\r': result += "\\r"; break;
-			case '\t': result += "\\t"; break;
-			case '\\': result += "\\\\"; break;
-			case '"':  result += "\\\""; break;
-			default:
-				result += str[i];
-				break;
-		}
-	}
-	
-	if (str.size() > maxLen)
-		result += "...";
-	
-	return result;
-}
-
 // ============================================================================
 // PrintVisitor : Inline display
 // ============================================================================
@@ -97,7 +73,7 @@ std::string	PrintVisitor::color(const std::string &text, const char *code) const
 	void	PrintVisitor::visit##ClassName(const ClassName &expr) \
 	{ \
 		_os << color(expr.debugName(), _kindColor(expr.kind())) \
-			<< " [" << _escapeStringDisplay(expr.value(), 20) << "]"; \
+			<< " [" << escapeStringDisplay(expr.value(), 20) << "]"; \
 	}
 
 # define PRINT_VISIT_IMPL(ClassName) \
