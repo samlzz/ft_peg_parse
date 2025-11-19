@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:27:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:05:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:21:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,9 @@ static const char* getLevelName(LogLevel level)
 {
 	switch (level) {
 		case LOG_ERROR:		return "ERROR";
-		case LOG_WARN:		return "WARN ";
-		case LOG_INFO:		return "INFO ";
-		case LOG_VERBOSE:	return "VERB ";
+		case LOG_WARN:		return "WARN";
+		case LOG_INFO:		return "INFO";
+		case LOG_VERBOSE:	return "VERB";
 		case LOG_TRACE:		return "TRACE";
 		default:			return "?????";
 	}
@@ -74,28 +74,30 @@ void Logger::log(LogLevel level, const std::string& category,
 	);
 	
 	if (!category.empty())
-		*_output << " " << color("[" + category + "]", COLOR_BOLD_WHITE);
+		*_output << " ("
+			<< color(category, COLOR_BOLD_WHITE)
+			<< ")";
 	
 	*_output << " " << message << "\n";
 	_output->flush();
 }
 
 
-void	Logger::dbg_enter(const char *fn)
+void	Logger::dbg_enter(const std::string &category, const char *fn)
 {
-	PEG_LOG_TRACE("PEGPARSER",
+	PEG_LOG_TRACE(category,
 		Logger::color("Enter", COLOR_RED) + " " +
-		Logger::color(fn, COLOR_MAGENTA)
+		Logger::color(fn, COLOR_BLUE)
 	);
 	Logger::indent();
 }
 
-void	Logger::dbg_exit(const char *fn)
+void	Logger::dbg_exit(const std::string &category, const char *fn)
 {
 	Logger::unindent();
-	PEG_LOG_TRACE("PEGPARSER",
+	PEG_LOG_TRACE(category,
 		Logger::color("Exit", COLOR_RED) + " " +
-		Logger::color(fn, COLOR_MAGENTA)
+		Logger::color(fn, COLOR_BLUE)
 	);
 }
 
