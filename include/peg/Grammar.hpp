@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/02 22:07:24 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/18 01:40:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,26 @@ public:
 
 	Expr	*get(const std::string &name)	const;
 	void	checkLeftRecursion(void)		const;
+
+#ifdef PEG_DEBUG_GRAMMAR
+public:
+	struct PrintOptions
+	{
+		bool	showResolved;
+		bool	expandRules;
+		int32_t	maxDepth;
+		
+		PrintOptions() : showResolved(true), expandRules(false), maxDepth(3) {}
+	};
+	
+	void print(std::ostream& os = std::cerr, 
+			const PrintOptions& opts = PrintOptions()) const;
+	
+	void printRule(const std::string& ruleName, std::ostream& os = std::cerr,
+				const PrintOptions& opts = PrintOptions()) const;
+	
+	void printStats(std::ostream& os = std::cerr) const;
+#endif
 };
 
 #endif
