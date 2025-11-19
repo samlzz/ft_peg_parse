@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/16 18:13:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 12:41:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "packrat/PackratParser.hpp"
 #include "peg/Expr.hpp"
 #include "ast/AstNode.hpp"
+#include "utils/DebugLogger.hpp"
 
 // ---- parseRule: public entry point
 void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
@@ -26,6 +27,7 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 				+ rootRuleName + "': "
 				+ _err.formatError(_input, true));
 
+	PEG_LOG_TRACE("PARSER", "Begin parsin with rule :" + rootRuleName);
 	AstNode	*root = new AstNode(rootRuleName);
 	const bool	ok = eval(start, root);
 	if (!ok || !_input.eof())

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/16 18:18:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:23:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "PackratCache.hpp"
 # include "ast/AstNode.hpp"
 # include "peg/Grammar.hpp"
+# include "utils/DebugLogger.hpp"
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"
 # include "utils/PegException.hpp"
@@ -64,8 +65,13 @@ public:
 # ifdef PEG_DEBUG_PARSER
 		, _traceDepth(0), _traceEnabled(false)
 		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
-# endif
+	{
+		PegDebug::Logger::resetIndent();
+		PegDebug::Logger::setIndentValue("│ ");
+	}
+# else
 	{}
+# endif
 	~PackratParser() {};
 
 	void		parseRule(const std::string &rootRuleName, AstNode *&out);

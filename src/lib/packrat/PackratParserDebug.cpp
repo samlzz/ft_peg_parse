@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 20:09:54 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:08:59 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,12 +27,10 @@ void	PackratParser::_traceEnter(const Expr* expr, size_t pos)
 		return;
 	
 	std::ostringstream	oss;
-	for (int i = 0; i < _traceDepth; ++i)
-		oss << "│ ";
 	oss << "├─→ " << expr << " @" << pos;
 	
 	PEG_LOG_TRACE("PARSER", oss.str());
-	_traceDepth++;
+	PegDebug::Logger::indent();
 }
 
 void	PackratParser::_traceExit(const Expr* expr, size_t pos, bool success)
@@ -40,13 +38,10 @@ void	PackratParser::_traceExit(const Expr* expr, size_t pos, bool success)
 	if (!_traceEnabled)
 		return;
 	
-	_traceDepth--;
+	PegDebug::Logger::unindent();
 	std::ostringstream	oss;
 
-	for (int i = 0; i < _traceDepth; ++i)
-		oss << "│ ";
 	oss << "└─" << (success ? "✓" : "✗") << " " << expr << " @" << pos;
-	
 	PEG_LOG_TRACE("PARSER", oss.str());
 }
 
