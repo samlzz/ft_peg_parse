@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/16 20:07:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 12:09:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 
 #ifdef PEG_DEBUG_AST
 
-# include <sstream>
 # include "ast/AstNode.hpp"
 
 // ---- Display ----

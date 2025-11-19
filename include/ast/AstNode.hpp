@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:05:49 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 12:09:33 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,7 +127,6 @@ public:
 	
 	size_t		nodeCount(void) const;
 	size_t		maxDepth(void) const;
-	void		collectStats(std::map<std::string, size_t>& typeCount) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const AstNode& node);
 # endif
