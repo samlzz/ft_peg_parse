@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:28:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:06:48 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,11 +141,11 @@ PegLexer::Token	PegLexer::next(void)
 	if (_hasPeeked)
 	{
 		_hasPeeked = false;
-		PEG_LOG_ACT("PEGLEXER", "next", &_peeked);
+		PEG_LOG_ACT("PegLexer", "next", &_peeked);
 		return _peeked;
 	}
 	_peeked = lexOne();
-	PEG_LOG_ACT("PEGLEXER", "next", &_peeked);
+	PEG_LOG_ACT("PegLexer", "next", &_peeked);
 	return _peeked;
 }
 
@@ -156,7 +156,7 @@ PegLexer::Token	PegLexer::peek(void)
 		_peeked = lexOne();
 		_hasPeeked = true;
 	}
-	PEG_LOG_ACT("PEGLEXER", "peek", &_peeked);
+	PEG_LOG_ACT("PegLexer", "peek", &_peeked);
 	return _peeked;
 }
 

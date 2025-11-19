@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:08:59 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:30:39 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,9 @@ void	PackratParser::_traceEnter(const Expr* expr, size_t pos)
 		return;
 	
 	std::ostringstream	oss;
-	oss << "├─→ " << expr << " @" << pos;
+	oss << "├─→ " << *expr << " @" << pos;
 	
-	PEG_LOG_TRACE("PARSER", oss.str());
+	PEG_LOG_TRACE("Parser", oss.str());
 	PegDebug::Logger::indent();
 }
 
@@ -41,8 +41,13 @@ void	PackratParser::_traceExit(const Expr* expr, size_t pos, bool success)
 	PegDebug::Logger::unindent();
 	std::ostringstream	oss;
 
-	oss << "└─" << (success ? "✓" : "✗") << " " << expr << " @" << pos;
-	PEG_LOG_TRACE("PARSER", oss.str());
+	oss << "└─";
+	if (success)
+		oss << PegDebug::Logger::color("✓", COLOR_GREEN);
+	else
+		oss << PegDebug::Logger::color("✗", COLOR_RED);
+	oss << " " << *expr << " @" << pos;
+	PEG_LOG_TRACE("Parser", oss.str());
 }
 
 PackratParser::Stats 	PackratParser::getStats(void) const

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:23:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:12:31 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ public:
 	PackratParser(Input &in, const Grammar &pegGrammar):
 		_input(in), _grammar(pegGrammar), _memo(), _err()
 # ifdef PEG_DEBUG_PARSER
-		, _traceDepth(0), _traceEnabled(false)
+		, _traceDepth(0), _traceEnabled(true)
 		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
 	{
 		PegDebug::Logger::resetIndent();

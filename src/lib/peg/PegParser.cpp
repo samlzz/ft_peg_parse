@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:20:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:20:39 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ static inline bool _isRuleBegin(PegLexer lex)
 
 Expr	*PegParser::parsePrimary(void)
 {
-	PEG_LOG_FN("parsePrimary");
+	PEG_LOG_FN("PegParser", "parsePrimary");
 	if (_isRuleBegin(_lex))
 		return NULL;
 	PegLexer::Token	tk = _lex.next();
@@ -73,7 +73,7 @@ Expr	*PegParser::parsePrimary(void)
 
 Expr	*PegParser::parseSuffix(void)
 {
-	PEG_LOG_FN("parseSuffix");
+	PEG_LOG_FN("PegParser", "parseSuffix");
 	Expr	*expr = parsePrimary();
 	if (!expr)
 		return NULL;
@@ -105,7 +105,7 @@ Expr	*PegParser::parseSuffix(void)
 
 Expr	*PegParser::parsePrefix(void)
 {
-	PEG_LOG_FN("parsePrefix");
+	PEG_LOG_FN("PegParser", "parsePrefix");
 	if (_lex.match(PegLexer::T_NOT))
 		return new Predicate(parsePrefix(), false);
 	if (_lex.match(PegLexer::T_AND))
@@ -115,7 +115,7 @@ Expr	*PegParser::parsePrefix(void)
 
 Expr	*PegParser::parseSequence(void)
 {
-	PEG_LOG_FN("parseSequence");
+	PEG_LOG_FN("PegParser", "parseSequence");
 	t_ExprList		seq;
 	Expr			*e;
 	PegLexer::Token	tk;
@@ -141,7 +141,7 @@ Expr	*PegParser::parseSequence(void)
 
 Expr	*PegParser::parseChoice(void)
 {
-	PEG_LOG_FN("ParseChoice");
+	PEG_LOG_FN("PegParser", "ParseChoice");
 	t_ExprList	choices;
 
 	choices.push_back(parseSequence());
@@ -154,7 +154,7 @@ Expr	*PegParser::parseChoice(void)
 
 void	PegParser::parseRule(void)
 {
-	PEG_LOG_FN("parseRule");
+	PEG_LOG_FN("PegParser", "parseRule");
 	PegLexer::Token	id = _lex.next();
 	if (id.type != PegLexer::T_ID)
 		throw PegParserError("Expected rule name");
@@ -169,7 +169,7 @@ void	PegParser::parseRule(void)
 	if (captureRule)
 		expr = new Capture(expr, ruleName);
 
-	PEG_LOG_CONTENT("PEGPARSER", ("Parserd rule " + ruleName), expr);
+	PEG_LOG_CONTENT("PEGPARSER", ("Parserd rule " + ruleName), &expr);
 	if (_rules.find(ruleName) != _rules.end())
 	{
 		delete expr;
@@ -180,7 +180,7 @@ void	PegParser::parseRule(void)
 
 void	PegParser::parseGrammar(Grammar &out)
 {
-	PEG_LOG_FN("parseGrammar");
+	PEG_LOG_FN("PegParser", "parseGrammar");
 	PegLexer::Token	tk;
 
 	while ((tk = _lex.peek()).type != PegLexer::T_END)

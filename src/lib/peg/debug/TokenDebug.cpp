@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ParserDebug.cpp                                    :+:      :+:    :+:   */
+/*   TokenDebug.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 12:53:15 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 13:48:44 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 15:22:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,18 +53,24 @@ std::string PegLexer::Token::debugRepr(bool colored) const
 	using namespace PegDebug;
 
 	std::string typeStr = debugType();
-	std::string valStr  = val;
+
+	if (type == T_EOL)
+	{
+		if (colored)
+			return Logger::color(typeStr, COLOR_YELLOW);
+		return typeStr;
+	}
+	std::string valStr = val;
 
 	if (colored)
 	{
 		typeStr = Logger::color(typeStr, COLOR_YELLOW);
 		if (!valStr.empty())
-			valStr  = Logger::color("\"" + valStr + "\"", COLOR_GREEN);
+			valStr = Logger::color("\"" + valStr + "\"", COLOR_GREEN);
 	}
 	else
 		valStr = "\"" + valStr + "\"";
-
-	return typeStr + valStr;
+	return typeStr + " " + valStr;
 }
 
 #endif
