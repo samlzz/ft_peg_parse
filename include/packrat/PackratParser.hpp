@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/06 17:32:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/16 18:18:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,20 @@ private:
 
 	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *parent);
 
+#ifdef PEG_DEBUG_PARSER
+	// trace state
+	int32_t	_traceDepth;
+	bool	_traceEnabled;
+	
+	// statistics
+	size_t	_evalCount;
+	size_t	_cacheHits;
+	size_t	_backtrackCount;
+	
+	void _traceEnter(const Expr* expr, size_t pos);
+	void _traceExit(const Expr* expr, size_t pos, bool success);
+#endif
+
 public:
 	class ParseError : public PegException {
 	public:
@@ -47,6 +61,10 @@ public:
 
 	PackratParser(Input &in, const Grammar &pegGrammar):
 		_input(in), _grammar(pegGrammar), _memo(), _err()
+# ifdef PEG_DEBUG_PARSER
+		, _traceDepth(0), _traceEnabled(false)
+		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
+# endif
 	{}
 	~PackratParser() {};
 
@@ -60,6 +78,26 @@ public:
 
 	void		resetDiag(void)		{ _err.reset(); }
 	void		resetMemo(void)		{ _memo.reset(); }
+
+#ifdef PEG_DEBUG_PARSER
+	void	enableTrace(bool enable = true) { _traceEnabled = enable; }
+	bool	isTraceEnabled() const			{ return _traceEnabled; }
+	
+	struct Stats {
+		size_t totalEvals;
+		size_t cacheHits;
+		size_t backtrackCount;
+		
+		double cacheHitRate(void) const
+		{
+			return totalEvals > 0 ? (double)cacheHits / totalEvals : 0.0;
+		}
+	};
+	
+	Stats 		getStats(void) const;
+	void		resetStats(void);
+	static void	printStats(Stats stats, std::ostream& os = std::cerr);
+#endif
 };
 
 #endif
