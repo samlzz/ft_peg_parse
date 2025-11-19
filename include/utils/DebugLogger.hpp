@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 07:59:53 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:10:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:27:08 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ public:
 
 #  define PEG_LOG_FN(fn_name)					PegDebug::Logger::DbgFn _dbgfn_scope_(fn_name)
 #  define PEG_LOG_CONTENT(cat, msg, printable)	PegDebug::Logger::dbg_action(cat, msg, printable)
-#  define PEG_LOG_ACT(cat, act, printable)		PEG_LOG_TXT(cat, act + "():", printable)
+#  define PEG_LOG_ACT(cat, act, printable)		PEG_LOG_CONTENT(cat, act + std::string("():"), printable)
 
 # else
 // Mode release : empty macros

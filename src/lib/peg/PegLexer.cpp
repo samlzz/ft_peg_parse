@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/09 12:26:26 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:28:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <string>
 
 #include "peg/PegLexer.hpp"
+#include "utils/DebugLogger.hpp"
 #include "utils/Input.hpp"
 
 // ---- Ctors ----
@@ -135,14 +136,16 @@ PegLexer::Token	PegLexer::lexOne(void)
 		return lexOp(c);
 }
 
-PegLexer::Token	PegLexer::next()
+PegLexer::Token	PegLexer::next(void)
 {
 	if (_hasPeeked)
 	{
 		_hasPeeked = false;
+		PEG_LOG_ACT("PEGLEXER", "next", &_peeked);
 		return _peeked;
 	}
 	_peeked = lexOne();
+	PEG_LOG_ACT("PEGLEXER", "next", &_peeked);
 	return _peeked;
 }
 
@@ -153,6 +156,7 @@ PegLexer::Token	PegLexer::peek(void)
 		_peeked = lexOne();
 		_hasPeeked = true;
 	}
+	PEG_LOG_ACT("PEGLEXER", "peek", &_peeked);
 	return _peeked;
 }
 
