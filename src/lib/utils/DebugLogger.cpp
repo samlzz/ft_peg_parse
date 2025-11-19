@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:27:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 23:48:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:05:52 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 #if PEG_DEBUG_LEVEL > 0
 
+# include <string>
 # include <iostream>
 # include <sstream>
 
@@ -21,6 +22,7 @@ namespace PegDebug {
 
 std::ostream*	Logger::_output = &std::cerr;
 int32_t			Logger::_indentLevel = 0;
+std::string		Logger::_indentValue = "  ";
 bool			Logger::_useColors = true;
 
 std::string Logger::color(const std::string& text, const char* colorCode)
@@ -65,7 +67,7 @@ void Logger::log(LogLevel level, const std::string& category,
 		return;
 	
 	for (int32_t i = 0; i < _indentLevel; ++i)
-		*_output << "  ";
+		*_output << _indentValue;
 	*_output << color(
 		std::string("[") + getLevelName(level) + "]",
 		getLevelColor(level)
@@ -76,6 +78,25 @@ void Logger::log(LogLevel level, const std::string& category,
 	
 	*_output << " " << message << "\n";
 	_output->flush();
+}
+
+
+void	Logger::dbg_enter(const char *fn)
+{
+	PEG_LOG_TRACE("PEGPARSER",
+		Logger::color("Enter", COLOR_RED) + " " +
+		Logger::color(fn, COLOR_MAGENTA)
+	);
+	Logger::indent();
+}
+
+void	Logger::dbg_exit(const char *fn)
+{
+	Logger::unindent();
+	PEG_LOG_TRACE("PEGPARSER",
+		Logger::color("Exit", COLOR_RED) + " " +
+		Logger::color(fn, COLOR_MAGENTA)
+	);
 }
 
 }
