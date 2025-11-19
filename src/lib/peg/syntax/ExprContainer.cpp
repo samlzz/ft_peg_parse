@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:37:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:11:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "peg/syntax/IExprVisitor.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 
+#if PEG_DEBUG_LEVEL > 0
 std::string ExprContainer::debugValue(void) const
 {
 	std::ostringstream	oss;
@@ -24,6 +25,7 @@ std::string ExprContainer::debugValue(void) const
 	oss << "(" << _elems.size() << " elem" << (_elems.size() > 1 ? "s" : "") << ")";
 	return oss.str();
 }
+#endif
 
 void Sequence::accept(IExprVisitor &visitor) const
 {

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 19:37:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/19 14:12:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	ExprUnary::setInner(Expr *e)
 	}
 }
 
+#if PEG_DEBUG_LEVEL > 0
 std::string ExprUnary::debugValue(void) const
 {
 	std::ostringstream oss;
@@ -36,6 +37,7 @@ std::string ExprUnary::debugValue(void) const
 	oss << debugUnaryRepr() << "-> " << (_inner ? _inner->debugName() : "NULL") << ")";
 	return oss.str();
 }
+#endif
 
 void ZeroOrMore::accept(IExprVisitor &visitor) const
 {

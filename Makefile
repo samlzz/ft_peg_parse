@@ -2,7 +2,7 @@
 #* >> USER CONFIGURATION (MANDATORY)
 # =============================================================================
 
-NAME      ?= ft_peg_parse.a
+NAME      ?= ft_peg_parse.out
 ifeq ($(NAME),)
     $(error NAME is empty: please define executable name)
 endif
@@ -13,17 +13,27 @@ OBJ_DIR   = build/
 BIN_DIR   =
 
 ### UFILES_START ###
-FILES =	lib/ast/AstNode.cpp \
+FILES =	main.cpp \
+		 \
+		lib/ast/AstNode.cpp \
+		lib/ast/AstNodeDebug.cpp \
 		lib/packrat/PackratCache.cpp \
 		lib/packrat/PackratParser.cpp \
+		lib/packrat/PackratParserDebug.cpp \
 		lib/peg/Grammar.cpp \
+		lib/peg/GrammarDebug.cpp \
 		lib/peg/PegLexer.cpp \
 		lib/peg/PegParser.cpp \
+		lib/peg/debug/ExprDebug.cpp \
+		lib/peg/debug/PrintVisitor.cpp \
+		lib/peg/debug/StatsVisitor.cpp \
+		lib/peg/debug/TokenDebug.cpp \
+		lib/peg/debug/TreeVisitor.cpp \
 		lib/peg/syntax/ExprContainer.cpp \
 		lib/peg/syntax/ExprLeaf.cpp \
 		lib/peg/syntax/ExprUnary.cpp \
 		lib/peg/syntax/RuleRef.cpp \
-		lib/utils/Debug.cpp \
+		lib/utils/DebugLogger.cpp \
 		lib/utils/Diag.cpp \
 		lib/utils/Input.cpp \
 		test/helpers.cpp
