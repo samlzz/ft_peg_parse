@@ -6,10 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 13:56:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 14:02:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "utils/DebugConfig.hpp"
 
 #ifdef PEG_DEBUG_PARSER
 

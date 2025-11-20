@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 07:54:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 12:22:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:57:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@
 // comment to disable
 
 # if PEG_DEBUG_LEVEL > 0
-#  define PEG_DEBUG_PEGPARSER
+// #  define PEG_DEBUG_PEGPARSER
 #  define PEG_DEBUG_GRAMMAR
 #  define PEG_DEBUG_PARSER
-#  define PEG_DEBUG_CACHE
+// #  define PEG_DEBUG_CACHE
 #  define PEG_DEBUG_AST
 # endif
 

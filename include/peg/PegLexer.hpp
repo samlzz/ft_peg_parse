@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 13:48:20 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 14:01:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ public:
 	struct Token {
 		enum e_tk_type	type;
 		std::string		val;
-# ifdef PEG_DEBUG_PEGPARSER
+# if defined(PEG_DEBUG_PEGPARSER) || defined(PEG_DEBUG_GRAMMAR)
 		std::string	debugType(void) const;
 		std::string	debugRepr(bool colored = true) const;
 

@@ -6,13 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 12:53:15 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:22:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 14:02:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/DebugConfig.hpp"
 
-#ifdef PEG_DEBUG_PEGPARSER
+#if defined(PEG_DEBUG_PEGPARSER) || defined(PEG_DEBUG_GRAMMAR)
 
 # include "utils/DebugLogger.hpp"
 # include "peg/PegLexer.hpp"
