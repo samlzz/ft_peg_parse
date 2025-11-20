@@ -6,11 +6,10 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:30:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:56:13 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils/DebugLogger.hpp"
 
 #ifdef PEG_DEBUG_PARSER
 
@@ -20,6 +19,7 @@
 # include "utils/DebugLogger.hpp"
 # include "packrat/PackratParser.hpp"
 # include "peg/Expr.hpp"
+# include "utils/StringUtils.hpp"
 
 void	PackratParser::_traceEnter(const Expr* expr, size_t pos)
 {
@@ -27,7 +27,7 @@ void	PackratParser::_traceEnter(const Expr* expr, size_t pos)
 		return;
 	
 	std::ostringstream	oss;
-	oss << "├─→ " << *expr << " @" << pos;
+	oss << "├─→ " << *expr << PegDebug::Logger::color(" @" + toString(pos), COLOR_BLUE);
 	
 	PEG_LOG_TRACE("Parser", oss.str());
 	PegDebug::Logger::indent();
@@ -46,7 +46,7 @@ void	PackratParser::_traceExit(const Expr* expr, size_t pos, bool success)
 		oss << PegDebug::Logger::color("✓", COLOR_GREEN);
 	else
 		oss << PegDebug::Logger::color("✗", COLOR_RED);
-	oss << " " << *expr << " @" << pos;
+	oss << " " << *expr << PegDebug::Logger::color(" @" + toString(pos), COLOR_BLUE);
 	PEG_LOG_TRACE("Parser", oss.str());
 }
 

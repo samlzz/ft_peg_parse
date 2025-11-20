@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 20:31:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:48:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,8 +67,7 @@ public:
 	virtual std::string	debugName(void) const = 0;
 	virtual std::string	debugValue(void) const { return ""; }
 
-	std::string			debugRepr(void) const
-		{ return debugName() + ": " + debugValue(); }
+	std::string			debugRepr(bool colored = true) const;
 
 	friend std::ostream& operator<<(std::ostream& os, const Expr& e)
 		{ return os << e.debugRepr(); }

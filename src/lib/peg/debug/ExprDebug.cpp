@@ -6,16 +6,19 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:44:46 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/18 01:45:46 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 13:52:03 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #if PEG_DEBUG_LEVEL > 0
 
 # include <ostream>
+# include <sstream>
+# include <string>
 
 # include "peg/Expr.hpp"
 # include "peg/debug/ExprVisitors.hpp"
+# include "utils/DebugLogger.hpp"
 
 namespace ExprDebug {
 
@@ -55,4 +58,16 @@ void	printExprStats(const Expr* expr, std::ostream &os)
 
 } // end namespace ExprDebug
 
+std::string	Expr::debugRepr(bool colored) const
+{
+	std::ostringstream	oss;
+
+	if (!colored)
+		oss << debugName() << ": " << debugValue();
+	else
+		oss << PegDebug::Logger::color(debugName(), COLOR_YELLOW)
+			<< ": "
+			<< PegDebug::Logger::color(debugValue(), COLOR_GREEN);
+	return oss.str();
+}
 #endif
