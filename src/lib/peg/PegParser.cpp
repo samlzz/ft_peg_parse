@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:20:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 14:19:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,9 @@ void	PegParser::parseRule(void)
 	if (captureRule)
 		expr = new Capture(expr, ruleName);
 
-	PEG_LOG_CONTENT("PEGPARSER", ("Parserd rule " + ruleName), &expr);
+	PEG_LOG_INFO("PegParser", 
+		"Parsed rule " + ruleName + " " + expr->debugRepr()
+	);
 	if (_rules.find(ruleName) != _rules.end())
 	{
 		delete expr;

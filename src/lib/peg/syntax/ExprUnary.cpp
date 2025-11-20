@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:12:12 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 14:20:25 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,10 @@ std::string ExprUnary::debugValue(void) const
 {
 	std::ostringstream oss;
 
-	oss << debugUnaryRepr() << "-> " << (_inner ? _inner->debugName() : "NULL") << ")";
+	oss << "("
+		<< debugUnaryRepr() << " -> "
+		<< (_inner ? _inner->debugName() : "NULL")
+		<< ")";
 	return oss.str();
 }
 #endif
