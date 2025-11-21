@@ -12,7 +12,7 @@
 
 #include "utils/DebugLogger.hpp"
 
-#if PEG_DEBUG_LEVEL > 0
+#if PEG_DEBUG_ENABLED
 
 # include <string>
 # include <iostream>

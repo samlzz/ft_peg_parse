@@ -13,7 +13,9 @@
 #ifndef DEBUGLOGGER_HPP
 # define DEBUGLOGGER_HPP
 
-# if PEG_DEBUG_LEVEL > 0
+#include "utils/DebugConfig.hpp"
+
+# if PEG_DEBUG_ENABLED
 
 #  include <iostream>
 #  include <string>
