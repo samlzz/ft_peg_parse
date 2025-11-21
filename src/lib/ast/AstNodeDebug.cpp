@@ -6,13 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 12:09:29 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:02:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/DebugLogger.hpp"
 
-#ifdef PEG_DEBUG_AST
+#if PEG_DEBUG_AST
 
 # include "ast/AstNode.hpp"
 

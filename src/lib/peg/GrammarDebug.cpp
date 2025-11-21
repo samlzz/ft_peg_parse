@@ -6,13 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:42:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/18 01:41:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:02:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/DebugConfig.hpp"
 
-#ifdef PEG_DEBUG_GRAMMAR
+#if PEG_DEBUG_GRAMMAR
 
 # include <iomanip>
 

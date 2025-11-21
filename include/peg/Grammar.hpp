@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/18 01:40:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:13:44 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,12 @@
 # include <string>
 
 # include "./Expr.hpp"
+# include "utils/DebugConfig.hpp"
 # include "utils/PegException.hpp"
+
+# if PEG_DEBUG_GRAMMAR
+#  include <iostream>
+# endif
 
 class Grammar {
 
@@ -42,14 +47,14 @@ public:
 	class GrammarResolutionError: public GrammarError
 	{
 	public:
-		GrammarResolutionError(const std::string& rule)
+		GrammarResolutionError(const std::string &rule)
 			: GrammarError("Unresolved rule reference: " + rule) {}
 	};
 
 	class GrammarLeftRecursionError: public GrammarError
 	{
 	public:
-		GrammarLeftRecursionError(const std::string& rule)
+		GrammarLeftRecursionError(const std::string &rule)
 			: GrammarError("Left recursion detected in rule: " + rule) {}
 	};
 
@@ -65,7 +70,7 @@ public:
 	Expr	*get(const std::string &name)	const;
 	void	checkLeftRecursion(void)		const;
 
-#ifdef PEG_DEBUG_GRAMMAR
+# if PEG_DEBUG_GRAMMAR
 public:
 	struct PrintOptions
 	{
@@ -76,14 +81,14 @@ public:
 		PrintOptions() : showResolved(true), expandRules(false), maxDepth(3) {}
 	};
 	
-	void print(std::ostream& os = std::cerr, 
-			const PrintOptions& opts = PrintOptions()) const;
+	void print(std::ostream &os = std::cerr,
+			const PrintOptions &opts = PrintOptions()) const;
 	
-	void printRule(const std::string& ruleName, std::ostream& os = std::cerr,
-				const PrintOptions& opts = PrintOptions()) const;
+	void printRule(const std::string &ruleName, std::ostream &os = std::cerr,
+				const PrintOptions &opts = PrintOptions()) const;
 	
-	void printStats(std::ostream& os = std::cerr) const;
-#endif
+	void printStats(std::ostream &os = std::cerr) const;
+# endif
 };
 
 #endif
