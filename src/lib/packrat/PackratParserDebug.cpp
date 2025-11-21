@@ -6,35 +6,46 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 14:02:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 18:00:38 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/DebugConfig.hpp"
+#include <string>
 
-#ifdef PEG_DEBUG_PARSER
+#if PEG_DEBUG_PACKRAT
 
 # include <iomanip>
 # include <sstream>
 
 # include "utils/DebugLogger.hpp"
+# include "utils/Input.hpp"
 # include "packrat/PackratParser.hpp"
 # include "peg/Expr.hpp"
-# include "utils/StringUtils.hpp"
 
-void	PackratParser::_traceEnter(const Expr* expr, size_t pos)
+static inline std::string	_getPos(const Input &in)
+{
+	std::ostringstream	oss;
+
+	oss << "[Ln " << in.line() << ", Col " << in.column() << "]";
+	return oss.str();
+}
+
+void	PackratParser::_traceEnter(const Expr* expr, const Input &in)
 {
 	if (!_traceEnabled)
 		return;
 	
 	std::ostringstream	oss;
-	oss << "├─→ " << *expr << PegDebug::Logger::color(" @" + toString(pos), COLOR_BLUE);
+
+	oss << "├─" << PegDebug::Logger::color("→ ", COLOR_CYAN)
+		<< *expr << " " << PegDebug::Logger::color(_getPos(in) , COLOR_BLUE);
 	
-	PEG_LOG_TRACE("Parser", oss.str());
+	PegDebug::Logger::log(PegDebug::LOG_TRACE, "PackratParser", oss.str());
 	PegDebug::Logger::indent();
 }
 
-void	PackratParser::_traceExit(const Expr* expr, size_t pos, bool success)
+void	PackratParser::_traceExit(const Expr* expr, const Input &in, bool success)
 {
 	if (!_traceEnabled)
 		return;
@@ -47,8 +58,9 @@ void	PackratParser::_traceExit(const Expr* expr, size_t pos, bool success)
 		oss << PegDebug::Logger::color("✓", COLOR_GREEN);
 	else
 		oss << PegDebug::Logger::color("✗", COLOR_RED);
-	oss << " " << *expr << PegDebug::Logger::color(" @" + toString(pos), COLOR_BLUE);
-	PEG_LOG_TRACE("Parser", oss.str());
+	oss << " " << *expr << PegDebug::Logger::color(_getPos(in), COLOR_BLUE);
+
+	PegDebug::Logger::log(PegDebug::LOG_TRACE, "PackratParser", oss.str());
 }
 
 PackratParser::Stats 	PackratParser::getStats(void) const

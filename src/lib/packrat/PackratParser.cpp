@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:11:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:55:00 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 #include "ast/AstNode.hpp"
 #include "utils/DebugLogger.hpp"
 #include "utils/DebugConfig.hpp"
+#include "utils/Input.hpp"
 
 // ---- parseRule: public entry point
 void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
@@ -28,8 +29,8 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 				+ rootRuleName + "': "
 				+ _err.formatError(_input, true));
 
-	PEG_LOG_TRACE("Parser", "Begin parsin with rule :" + rootRuleName);
-	AstNode	*root = new AstNode(rootRuleName);
+	PEG_LOG_TRACE_C(PACKRAT, "PackratParser", "Begin parsing with rule :" + rootRuleName);
+	AstNode		*root = new AstNode(rootRuleName);
 	const bool	ok = eval(start, root);
 	if (!ok || !_input.eof())
 	{
@@ -64,19 +65,19 @@ bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *parent)
 // ----- eval: main of packrat logic (memo + dispatch)
 bool PackratParser::eval(const Expr *expr, AstNode *parent)
 {
-	const size_t	pos = _input.pos();
+	const Input	save(_input);
 
-#ifdef PEG_DEBUG_PARSER
+#if PEG_DEBUG_PACKRAT
 	_evalCount++;
-	_traceEnter(expr, pos);
+	_traceEnter(expr, save);
 #endif
 
-	// TODO: retrive from cache
+	// TODO: retrieve from cache
 
 	const bool	ok = expr->parse(*this, parent);
 
-#ifdef PEG_DEBUG_PARSER
-	_traceExit(expr, pos, ok);
+#if PEG_DEBUG_PACKRAT
+	_traceExit(expr, save, ok);
 	if (!ok)
 		_backtrackCount++;
 #endif
@@ -84,6 +85,6 @@ bool PackratParser::eval(const Expr *expr, AstNode *parent)
 	// TODO: append to cache
 
 	if (!ok)
-		_input.setPos(pos);
+		_input.setPos(save.pos());
 	return ok;
 }
