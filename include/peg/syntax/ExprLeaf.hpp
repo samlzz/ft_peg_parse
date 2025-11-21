@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:26:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:29:25 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ public:
 
 	const std::string&	value() const					{ return _value; }
 	void				setValue(const std::string &v)	{ _value = v; }
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugValue(void) const			{ return escapeStringDisplay(_value, 30); }
 # endif
 
@@ -49,7 +49,7 @@ public:
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor& visitor) const;
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "Literal"; }
 # endif
 };
@@ -63,7 +63,7 @@ public:
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor& visitor) const;
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "CharRange"; }
 # endif
 };
@@ -75,7 +75,7 @@ public:
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor& visitor) const;
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "CharAny"; }
 	virtual std::string	debugValue(void) const	{ return "."; }
 # endif

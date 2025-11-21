@@ -6,11 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/18 01:46:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:35:01 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#if PEG_DEBUG_LEVEL > 0
+#include "utils/DebugConfig.hpp"
+
+#if PEG_DEBUG_ANY
 
 # include "peg/debug/ExprVisitors.hpp"
 # include "peg/syntax/ExprContainer.hpp"

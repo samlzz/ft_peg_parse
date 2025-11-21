@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 14:11:43 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:35:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@
 #include "packrat/PackratParser.hpp"
 #include "peg/syntax/IExprVisitor.hpp"
 #include "peg/syntax/ExprContainer.hpp"
+#include "utils/DebugConfig.hpp"
 
-#if PEG_DEBUG_LEVEL > 0
+#if PEG_DEBUG_ANY
 std::string ExprContainer::debugValue(void) const
 {
 	std::ostringstream	oss;

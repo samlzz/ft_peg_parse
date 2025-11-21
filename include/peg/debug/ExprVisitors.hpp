@@ -5,16 +5,19 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/17 20:00:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 20:51:46y sliziard         ###   ########.fr       */
+/*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/21 10:16:51 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRVISITORS_HPP
 # define EXPRVISITORS_HPP
 
-# if PEG_DEBUG_LEVEL > 0
+# include "utils/DebugConfig.hpp"
 
+# if PEG_DEBUG_ANY
+
+#  include <iostream>
 #  include <ostream>
 #  include <string>
 #  include <map>

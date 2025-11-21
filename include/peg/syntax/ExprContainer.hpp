@@ -6,15 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/17 20:31:14 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:29:19 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRCONTAINER_HPP
 # define EXPRCONTAINER_HPP
-
-# include <cstddef>
-# include <vector>
 
 # include "peg/Expr.hpp"
 
@@ -50,7 +47,7 @@ public:
 
 	void						add(Expr *e) { if (e) _elems.push_back(e); }
 
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugValue(void) const;
 # endif
 };
@@ -65,7 +62,7 @@ public:
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor& visitor) const;
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "Sequence"; }
 # endif
 };
@@ -80,7 +77,7 @@ public:
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor& visitor) const;
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "Choice"; }
 # endif
 };

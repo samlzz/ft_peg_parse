@@ -6,15 +6,18 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 01:38:43 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/18 01:40:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:21:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRDEBUG_HPP
 # define EXPRDEBUG_HPP
 
-# if PEG_DEBUG_LEVEL > 0
+# include "utils/DebugConfig.hpp"
 
+# if PEG_DEBUG_ANY
+
+#  include <iostream>
 #  include <ostream>
 #  include <stdint.h>
 
@@ -31,5 +34,5 @@ void	printExprStats(const Expr *expr, std::ostream &os = std::cerr);
 
 }
 
-# endif
+# endif // PEG_DEBUG_ANY
 #endif

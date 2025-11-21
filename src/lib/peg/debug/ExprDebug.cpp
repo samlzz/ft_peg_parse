@@ -6,11 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:44:46 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 13:52:03 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:34:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#if PEG_DEBUG_LEVEL > 0
+#include "utils/DebugConfig.hpp"
+
+#if PEG_DEBUG_ANY
 
 # include <ostream>
 # include <sstream>

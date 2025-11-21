@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 13:48:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 16:27:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,23 @@
 # define EXPR_HPP
 
 # include <cstddef>
-# include <iostream>
 # include <map>
-# include <ostream>
 # include <stdint.h>
 # include <string>
 # include <vector>
 
+# include "utils/DebugConfig.hpp"
+
+// ============================================================================
+// Forward definitions
+// ============================================================================
 class PackratParser;
 class AstNode;
 class IExprVisitor;
+
+// ============================================================================
+// Expr abstract generic Class
+// ============================================================================
 
 class Expr {
 
@@ -63,7 +70,7 @@ public:
 	virtual size_t			childCount(void) const	{ return 0; }
 	virtual const Expr *	child(size_t) const		{ return NULL; }
 
-# if PEG_DEBUG_LEVEL > 0
+# if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const = 0;
 	virtual std::string	debugValue(void) const { return ""; }
 
@@ -74,8 +81,17 @@ public:
 # endif
 };
 
+// ============================================================================
+// Heplpers
+// ============================================================================
+
+// ----- Expr containers types ----
+
 typedef std::vector<Expr *> 			t_ExprList;
 typedef std::map<std::string, Expr *>	t_ExprDict;
+
+// ---- Delete containers contents ----
+// ? (work on any ptr container)
 
 template <typename T>
 void	deleteAll(std::vector<T *> &list)
