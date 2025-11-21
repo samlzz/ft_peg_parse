@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:27:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:21:07 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:20:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void Logger::log(LogLevel level, const std::string& category,
 
 void	Logger::dbg_enter(const std::string &category, const char *fn)
 {
-	PEG_LOG_TRACE(category,
+	log(LOG_TRACE, category,
 		Logger::color("Enter", COLOR_RED) + " " +
 		Logger::color(fn, COLOR_BLUE)
 	);
@@ -95,12 +95,12 @@ void	Logger::dbg_enter(const std::string &category, const char *fn)
 void	Logger::dbg_exit(const std::string &category, const char *fn)
 {
 	Logger::unindent();
-	PEG_LOG_TRACE(category,
+	log(LOG_TRACE, category,
 		Logger::color("Exit", COLOR_RED) + " " +
 		Logger::color(fn, COLOR_BLUE)
 	);
 }
 
-}
+} // namespace PegDebug
 
-#endif
+#endif // PEG_DEBUG_ENABLED

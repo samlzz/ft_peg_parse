@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 15:07:16 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:38:10 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:25:31 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@
 # ifndef PEG_DEBUG_LEXER
 #  define PEG_DEBUG_LEXER	0
 # endif
-// display`next` and `peek` call with PEG_LOG_ACT_C
+// display`next` and `peek` call and curr _peeked token
 // need & HAD Token debug methods
 
 # ifndef PEG_DEBUG_PARSER

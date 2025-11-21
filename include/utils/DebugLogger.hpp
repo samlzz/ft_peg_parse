@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 07:59:53 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:20:56 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:25:09 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,11 @@
 #  include <string>
 #  include <stdint.h>
 
-# include "utils/DebugConfig.hpp"
-# include "utils/StringUtils.hpp"
+#  include "utils/StringUtils.hpp"
 
-namespace PegDebug {
-
+// ============================================================================
+// ANSI Color codes
+// ============================================================================
 #  define COLOR_RESET			"\033[0m"
 #  define COLOR_BOLD			"\033[1m"
 #  define COLOR_DIM			"\033[2m"
@@ -46,6 +46,11 @@ namespace PegDebug {
 #  define COLOR_BOLD_CYAN		"\033[1;36m"
 #  define COLOR_BOLD_WHITE	"\033[1;37m"
 
+// ============================================================================
+// PegDebug::Logger
+// ============================================================================
+namespace PegDebug {
+
 enum LogLevel
 {
 	LOG_ERROR = PEG_DBG_ERROR,
@@ -54,8 +59,6 @@ enum LogLevel
 	LOG_VERBOSE = PEG_DBG_VERBOSE,
 	LOG_TRACE = PEG_DBG_TRACE
 };
-
-class PegLexer { public: struct Token; };
 
 class Logger {
 private:
@@ -82,62 +85,73 @@ public:
 
 	static void	dbg_enter(const std::string &category, const char *fn);
 	static void	dbg_exit(const std::string &category, const char *fn);
+
 	template<typename T>
-	static void	dbg_action(const std::string &category, const std::string &action, T *printable);
+	static void	dbg_action(const std::string &category,
+							const std::string &action,
+							T *printable);
 
 	struct DbgFn
 	{
 		std::string	_cat;
 		const char	*_name;
+		
+		DbgFn(const std::string &cat, const char *name)
+			: _cat(cat), _name(name)
+		{ dbg_enter(_cat, _name); }
 
-		DbgFn(const std::string &category, const char *name): _cat(category), _name(name)
-			{ dbg_enter(_cat, _name); }
-		~DbgFn()								{ dbg_exit(_cat, _name); }
+		~DbgFn()
+		{ dbg_exit(_cat, _name); }
 	};
-
 };
-}
-
-// Debug Macros
-#  define PEG_LOG(level, category, msg) \
-	do { \
-		if (level <= PEG_DEBUG_LEVEL) \
-			PegDebug::Logger::log((PegDebug::LogLevel)(level), category, msg); \
-	} while(0)
-
-#  define PEG_LOG_ERROR(cat, msg)		PEG_LOG(PEG_DBG_ERROR, cat, msg)
-#  define PEG_LOG_WARN(cat, msg)		PEG_LOG(PEG_DBG_WARN, cat, msg)
-#  define PEG_LOG_INFO(cat, msg)		PEG_LOG(PEG_DBG_INFO, cat, msg)
-#  define PEG_LOG_VERBOSE(cat, msg)		PEG_LOG(PEG_DBG_VERBOSE, cat, msg)
-#  define PEG_LOG_TRACE(cat, msg)		PEG_LOG(PEG_DBG_TRACE, cat, msg)
-
-#  define PEG_LOG_FN(cat, fn_name)					PegDebug::Logger::DbgFn _dbgfn_scope_(cat, fn_name)
-#  define PEG_LOG_CONTENT(cat, msg, printable)	PegDebug::Logger::dbg_action(cat, msg, printable)
-#  define PEG_LOG_ACT(cat, act, printable)		PEG_LOG_CONTENT(cat, act + std::string("():"), printable)
-
-# else
-// Mode release : empty macros
-#  define PEG_LOG(level, category, msg)	do {} while(0)
-#  define PEG_LOG_ERROR(cat, msg)		do {} while(0)
-#  define PEG_LOG_WARN(cat, msg)		do {} while(0)
-#  define PEG_LOG_INFO(cat, msg)		do {} while(0)
-#  define PEG_LOG_VERBOSE(cat, msg)		do {} while(0)
-#  define PEG_LOG_TRACE(cat, msg)		do {} while(0)
-
-#  define PEG_LOG_FN(cat, fn_name)
-#  define PEG_LOG_CONTENT(cat, msg, printable)	do {} while(0)
-#  define PEG_LOG_ACT(cat, act, printable)		do {} while(0)
-
-# endif
 
 template<typename T>
 void	PegDebug::Logger::dbg_action(const std::string &category, const std::string &action, T *printable)
 {
-	PEG_LOG_TRACE(category,
-		color(action, COLOR_MAGENTA)
-			+ (printable ? " " + toString(*printable) : ""
-		)
+	log(LOG_TRACE, category,
+		color(action, COLOR_MAGENTA) + (printable ? " " + toString(*printable) : "")
 	);
 }
+
+} // namespace PegDebug
+
+
+// ============================================================================
+// Component-aware logging macros
+// ============================================================================
+#  define PEG_COMPONENT_SHOULD_LOG(component, level) \
+	(PEG_DEBUG_##component && (level) <= PEG_DEBUG_LEVEL)
+
+#  define PEG_LOG_COMPONENT(component, level, category, msg) \
+	do { \
+		if (PEG_COMPONENT_SHOULD_LOG(component, level)) \
+			PegDebug::Logger::log((PegDebug::LogLevel)(level), category, msg); \
+	} while(0)
+
+#  define PEG_LOG_ERROR_C(comp, cat, msg)	PEG_LOG_COMPONENT(comp, PEG_DBG_ERROR, cat, msg)
+#  define PEG_LOG_WARN_C(comp, cat, msg)	PEG_LOG_COMPONENT(comp, PEG_DBG_WARN, cat, msg)
+#  define PEG_LOG_INFO_C(comp, cat, msg)	PEG_LOG_COMPONENT(comp, PEG_DBG_INFO, cat, msg)
+#  define PEG_LOG_VERBOSE_C(comp, cat, msg)	PEG_LOG_COMPONENT(comp, PEG_DBG_VERBOSE, cat, msg)
+#  define PEG_LOG_TRACE_C(comp, cat, msg)	PEG_LOG_COMPONENT(comp, PEG_DBG_TRACE, cat, msg)
+
+#  if PEG_DEBUG_PARSER
+#   define PEG_LOG_PARSER_FN(fn_name)	PegDebug::Logger::DbgFn	_dbgfn_scope_("PegParser", fn_name)
+#  endif
+
+# else
+
+// Mode release : empty macros
+#  define PEG_LOG_COMPONENT(comp, level, cat, msg)  do {} while(0)
+#  define PEG_LOG_ERROR_C(comp, cat, msg)           do {} while(0)
+#  define PEG_LOG_WARN_C(comp, cat, msg)            do {} while(0)
+#  define PEG_LOG_INFO_C(comp, cat, msg)            do {} while(0)
+#  define PEG_LOG_VERBOSE_C(comp, cat, msg)         do {} while(0)
+#  define PEG_LOG_TRACE_C(comp, cat, msg)           do {} while(0)
+
+# endif // PEG_DEBUG_ENABLED
+
+# ifndef PEG_LOG_PARSER_FN
+#   define PEG_LOG_PARSER_FN(fn_name)
+# endif
 
 #endif
