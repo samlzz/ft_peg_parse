@@ -6,20 +6,23 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 14:01:14 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 10:15:58 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PEGLEXER_HPP
 # define PEGLEXER_HPP
 
-#include <ostream>
 # include <stdint.h>
 # include <string>
 
 # include "utils/Input.hpp"
 # include "utils/PegException.hpp"
 # include "utils/DebugConfig.hpp"
+
+# if PEG_DEBUG_LEXER
+#  include <ostream>
+# endif
 
 class PegLexer {
 
@@ -37,7 +40,7 @@ public:
 	struct Token {
 		enum e_tk_type	type;
 		std::string		val;
-# if defined(PEG_DEBUG_PEGPARSER) || defined(PEG_DEBUG_GRAMMAR)
+# if PEG_DEBUG_LEXER
 		std::string	debugType(void) const;
 		std::string	debugRepr(bool colored = true) const;
 

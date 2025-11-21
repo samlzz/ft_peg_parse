@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:06:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/20 17:36:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 #include <string>
 
 #include "peg/PegLexer.hpp"
-#include "utils/DebugLogger.hpp"
 #include "utils/Input.hpp"
+#include "utils/DebugConfig.hpp"
+
+#if PEG_DEBUG_LEXER
+# include "utils/DebugLogger.hpp"
+#endif
 
 // ---- Ctors ----
 
@@ -139,13 +143,13 @@ PegLexer::Token	PegLexer::lexOne(void)
 PegLexer::Token	PegLexer::next(void)
 {
 	if (_hasPeeked)
-	{
 		_hasPeeked = false;
-		PEG_LOG_ACT("PegLexer", "next", &_peeked);
-		return _peeked;
-	}
-	_peeked = lexOne();
-	PEG_LOG_ACT("PegLexer", "next", &_peeked);
+	else
+		_peeked = lexOne();
+
+#if PEG_DEBUG_LEXER
+	PegDebug::Logger::dbg_action("PegLexer", "next", &_peeked);
+#endif
 	return _peeked;
 }
 
@@ -156,7 +160,9 @@ PegLexer::Token	PegLexer::peek(void)
 		_peeked = lexOne();
 		_hasPeeked = true;
 	}
-	PEG_LOG_ACT("PegLexer", "peek", &_peeked);
+#if PEG_DEBUG_LEXER
+	PegDebug::Logger::dbg_action("PegLexer", "peek", &_peeked);
+#endif
 	return _peeked;
 }
 
