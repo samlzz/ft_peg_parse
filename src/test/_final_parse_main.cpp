@@ -1,10 +1,12 @@
+
 #include <iostream>
+
 #include "peg/PegParser.hpp"
 #include "packrat/PackratParser.hpp"
 #include "peg/Grammar.hpp"
 #include "ast/AstNode.hpp"
-#include "utils/Debug.hpp"
 #include "utils/Input.hpp"
+
 
 int main(int ac, char **av)
 {
@@ -28,7 +30,7 @@ int main(int ac, char **av)
 		AstNode		*output = NULL;
 		exec.parseRule("config", output);
 		std::cout << "Final AST:" << std::endl;
-		printAstTree(output);
+		AstNode::PrintTree(output);
 		delete output;
 	} catch (const std::exception &e)
 	{
