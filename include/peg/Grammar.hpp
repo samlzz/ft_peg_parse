@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/21 10:13:44 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/24 12:34:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ public:
 		bool	expandRules;
 		int32_t	maxDepth;
 		
-		PrintOptions() : showResolved(true), expandRules(false), maxDepth(3) {}
+		PrintOptions() : showResolved(false), expandRules(true), maxDepth(-1) {}
 	};
 	
 	void print(std::ostream &os = std::cerr,
