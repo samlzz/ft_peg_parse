@@ -1,0 +1,65 @@
+# ============================================================================
+# Grammaire PEG pour fichier de configuration webserv (style nginx)
+# ============================================================================
+
+@config <- _ server+ _
+
+# --- Bloc server ---
+@server <- 'server' _ '{' _ server_body _ '}' _
+server_body <- (server_directive / location)*
+
+server_directive <- listen / methods / root / index / autoindex / error_page 
+                 / client_max_body_size / cgi_extension / return_redirect
+
+# --- Bloc location ---
+@location <- 'location' __ path:(path) _ '{' _ location_body _ '}' _
+
+location_body <- location_directive*
+
+location_directive <- methods / root / index / autoindex / error_page 
+                   / cgi_extension / cgi_path / upload_store / return_redirect
+
+# --- Directives server ---
+listen              <- 'listen' __ listen:listen_value _ ';' _
+methods             <- 'methods' __ method:method_list _ ';' _
+root                <- 'root' __ root:path _ ';' _
+index               <- 'index' __ index:path _ ';' _
+autoindex           <- 'autoindex' __ autoindex:bool_value _ ';' _
+error_page          <- 'error_page' __ err_page:error_page_value _ ';' _
+client_max_body_size <- 'client_max_body_size' __ client_max_body_size:size_value _ ';' _
+cgi_extension       <- 'cgi_extension' __ cgi_ext:extension _ ';' _
+return_redirect     <- 'return' __ redirect:redirect_value _ ';' _
+
+# --- Directives location ---
+cgi_path      <- 'cgi_path' __ cgi_path:path _ ';' _
+upload_store  <- 'upload_store' __ upload_store:path _ ';' _
+
+# --- Values ---
+listen_value      <- host_port / port_only
+host_port         <- [^:\n\r\t ;{}]+ ':' [0-9]+
+port_only         <- [0-9]+
+
+method_list       <- method (__ method)*
+method            <- 'GET' / 'POST' / 'DELETE' / 'PUT' / 'HEAD' / 'OPTIONS'
+
+path              <- [^;\n\r\t {}]+
+
+bool_value        <- 'on' / 'off' / 'true' / 'false' / '1' / '0'
+
+error_page_value  <- error_codes _ path
+error_codes       <- [0-9]+ (__ [0-9]+)*
+
+size_value        <- [0-9]+ size_unit?
+size_unit         <- 'K' / 'M' / 'G' / 'k' / 'm' / 'g'
+
+extension         <- '.' [a-zA-Z0-9]+
+
+redirect_value    <- [0-9]+ __ path
+
+# --- Whitespaces and commentary ---
+_   <- (SP / EOL / comment)*      # Espaces/retours/commentaires optionnels
+__  <- (SP / EOL / comment)+      # Au moins un espace/retour/commentaire
+
+SP      <- [ \t]+                 # Espaces horizontaux
+EOL     <- '\r\n' / '\n' / '\r'   # Retours à la ligne
+comment <- '#' [^\n\r]* EOL?      # Commentaire jusqu'à fin de ligne
