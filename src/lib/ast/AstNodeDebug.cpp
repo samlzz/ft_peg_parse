@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:02:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 20:08:22 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,13 @@
 
 #if PEG_DEBUG_AST
 
+# include <ostream>
+
 # include "ast/AstNode.hpp"
 
 // ---- Display ----
 
-void AstNode::print(std::ostream& os, const PrintOptions& opts) const
+void AstNode::print(std::ostream& os, int32_t depth, const PrintOptions& opts) const
 {
 	os << PegDebug::Logger::color(_type, "\033[1;36m");
 	
@@ -27,14 +29,24 @@ void AstNode::print(std::ostream& os, const PrintOptions& opts) const
 	
 	if (opts.showAttributes && !_attrs.empty())
 	{
-		os << " {";
+		os << "\n";
+		for (int32_t i = 0 ; i < depth + 2; ++i)
+			os << opts.indentStr;
+		os << "attrs:\n";
+
 		std::map<std::string, std::string>::const_iterator it = _attrs.begin();
-		for ((void)it; it != _attrs.end(); ++it) {
-			if (it != _attrs.begin()) os << ", ";
+		for ((void)it; it != _attrs.end(); ++it)
+		{
+			for (int32_t i = 0 ; i < depth + 3; ++i)
+				os << opts.indentStr;
+
 			os << it->first << "="
-				<< PegDebug::Logger::color("\"" + it->second + "\"", "\033[33m");
+				<< PegDebug::Logger::color("\"" + it->second + "\"", "\033[33m")
+				<< "\n";
 		}
-		os << "}";
+
+		for (int32_t i = 0 ; i < depth; ++i)
+			os << opts.indentStr;
 	}
 	
 	if (!_children.empty() && !opts.compactMode)
@@ -42,14 +54,14 @@ void AstNode::print(std::ostream& os, const PrintOptions& opts) const
 }
 
 void AstNode::PrintTree(const AstNode *node, std::ostream& os,
-						const PrintOptions& opts, int currentDepth)
+						int32_t currentDepth, const PrintOptions& opts)
 {
 	for (int i = 0; i < currentDepth; ++i)
 		os << opts.indentStr;
 	if (currentDepth > 0)
 		os << "├─ ";
 	
-	node->print(os, opts);
+	node->print(os, currentDepth, opts);
 	os << "\n";
 	
 	if (opts.maxDepth >= 0 && currentDepth >= opts.maxDepth)
@@ -64,7 +76,7 @@ void AstNode::PrintTree(const AstNode *node, std::ostream& os,
 	}
 	
 	for (size_t i = 0; i < node->children().size(); ++i)
-		PrintTree(node->children()[i], os, opts, currentDepth + 1);
+		PrintTree(node->children()[i], os, currentDepth + 1, opts);
 }
 
 std::ostream& operator<<(std::ostream& os, const AstNode& node)

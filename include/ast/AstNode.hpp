@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:01:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 20:02:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,11 +119,11 @@ public:
 			indentStr("  ") {}
 	};
 	
-	void		print(std::ostream& os = std::cerr,
+	void		print(std::ostream& os = std::cerr, int32_t depth = 0,
 				const PrintOptions& opts = PrintOptions()) const;
 	
 	static void	PrintTree(const AstNode *root, std::ostream& os = std::cerr,
-					const PrintOptions& opts = PrintOptions(), int currentDepth = 0);
+					int32_t currentDepth = 0, const PrintOptions& opts = PrintOptions());
 	
 	size_t		nodeCount(void) const;
 	size_t		maxDepth(void) const;
