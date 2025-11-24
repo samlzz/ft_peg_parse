@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/21 10:17:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:11:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ public:
 	virtual void		accept(IExprVisitor& visitor) const;
 # if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const		{ return "Capture"; }
-	virtual std::string	debugValue(void) const		{ return _isProp ? ": " : "@" + _tag; }
+	virtual std::string	debugValue(void) const		{ return (_isProp ? ": " : "@" ) + _tag; }
 # endif
 };
 
