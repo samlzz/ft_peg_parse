@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:52:25 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:34:47 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/24 14:22:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 # include "peg/syntax/ExprUnary.hpp"
 # include "peg/syntax/RuleRef.hpp"
 # include "utils/DebugLogger.hpp"
-# include "utils/StringUtils.hpp"
 
 namespace ExprDebug {
 
@@ -71,13 +70,6 @@ std::string	PrintVisitor::color(const std::string &text, const char *code) const
 	return std::string(code) + text + COLOR_RESET;
 }
 
-# define PRINT_VISIT_LEAF_IMPL(ClassName) \
-	void	PrintVisitor::visit##ClassName(const ClassName &expr) \
-	{ \
-		_os << color(expr.debugName(), _kindColor(expr.kind())) \
-			<< " [" << escapeStringDisplay(expr.value(), 20) << "]"; \
-	}
-
 # define PRINT_VISIT_IMPL(ClassName) \
 	void	PrintVisitor::visit##ClassName(const ClassName &expr) \
 	{ \
@@ -86,9 +78,9 @@ std::string	PrintVisitor::color(const std::string &text, const char *code) const
 	}
 
 // ---- Implement visit methods for all Expr child class ----
-PRINT_VISIT_LEAF_IMPL(Literal)
-PRINT_VISIT_LEAF_IMPL(CharRange)
 
+PRINT_VISIT_IMPL(Literal)
+PRINT_VISIT_IMPL(CharRange)
 PRINT_VISIT_IMPL(Any)
 
 PRINT_VISIT_IMPL(Sequence)

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:29:25 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:03:33 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ public:
 	const std::string&	value() const					{ return _value; }
 	void				setValue(const std::string &v)	{ _value = v; }
 # if PEG_DEBUG_ANY
-	virtual std::string	debugValue(void) const			{ return escapeStringDisplay(_value, 30); }
+	virtual std::string	debugValue(void) const			{ return escapeStringDisplay(_value); }
 # endif
 
 private:
@@ -65,6 +65,7 @@ public:
 	virtual void		accept(IExprVisitor& visitor) const;
 # if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "CharRange"; }
+	virtual std::string debugValue(void) const	{ return escapeCharSetDisplay(_value); }
 # endif
 };
 

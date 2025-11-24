@@ -6,42 +6,85 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/19 15:25:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/24 15:09:01 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRINGUTILS_HPP
 # define STRINGUTILS_HPP
 
+# include <cstdio>
 # include <sstream>
 # include <stdint.h>
 # include <cstddef>
 # include <string>
 
-inline std::string	escapeStringDisplay(const std::string &str, size_t maxLen = 40)
+inline std::string escapeCharDisplay(unsigned char c)
 {
-	std::string	result;
-	size_t		len = 0;
-	
-	for (size_t i = 0; i < str.size() && len < maxLen; ++i, ++len)
+	switch (c)
 	{
-		switch (str[i]) {
-			case '\n': result += "\\n"; break;
-			case '\r': result += "\\r"; break;
-			case '\t': result += "\\t"; break;
-			case '\\': result += "\\\\"; break;
-			case '"':  result += "\\\""; break;
-			default:
-				result += str[i];
-				break;
-		}
+		case '\n': return "\\n";
+		case '\r': return "\\r";
+		case '\t': return "\\t";
+		case '\\': return "\\\\";
+		case '"':  return "\\\"";
+		default:
+			if (c < 32 || c >= 127)
+			{
+				char buf[6];
+				std::sprintf(buf, "\\x%02X", c);
+				return buf;
+			}
+			else
+			{
+				return std::string(1, c);
+			}
 	}
+}
+
+inline std::string	escapeStringDisplay(const std::string &str, size_t maxLen = 30)
+{
+	std::ostringstream	oss;
+
+	for (size_t i = 0; i < str.size() && i < maxLen; ++i)
+		oss << escapeCharDisplay(str[i]);
 	
 	if (str.size() > maxLen)
-		result += "...";
-	
-	return result;
+		oss << "...";
+	return oss.str();
 }
+
+inline std::string	escapeCharSetDisplay(const std::string &set, size_t maxSegments = 15)
+{
+	std::ostringstream	oss;
+	size_t				count = 0;
+	size_t				seg = 0;
+
+	oss << "[";
+	for (size_t i = 0; i < set.size() && seg < maxSegments; )
+	{
+		uint8_t	start = static_cast<uint8_t>(set[i]);
+		uint8_t	end = start;
+		size_t	j;
+
+		for (j = i + 1; j < set.size() && static_cast<uint8_t>(set[j]) == end + 1; ++j)
+			end = static_cast<uint8_t>(set[j]);
+
+		if (seg++ > 0)
+			oss << " ";
+		oss << escapeCharDisplay(start);
+		if (start != end)
+			oss << '-' << escapeCharDisplay(end);
+		count += (end - start + 1);
+		i = j;
+	}
+	
+	if (set.size() > count)
+		oss << "...";
+	oss << "]";
+	return oss.str();
+}
+
 
 inline char unescapeChar(const std::string &s, size_t &i)
 {
@@ -64,30 +107,45 @@ inline char unescapeChar(const std::string &s, size_t &i)
 
 inline std::string unescapeString(const std::string &raw)
 {
-	std::string	resp;
+	std::ostringstream	oss;
 	
 	for (size_t i = 0; i < raw.size(); ++i)
-		resp += unescapeChar(raw, i);
-	return resp;
+		oss << unescapeChar(raw, i);
+	return oss.str();
 }
 
-static inline void	_appendRange(std::string &dst, char beg, char end)
+static inline void	_appendRange(std::ostringstream &dst, char beg, char end)
 {
 	if (static_cast<uint8_t>(beg) <= static_cast<uint8_t>(end))
 	{
 		for (uint8_t ch = beg; ch <= end; ++ch)
-			dst += ch;
+			dst << ch;
 	}
 	else
-		dst += std::string() + beg + '-' + end;
+		dst << beg << '-' << end;
+}
+
+static inline std::string	_inverseChars(const std::string &src)
+{
+	std::ostringstream dst;
+
+	for (int32_t i = 0; i < 256; ++i)
+	{
+		char c = static_cast<char>(i);
+		if (src.find(c) == std::string::npos)
+			dst << c;
+	}
+	return dst.str();
 }
 
 inline std::string expandCharSet(const std::string &raw)
 {
-	std::string	resp;
-	char		c;
+	std::ostringstream	resp;
+	bool				negate;
+	char				c;
 
-	for (size_t i = 0; i < raw.size(); ++i)
+	negate = (!raw.empty() && raw[0] == '^');
+	for (size_t i = size_t(negate); i < raw.size(); ++i)
 	{
 		c = unescapeChar(raw, i);
 		if (i + 2 < raw.size()
@@ -97,9 +155,11 @@ inline std::string expandCharSet(const std::string &raw)
 			_appendRange(resp, c, unescapeChar(raw, i));
 		}
 		else
-			resp += c;
+			resp << c;
 	}
-	return resp;
+	if (negate)
+		return _inverseChars(resp.str());
+	return resp.str();
 }
 
 template <typename T>
