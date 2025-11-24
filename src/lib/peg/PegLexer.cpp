@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:36:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 19:57:22 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,15 +142,20 @@ PegLexer::Token	PegLexer::lexOne(void)
 
 PegLexer::Token	PegLexer::next(void)
 {
+	Token	curr;
+
 	if (_hasPeeked)
+	{
 		_hasPeeked = false;
+		curr = _peeked;
+	}
 	else
-		_peeked = lexOne();
+		curr = lexOne();
 
 #if PEG_DEBUG_LEXER
-	PegDebug::Logger::dbg_action("PegLexer", "next", &_peeked);
+	PegDebug::Logger::dbg_action("PegLexer", "next", &curr);
 #endif
-	return _peeked;
+	return curr;
 }
 
 PegLexer::Token	PegLexer::peek(void)

@@ -6,16 +6,16 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:23:15 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/24 12:36:33 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 
-#include "peg/PegParser.hpp"
 #include "peg/Expr.hpp"
 #include "peg/Grammar.hpp"
 #include "peg/PegLexer.hpp"
+#include "peg/PegParser.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
@@ -51,9 +51,8 @@ Expr	*PegParser::parsePrimary(void)
 	case PegLexer::T_ID: {
 		if (_lex.match(PegLexer::T_COLON))
 		{
-			if (_lex.peek().type != PegLexer::T_ID)
-				throw PegParserError("Malformed property capture, expected an Identifier");
-			return new Capture(new RuleRef(_lex.next().val), tk.val, true);
+			Expr	*expr = parseChoice();
+			return new Capture(expr, tk.val, true);
 		}
 		return new RuleRef(tk.val);
 	}

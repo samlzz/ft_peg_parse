@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:55:00 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:16:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,11 +65,11 @@ bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *parent)
 // ----- eval: main of packrat logic (memo + dispatch)
 bool PackratParser::eval(const Expr *expr, AstNode *parent)
 {
-	const Input	save(_input);
+	size_t	pos = _input.pos();
 
 #if PEG_DEBUG_PACKRAT
 	_evalCount++;
-	_traceEnter(expr, save);
+	_traceEnter(expr, _input);
 #endif
 
 	// TODO: retrieve from cache
@@ -77,7 +77,7 @@ bool PackratParser::eval(const Expr *expr, AstNode *parent)
 	const bool	ok = expr->parse(*this, parent);
 
 #if PEG_DEBUG_PACKRAT
-	_traceExit(expr, save, ok);
+	_traceExit(expr, _input, ok);
 	if (!ok)
 		_backtrackCount++;
 #endif
@@ -85,6 +85,6 @@ bool PackratParser::eval(const Expr *expr, AstNode *parent)
 	// TODO: append to cache
 
 	if (!ok)
-		_input.setPos(save.pos());
+		_input.setPos(pos);
 	return ok;
 }
