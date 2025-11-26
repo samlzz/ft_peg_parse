@@ -13,9 +13,9 @@ OBJ_DIR   = build/
 BIN_DIR   =
 
 ### UFILES_START ###
-FILES =	ast/AstNode.cpp \
+FILES =	 \
+		ast/AstNode.cpp \
 		ast/AstNodeDebug.cpp \
-		packrat/PackratCache.cpp \
 		packrat/PackratParser.cpp \
 		packrat/PackratParserDebug.cpp \
 		peg/Grammar.cpp \

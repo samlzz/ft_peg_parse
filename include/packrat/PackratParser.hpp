@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 09:39:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:54:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 
 # include <stdint.h>
 
-# include "PackratCache.hpp"
 # include "ast/AstNode.hpp"
 # include "peg/Grammar.hpp"
 # include "utils/DebugConfig.hpp"
@@ -44,7 +43,6 @@ class PackratParser {
 private:
 	Input			_input;
 	const Grammar	&_grammar;
-	PackratCache	_memo;
 	Diag			_err;
 
 	PackratParser(const PackratParser &other);
@@ -82,7 +80,7 @@ public:
 	// ========================================================================
 
 	PackratParser(const std::string &path, const Grammar &pegGrammar):
-		_input(Input::fromFile(path)), _grammar(pegGrammar), _memo(), _err()
+		_input(Input::fromFile(path)), _grammar(pegGrammar), _err()
 # if PEG_DEBUG_PACKRAT
 		, _traceDepth(0), _traceEnabled(true)
 		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
@@ -110,8 +108,7 @@ public:
 	const Input	&input(void) const	{ return _input; }
 	Input		&input(void)		{ return _input; }
 
-	void	resetDiag(void)		{ _err.reset(); }
-	void	resetMemo(void)		{ _memo.reset(); }
+	void		resetDiag(void)		{ _err.reset(); }
 
 	// ---- Debug functions ----
 # if PEG_DEBUG_PACKRAT

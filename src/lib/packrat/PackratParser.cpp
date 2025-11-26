@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 19:00:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:54:38 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,23 +50,6 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 	}
 	else
 		out = root;
-}
-
-// ============================================================================
-// retrieveExpr: memo lookup
-// ============================================================================
-
-bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *parent)
-{
-	PackratCache::MemoEntry m = _memo.get(e, pos);
-
-	_input.setPos(m.nextPos());
-	if (m.node())
-	{
-		AstNode *clone = new AstNode(*m.node());
-		parent->addChild(clone);
-	}
-	return m.ok();
 }
 
 // ============================================================================
