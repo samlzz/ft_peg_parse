@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 18:21:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 11:12:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,6 @@ public:
 
 	// ---- Input accessors ----
 	const Input	&input(void) const	{ return _input; }
-	Input		&input(void)		{ return _input; }
 
 private:
 
