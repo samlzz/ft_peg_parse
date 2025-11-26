@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 17:19:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:27:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 # include "peg/syntax/ExprLeaf.hpp"
 # include "peg/syntax/ExprUnary.hpp"
 # include "peg/syntax/RuleRef.hpp"
-
-namespace ExprDebug {
 
 // ============================================================================
 // StatsVisitor
@@ -113,8 +111,6 @@ void	StatsVisitor::print(std::ostream &os) const
 
 	os << "╚═══════════════════════════════════════╝\n";
 }
-
-} // namespace ExprDebug
 
 #endif
 

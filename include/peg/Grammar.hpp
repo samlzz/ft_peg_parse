@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 18:19:28 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:34:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,9 +121,11 @@ public:
 	struct PrintOptions {
 		bool	showResolved;
 		bool	expandRules;
+		bool	colored;
 		int32_t	maxDepth;
 
-		PrintOptions() : showResolved(false), expandRules(true), maxDepth(-1) {}
+		PrintOptions(): showResolved(false), expandRules(true),
+				colored(true), maxDepth(-1) {}
 	};
 
 

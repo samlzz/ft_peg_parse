@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:44:46 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 16:01:16 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:26:49 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,61 +22,11 @@
 # include "peg/debug/ExprVisitors.hpp"
 # include "utils/DebugLogger.hpp"
 
-namespace ExprDebug {
-
 // ============================================================================
-// printExpr : Inline display
+// Expr display functions
 // ============================================================================
 
-void	printExpr(const Expr *expr, std::ostream &os)
-{
-	if (!expr)
-	{
-		os << "(null)";
-		return;
-	}
-	PrintVisitor visitor(os);
-	expr->accept(visitor);
-}
-
-// ============================================================================
-// printExprTree : Hierarchical tree display
-// ============================================================================
-
-void	printExprTree(const Expr *expr, std::ostream &os, int maxDepth)
-{
-	if (!expr)
-	{
-		os << "(null)\n";
-		return;
-	}
-	TreeVisitor visitor(os, maxDepth);
-	expr->accept(visitor);
-}
-
-// ============================================================================
-// printExprStats : Statistics report
-// ============================================================================
-
-void	printExprStats(const Expr *expr, std::ostream &os)
-{
-	if (!expr)
-	{
-		os << "No expression to analyze\n";
-		return;
-	}
-	StatsVisitor visitor;
-	expr->accept(visitor);
-	visitor.print(os);
-}
-
-} // namespace ExprDebug
-
-// ============================================================================
-// Expr::debugRepr : Inline colored representation
-// ============================================================================
-
-// Return a debug-friendly string including name and value, optionally colored.
+// Return a debug-friendly inline colored representation, optionally colored.
 std::string	Expr::debugRepr(bool colored) const
 {
 	std::ostringstream oss;
@@ -89,6 +39,31 @@ std::string	Expr::debugRepr(bool colored) const
 			<< PegDebug::Logger::color(debugValue(), COLOR_GREEN);
 
 	return oss.str();
+}
+
+// Use TreeVisitor to perform the print of expressions
+void	Expr::printTree(const Expr *root, std::ostream &os, int32_t maxDepth)
+{
+	if (!root)
+	{
+		os << "(null)\n";
+		return;
+	}
+	TreeVisitor visitor(os, maxDepth);
+	root->accept(visitor);
+}
+
+// Use StatsVisitor to collect and print expressions statistiques
+void	Expr::printStats(const Expr *root, std::ostream &os)
+{
+	if (!root)
+	{
+		os << "No expression to analyze\n";
+		return;
+	}
+	StatsVisitor visitor;
+	root->accept(visitor);
+	visitor.print(os);
 }
 
 #endif

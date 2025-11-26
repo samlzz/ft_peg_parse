@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:42:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 17:37:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:35:58 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,6 @@
 
 # include "peg/Grammar.hpp"
 # include "peg/Expr.hpp"
-# include "peg/debug/ExprDebug.hpp"
 
 // ============================================================================
 // Grammar debug display
@@ -41,9 +40,9 @@ void	Grammar::print(std::ostream &os, const PrintOptions &opts) const
 		os << "\n";
 
 		if (opts.expandRules)
-			ExprDebug::printExprTree(it->second, os, opts.maxDepth);
+			Expr::printTree(it->second, os, opts.maxDepth);
 		else
-			ExprDebug::printExpr(it->second, os);
+			os << it->second->debugRepr(opts.colored);
 
 		os << "└─────────────────────────────────\n";
 	}
@@ -62,7 +61,7 @@ void	Grammar::printRule(const std::string &ruleName,
 	}
 
 	os << "\nRule: " << ruleName << "\n";
-	ExprDebug::printExprTree(expr, os, opts.maxDepth);
+	Expr::printTree(expr, os, opts.maxDepth);
 }
 
 void	Grammar::printStats(std::ostream &os) const
@@ -75,7 +74,7 @@ void	Grammar::printStats(std::ostream &os) const
 	os << "║ Expression types:                     ║\n";
 
 	if (!_start.empty())
-		ExprDebug::printExprStats(get(_start), os);
+		Expr::printStats(get(_start), os);
 	else
 		os << "║ (no start rule)                       ║\n";
 

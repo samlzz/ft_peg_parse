@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 21:20:10 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:27:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,15 +20,13 @@
 # include "peg/syntax/ExprUnary.hpp"
 # include "peg/syntax/RuleRef.hpp"
 
-namespace ExprDebug {
-
 // ============================================================================
 // TreeVisitor
 // ============================================================================
 
 TreeVisitor::TreeVisitor(std::ostream &os, int32_t maxDepth, bool useColors)
 	: _os(os), _depth(0), _maxDepth(maxDepth),
-	  _prefix(""), _isLast(true), _useColors(useColors)
+		_prefix(""), _isLast(true), _useColors(useColors)
 {}
 
 // Apply ANSI color if enabled.
@@ -47,10 +45,7 @@ void	TreeVisitor::printNode(const Expr &expr)
 	if (_depth > 0)
 		_os << (_isLast ? "└─ " : "├─ ");
 
-	PrintVisitor printer(_os, _useColors);
-	expr.accept(printer);
-
-	_os << "\n";
+	_os << expr.debugRepr(_useColors) << "\n";
 }
 
 // Visit all children, respecting maxDepth and prefixes.
@@ -137,8 +132,6 @@ void	TreeVisitor::visitRuleRef(const RuleRef &expr)
 	descend(expr.resolved(), true);
 	_prefix = oldPrefix;
 }
-
-} // namespace ExprDebug
 
 #endif
 

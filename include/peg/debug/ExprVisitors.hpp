@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 21:20:00 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:14:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,42 +24,6 @@
 
 #  include "peg/syntax/IExprVisitor.hpp"
 #  include "peg/Expr.hpp"
-
-namespace ExprDebug {
-
-// ============================================================================
-// PrintVisitor
-// ============================================================================
-
-/**
- * @brief Visitor producing compact inline debug output.
- *
- * Applies color coding based on Expr kind. This visitor does not explore
- * children and only prints the current node.
- */
-class PrintVisitor : public IExprVisitor {
-
-private:
-	std::ostream	&_os;
-	bool			_useColors;
-
-	std::string		color(const std::string &text, const char *code) const;
-
-public:
-	PrintVisitor(std::ostream &os = std::cerr, bool useColors = true);
-
-	virtual void	visitLiteral(const Literal &expr);
-	virtual void	visitCharRange(const CharRange &expr);
-	virtual void	visitAny(const Any &expr);
-	virtual void	visitSequence(const Sequence &expr);
-	virtual void	visitChoice(const Choice &expr);
-	virtual void	visitZeroOrMore(const ZeroOrMore &expr);
-	virtual void	visitOneOrMore(const OneOrMore &expr);
-	virtual void	visitOptional(const Optional &expr);
-	virtual void	visitPredicate(const Predicate &expr);
-	virtual void	visitRuleRef(const RuleRef &expr);
-	virtual void	visitCapture(const Capture &expr);
-};
 
 // ============================================================================
 // TreeVisitor
@@ -150,8 +114,6 @@ public:
 	virtual void	visitRuleRef(const RuleRef &expr);
 	virtual void	visitCapture(const Capture &expr);
 };
-
-} // namespace ExprDebug
 
 # endif // PEG_DEBUG_ANY
 #endif

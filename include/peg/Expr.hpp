@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 15:51:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:26:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@
 # include <vector>
 
 # include "utils/DebugConfig.hpp"
+
+# if PEG_DEBUG_ANY
+#  include <iostream>
+# endif
+
 
 // ============================================================================
 // Forward declarations
@@ -73,7 +78,7 @@ public:
 	virtual void			accept(IExprVisitor &visitor) const = 0;
 
 	// ---- Accessors ----
-	enum e_expr_kind		kind(void) const	{ return _kind; }
+	enum e_expr_kind		kind(void) const		{ return _kind; }
 	virtual size_t			childCount(void) const	{ return 0; }
 	virtual const Expr *	child(size_t) const		{ return NULL; }
 
@@ -82,10 +87,23 @@ public:
 	virtual std::string	debugName(void) const = 0;
 	virtual std::string	debugValue(void) const { return ""; }
 
+	/**
+	 * @brief Print a compact inline representation of an expression.
+	 */
 	std::string			debugRepr(bool colored = true) const;
 
-	friend std::ostream& operator<<(std::ostream& os, const Expr& e)
-		{ return os << e.debugRepr(); }
+	/**
+	 * @brief Print an expression as a tree structure.
+	 */
+	static void	printTree(const Expr *root, std::ostream &os = std::cerr,
+							int32_t maxDepth = -1);
+	/**
+	 * @brief Compute and print statistics about an expression tree.
+	 */
+	static void	printStats(const Expr *root, std::ostream &os = std::cerr);
+
+
+	friend std::ostream& operator<<(std::ostream& os, const Expr& e) { return os << e.debugRepr(); }
 # endif
 };
 
