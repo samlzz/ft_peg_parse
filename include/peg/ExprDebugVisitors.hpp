@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ExprVisitors.hpp                                   :+:      :+:    :+:   */
+/*   ExprDebugVisitors.hpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:14:55 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:38:38 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 #  include <string>
 #  include <map>
 
-#  include "peg/syntax/IExprVisitor.hpp"
+#  include "peg/IExprVisitor.hpp"
 #  include "peg/Expr.hpp"
 
 // ============================================================================

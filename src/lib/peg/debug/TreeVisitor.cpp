@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:27:41 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:39:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #if PEG_DEBUG_ANY
 
-# include "peg/debug/ExprVisitors.hpp"
+# include "peg/ExprDebugVisitors.hpp"
 # include "peg/syntax/ExprContainer.hpp"
 # include "peg/syntax/ExprLeaf.hpp"
 # include "peg/syntax/ExprUnary.hpp"
