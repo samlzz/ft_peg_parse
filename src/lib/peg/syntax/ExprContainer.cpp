@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:40:15 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 16:25:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ bool Choice::parse(PackratParser &parser, AstNode *parent) const
 			return true;
 		}
 	}
-	parser.diag().update(start, "expected at least one valid choice");
+	parser.diag().update(start, "one of the alternatives", Diag::PRIO_LOW);
 	return false;
 }
 

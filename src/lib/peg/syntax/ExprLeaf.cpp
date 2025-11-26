@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:27:31 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:40:26 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 16:25:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 #include "packrat/PackratParser.hpp"
 #include "peg/IExprVisitor.hpp"
+#include "utils/Diag.hpp"
+#include "utils/StringUtils.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
 
 // ============================================================================
@@ -34,17 +36,10 @@ bool Literal::parse(PackratParser &parser, AstNode *parent) const
 	Input &in = parser.input();
 	(void)parent;
 
-	if (in.eof())
+	if (in.eof() || !in.match(_value))
 	{
-		parser.diag().update(
-			in.pos(),
-			"unexpected EOF (expected \"" + _value + "\")"
-		);
-		return false;
-	}
-	if (!in.match(_value))
-	{
-		parser.diag().update(in.pos(), "expected \"" + _value + "\"");
+		parser.diag().update(in.pos(),
+			escapeStringDisplay(_value), Diag::PRIO_HIGH);
 		return false;
 	}
 	return true;
@@ -62,25 +57,14 @@ void CharRange::accept(IExprVisitor &visitor) const
 // Match a single character belonging to the expanded charset.
 bool CharRange::parse(PackratParser &parser, AstNode *parent) const
 {
-	Input &in = parser.input();
+	Input	&in = parser.input();
+	char	c = in.peek();
 	(void)parent;
 
-	if (in.eof())
+	if (in.eof() || _value.find(c) == std::string::npos)
 	{
-		parser.diag().update(
-			in.pos(),
-			"unexpected EOF (expected [" + _value + "])"
-		);
-		return false;
-	}
-
-	char c = in.peek();
-	if (_value.empty() || _value.find(c) == std::string::npos)
-	{
-		parser.diag().update(
-			in.pos(),
-			std::string("unexpected '") + c + "' (expected [" + _value + "])"
-		);
+		parser.diag().update(in.pos(),
+			escapeCharSetDisplay(_value), Diag::PRIO_HIGH);
 		return false;
 	}
 
@@ -105,10 +89,7 @@ bool Any::parse(PackratParser &parser, AstNode *parent) const
 
 	if (in.eof())
 	{
-		parser.diag().update(
-			in.pos(),
-			"unexpected EOF (expected any character)"
-		);
+		parser.diag().update(in.pos(), "any character", Diag::PRIO_LOW);
 		return false;
 	}
 

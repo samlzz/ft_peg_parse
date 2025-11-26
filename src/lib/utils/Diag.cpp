@@ -6,70 +6,215 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 19:26:55 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 16:24:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstddef>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <algorithm>
+#include <vector>
 
 #include "utils/Diag.hpp"
 #include "utils/Input.hpp"
 
 // ============================================================================
-// Assignment
+// Expectation
 // ============================================================================
 
+bool Diag::Expectation::operator<(const Expectation &other) const
+{
+	if (priority != other.priority)
+		return priority > other.priority;
+	return message < other.message;
+}
+
+bool Diag::Expectation::operator==(const Expectation &other) const
+{
+	return priority == other.priority
+		&& message == other.message
+		&& rule_context == other.rule_context;
+}
+
+// ============================================================================
+// Diag
+// ============================================================================
+
+// Assignment
 Diag	&Diag::operator=(const Diag &other)
 {
 	if (this != &other)
 	{
-		_expected = other._expected;
+		_expectations = other._expectations;
 		_farthest = other._farthest;
+		_current_rule = other._current_rule;
 	}
 	return *this;
+}
+
+// ============================================================================
+// Rule context tracking
+// ============================================================================
+
+void	Diag::enter_rule(const std::string &rule_name)
+{
+	_current_rule = rule_name;
+}
+
+void	Diag::exit_rule(void)
+{
+	_current_rule.clear();
 }
 
 // ============================================================================
 // Update & merge
 // ============================================================================
 
-void	Diag::concat_expectation(const std::string &exp)
+void	Diag::add_expectation(const std::string &msg, enum e_priority prio)
 {
-	if (_expected.find(exp) != std::string::npos)
-		return;
-
-	if (!_expected.empty())
-		_expected += ", ";
-	_expected += exp;
+	for (size_t i = 0; i < _expectations.size(); ++i)
+	{
+		if (_expectations[i].message == msg)
+		{
+			if (prio > _expectations[i].priority)
+				_expectations[i].priority = prio;
+			return;
+		}
+	}
+	
+	_expectations.push_back(Expectation(msg, prio, _current_rule));
 }
 
-void	Diag::update(size_t pos, const std::string &expected)
+// New farthest position: reset expectations
+// Same position: add to expectations
+// Less farther position: ignore (older error)
+void	Diag::update(size_t pos, const std::string &expected, enum e_priority prio)
 {
 	if (pos > _farthest)
 	{
 		_farthest = pos;
-		_expected = expected;
+		_expectations.clear();
+		add_expectation(expected, prio);
 	}
 	else if (pos == _farthest)
-		concat_expectation(expected);
-}
-
-void	Diag::merge(const Diag &other)
-{
-	update(other._farthest, other._expected);
+		add_expectation(expected, prio);
 }
 
 void	Diag::reset(void)
 {
 	_farthest = 0;
-	_expected.clear();
+	_expectations.clear();
+	_current_rule.clear();
 }
 
 // ============================================================================
-// Formatting
+// Formatting helpers
 // ============================================================================
+
+// Sort by priority (descending), then alphabetically
+void	Diag::deduplicate_expectations(void)
+{
+	if (_expectations.empty())
+		return;
+
+	std::sort(_expectations.begin(), _expectations.end());
+
+	std::vector<Expectation> unique;
+
+	unique.push_back(_expectations[0]);
+	for (size_t i = 1; i < _expectations.size(); ++i)
+	{
+		if (_expectations[i].message != _expectations[i-1].message)
+			unique.push_back(_expectations[i]);
+	}
+	_expectations = unique;
+}
+
+static inline void	_group_by_priority(
+	const std::vector<Diag::Expectation> &src,
+	std::vector<Diag::Expectation> groups[4])
+{
+	for (size_t i = 0; i < src.size(); ++i)
+	{
+		const Diag::Expectation &e = src[i];
+		groups[e.priority].push_back(e);
+	}
+}
+
+static inline const std::vector<Diag::Expectation> *
+_select_best_group(std::vector<Diag::Expectation> groups[4])
+{
+	if (!groups[Diag::PRIO_CRITICAL].empty())	return &groups[Diag::PRIO_CRITICAL];
+	if (!groups[Diag::PRIO_HIGH].empty())		return &groups[Diag::PRIO_HIGH];
+	if (!groups[Diag::PRIO_MEDIUM].empty())		return &groups[Diag::PRIO_MEDIUM];
+	if (!groups[Diag::PRIO_LOW].empty())		return &groups[Diag::PRIO_LOW];
+	return NULL;
+}
+
+static inline std::string _format_group(const std::vector<Diag::Expectation> &v)
+{
+	std::ostringstream oss;
+	oss << "expected ";
+
+	size_t max_show = (v.size() > 3) ? 3 : v.size();
+
+	for (size_t i = 0; i < max_show; ++i)
+	{
+		if (i > 0)
+		{
+			if (i == max_show - 1)
+				oss << " or ";
+			else
+				oss << ", ";
+		}
+		oss << v[i].message;
+	}
+
+	if (v.size() > 3)
+		oss << " (or " << (v.size() - 3) << " other alternatives)";
+	return oss.str();
+}
+
+std::string Diag::format_expectations(void) const
+{
+	if (_expectations.empty())
+		return "unexpected input";
+
+	std::vector<Expectation> groups[4];
+	_group_by_priority(_expectations, groups);
+
+	const std::vector<Expectation> *best = _select_best_group(groups);
+	if (!best || best->empty())
+		return "unexpected input";
+
+	return _format_group(*best);
+}
+
+// ============================================================================
+// Error formatting with mark
+// ============================================================================
+
+static inline void	_append_ctx(const Input &in, size_t farthest, std::ostringstream &oss)
+{
+	const size_t	rad = 10;
+	std::string		ctx = in.context(farthest, rad);
+
+	if (!ctx.empty())
+	{
+		size_t		pos = std::min(farthest, rad);
+		std::string	marked;
+
+		if (ctx.size() < pos)
+			pos = ctx.size();
+		marked.resize(ctx.size() + 4);
+		marked.append(ctx.substr(0, pos));
+		marked.append(" >>>");
+		marked.append(ctx.substr(pos));
+		oss << "\n" << marked;
+	}
+}
 
 std::string	Diag::formatError(const Input &in, bool withCtx) const
 {
@@ -77,18 +222,20 @@ std::string	Diag::formatError(const Input &in, bool withCtx) const
 	Input				tmp(in);
 
 	tmp.setPos(_farthest);
-	oss << "error at line " << tmp.line()
-		<< ", column " << tmp.column();
+	oss << "error at line " << tmp.line() << ", column " << tmp.column();
+	
+	if (!_current_rule.empty())
+		oss << " (in rule '" << _current_rule << "')";
+	
+	oss << ": ";
 
-	if (!_expected.empty())
-		oss << " " << _expected;
+	Diag mutable_copy = *this;
+	mutable_copy.deduplicate_expectations();
+	oss << mutable_copy.format_expectations();
 
 	if (withCtx)
-	{
-		std::string ctx = in.context(_farthest, 10);
-		if (!ctx.empty())
-			oss << " before \"" << ctx << "\"";
-	}
+		_append_ctx(in, _farthest, oss);
+
 	return oss.str();
 }
 

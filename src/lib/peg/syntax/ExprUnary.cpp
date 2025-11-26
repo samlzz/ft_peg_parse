@@ -82,7 +82,8 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
 	}
 	if (!occ)
 	{
-		parser.diag().update(in.pos(), "expected one or more repetitions");
+		parser.diag().update(in.pos(),
+			"at least one occurence", Diag::PRIO_MEDIUM);
 		return false;
 	}
 	return true;
@@ -146,17 +147,22 @@ bool Capture::parseProperty(PackratParser &parser, AstNode *parent) const
 	{
 		AstNode	tmp;
 		if (!parser.eval(_inner, &tmp))
+		{
+			parser.diag().exit_rule();
 			return false;
+		}
 		parent->stealChildren(tmp);
 	}
 
 	parent->setAttr(_tag, in.substr(start, in.pos()));
+	parser.diag().exit_rule();
 	return true;
 }
 
 // Standard capture: build a child AST node with inner parse content.
 bool Capture::parse(PackratParser &parser, AstNode *parent) const
 {
+	parser.diag().enter_rule(_tag);
 	if (_isProp)
 		return parseProperty(parser, parent);
 
@@ -168,10 +174,12 @@ bool Capture::parse(PackratParser &parser, AstNode *parent) const
 	{
 		in.setPos(start);
 		delete me;
+		parser.diag().exit_rule();
 		return false;
 	}
 	me->setSpan(start, in.pos());
 	parent->addChild(me);
+	parser.diag().exit_rule();
 	return true;
 }
 
