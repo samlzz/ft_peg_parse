@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			*/
-/*														:::	  ::::::::   */
-/*   Grammar.cpp										:+:	  :+:	:+:   */
-/*													+:+ +:+		 +:+	 */
-/*   By: sliziard <sliziard@student.42.fr>		  +#+  +:+	   +#+		*/
-/*												+#+#+#+#+#+   +#+		   */
-/*   Created: 2025/11/01 00:38:12 by sliziard		  #+#	#+#			 */
-/*   Updated: 2025/11/02 20:39:04 by sliziard		 ###   ########.fr	   */
-/*																			*/
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   Grammar.cpp                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/24 19:08:10 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/25 17:39:13 by sliziard         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include <cstddef>
@@ -20,13 +20,20 @@
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/RuleRef.hpp"
 
-// ---- Ctors ----
+// ============================================================================
+// Constructors / assignment
+// ============================================================================
 
-Grammar::Grammar(t_ExprDict &rules): _rules(), _start()
+Grammar::Grammar(t_ExprDict &rules) : _rules(), _start()
 {
+	// Transfer ownership
 	_rules.swap(rules);
 	rules.clear();
+
+	// Resolve rule references
 	resolveRefs();
+
+	// Auto-select first rule as start rule
 	if (!_rules.empty())
 		_start = _rules.begin()->first;
 }
@@ -40,56 +47,71 @@ Grammar	&Grammar::operator=(Grammar &other)
 		other._rules.clear();
 		_start = other._start;
 	}
-	return (*this);
+	return *this;
 }
 
-// ---- Methods ----
+// ============================================================================
+// Public methods
+// ============================================================================
 
 Expr	*Grammar::get(const std::string &name) const
 {
 	t_ExprDict::const_iterator it = _rules.find(name);
-
 	if (it == _rules.end())
-		return (NULL);
-	return (it->second);
+		return NULL;
+	return it->second;
 }
+
+// ============================================================================
+// Rule reference resolution
+// ============================================================================
 
 static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 {
 	if (!expr)
 		return;
+
 	switch (expr->kind())
 	{
 	case Expr::K_LITERAL:
 	case Expr::K_CHARRANGE:
 	case Expr::K_ANY:
 		return;
+
 	case Expr::K_SEQUENCE:
-	case Expr::K_CHOICE: {
-		const ExprContainer	*c = static_cast<ExprContainer *>(expr);
+	case Expr::K_CHOICE:
+	{
+		const ExprContainer *c = static_cast<ExprContainer *>(expr);
 		for (t_ExprList::const_iterator it = c->begin(); it != c->end(); ++it)
 			resolveExpr(*it, rules);
 		break;
 	}
+
 	case Expr::K_ZERO_OR_MORE:
 	case Expr::K_ONE_OR_MORE:
 	case Expr::K_OPTIONAL:
 	case Expr::K_PREDICATE:
-	case Expr::K_CAPTURE: {
+	case Expr::K_CAPTURE:
+	{
 		ExprUnary *u = static_cast<ExprUnary *>(expr);
 		resolveExpr(u->inner(), rules);
 		break;
 	}
-	case Expr::K_RULEREF: {
+
+	case Expr::K_RULEREF:
+	{
 		RuleRef *r = static_cast<RuleRef *>(expr);
 		if (r->resolved())
 			break;
-		std::string	ruleName = r->name();
+
+		std::string ruleName = r->name();
 		if (ruleName[0] == '@')
 			ruleName = ruleName.substr(1);
+
 		t_ExprDict::const_iterator it = rules.find(ruleName);
 		if (it == rules.end())
 			throw Grammar::GrammarResolutionError(ruleName);
+
 		r->resolve(it->second);
 		break;
 	}
@@ -102,40 +124,59 @@ void	Grammar::resolveRefs(void)
 		resolveExpr(it->second, _rules);
 }
 
-static bool firstSymbolIs(Expr *expr, const std::string &target, std::set<const Expr*> &visited)
+// ============================================================================
+// Left recursion detection
+// ============================================================================
+
+static bool	firstSymbolIs(
+	Expr *expr,
+	const std::string &target,
+	std::set<const Expr *> &visited)
 {
 	if (!expr || visited.count(expr))
 		return false;
+
 	visited.insert(expr);
+
 	switch (expr->kind())
 	{
-	case Expr::K_RULEREF: {
-		RuleRef *r = static_cast<RuleRef*>(expr);
+	case Expr::K_RULEREF:
+	{
+		RuleRef *r = static_cast<RuleRef *>(expr);
 		return r->name() == target;
 	}
-	case Expr::K_SEQUENCE: {
-		Sequence *s = static_cast<Sequence*>(expr);
+
+	case Expr::K_SEQUENCE:
+	{
+		Sequence *s = static_cast<Sequence *>(expr);
 		if (!s->elems().empty())
 			return firstSymbolIs(s->elems().front(), target, visited);
 		break;
 	}
-	case Expr::K_CHOICE: {
-		Choice *c = static_cast<Choice*>(expr);
+
+	case Expr::K_CHOICE:
+	{
+		Choice *c = static_cast<Choice *>(expr);
 		for (t_ExprList::const_iterator it = c->begin(); it != c->end(); ++it)
 			if (firstSymbolIs(*it, target, visited))
 				return true;
 		break;
 	}
+
 	case Expr::K_ZERO_OR_MORE:
 	case Expr::K_ONE_OR_MORE:
 	case Expr::K_OPTIONAL:
 	case Expr::K_PREDICATE:
-	case Expr::K_CAPTURE: {
-		ExprUnary *e = static_cast<ExprUnary *>(expr);
-		return firstSymbolIs(e->inner(), target, visited);
+	case Expr::K_CAPTURE:
+	{
+		ExprUnary *u = static_cast<ExprUnary *>(expr);
+		return firstSymbolIs(u->inner(), target, visited);
 	}
-	default: break;
+
+	default:
+		break;
 	}
+
 	return false;
 }
 
@@ -143,9 +184,11 @@ void	Grammar::checkLeftRecursion(void) const
 {
 	for (t_ExprDict::const_iterator it = _rules.begin(); it != _rules.end(); ++it)
 	{
-		std::string				ruleName = it->first;
-		std::set<const Expr*>	visited;
+		std::string ruleName = it->first;
+		std::set<const Expr *> visited;
+
 		if (firstSymbolIs(it->second, ruleName, visited))
 			throw GrammarLeftRecursionError(ruleName);
 	}
 }
+

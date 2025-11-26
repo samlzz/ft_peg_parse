@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/21 15:16:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:00:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,24 @@
 #include "utils/DebugConfig.hpp"
 #include "utils/Input.hpp"
 
-// ---- parseRule: public entry point
+// ============================================================================
+// parseRule: public entry point
+// ============================================================================
+
 void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 {
 	out = NULL;
-	const Expr	*start = _grammar.get(rootRuleName);
+	const Expr *start = _grammar.get(rootRuleName);
 	if (!start)
-		throw ParseError("at rule '"
-				+ rootRuleName + "': "
-				+ _err.formatError(_input, true));
+		throw ParseError("at rule '" + rootRuleName
+				+ "': " + _err.formatError(_input, true));
 
-	PEG_LOG_TRACE_C(PACKRAT, "PackratParser", "Begin parsing with rule :" + rootRuleName);
+	PEG_LOG_TRACE_C(PACKRAT, "PackratParser",
+		"Begin parsing with rule :" + rootRuleName);
+
 	AstNode		*root = new AstNode(rootRuleName);
 	const bool	ok = eval(start, root);
+
 	if (!ok || !_input.eof())
 	{
 		delete root;
@@ -47,7 +52,9 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 		out = root;
 }
 
-// ---- privates helpers
+// ============================================================================
+// retrieveExpr: memo lookup
+// ============================================================================
 
 bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *parent)
 {
@@ -56,31 +63,34 @@ bool	PackratParser::retrieveExpr(const Expr *e, size_t pos, AstNode *parent)
 	_input.setPos(m.nextPos());
 	if (m.node())
 	{
-		AstNode	*clone = new AstNode(*m.node());
+		AstNode *clone = new AstNode(*m.node());
 		parent->addChild(clone);
 	}
 	return m.ok();
 }
 
-// ----- eval: main of packrat logic (memo + dispatch)
-bool PackratParser::eval(const Expr *expr, AstNode *parent)
-{
-	size_t	pos = _input.pos();
+// ============================================================================
+// eval: main packrat logic (memo + dispatch)
+// ============================================================================
 
-#if PEG_DEBUG_PACKRAT
+bool	PackratParser::eval(const Expr *expr, AstNode *parent)
+{
+	size_t pos = _input.pos();
+
+# if PEG_DEBUG_PACKRAT
 	_evalCount++;
 	_traceEnter(expr, _input);
-#endif
+# endif
 
 	// TODO: retrieve from cache
 
-	const bool	ok = expr->parse(*this, parent);
+	const bool ok = expr->parse(*this, parent);
 
-#if PEG_DEBUG_PACKRAT
+# if PEG_DEBUG_PACKRAT
 	_traceExit(expr, _input, ok);
 	if (!ok)
 		_backtrackCount++;
-#endif
+# endif
 
 	// TODO: append to cache
 
@@ -88,3 +98,4 @@ bool PackratParser::eval(const Expr *expr, AstNode *parent)
 		_input.setPos(pos);
 	return ok;
 }
+

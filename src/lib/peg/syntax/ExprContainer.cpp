@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:35:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:45:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include "peg/syntax/ExprContainer.hpp"
 #include "utils/DebugConfig.hpp"
 
+// ---- Generic debug function ----
 #if PEG_DEBUG_ANY
 std::string ExprContainer::debugValue(void) const
 {
@@ -28,11 +29,16 @@ std::string ExprContainer::debugValue(void) const
 }
 #endif
 
+// ============================================================================
+// Sequence
+// ============================================================================
+
 void Sequence::accept(IExprVisitor &visitor) const
 {
 	visitor.visitSequence(*this);
 }
 
+// Evaluate each sub-expression in order. Stops on first failure.
 bool Sequence::parse(PackratParser &parser, AstNode *parent) const
 {
 	for (size_t i = 0; i < _elems.size(); ++i)
@@ -43,11 +49,17 @@ bool Sequence::parse(PackratParser &parser, AstNode *parent) const
 	return true;
 }
 
+// ============================================================================
+// Choice
+// ============================================================================
+
 void Choice::accept(IExprVisitor &visitor) const
 {
 	visitor.visitChoice(*this);
 }
 
+// Try each alternative expression until one succeeds.
+// Restores input position before each attempt.
 bool Choice::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
@@ -66,3 +78,4 @@ bool Choice::parse(PackratParser &parser, AstNode *parent) const
 	parser.diag().update(start, "expected at least one valid choice");
 	return false;
 }
+

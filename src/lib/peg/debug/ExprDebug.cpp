@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:44:46 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:34:24 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 16:01:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,11 @@
 
 namespace ExprDebug {
 
-void	printExpr(const Expr* expr, std::ostream &os)
+// ============================================================================
+// printExpr : Inline display
+// ============================================================================
+
+void	printExpr(const Expr *expr, std::ostream &os)
 {
 	if (!expr)
 	{
@@ -35,7 +39,11 @@ void	printExpr(const Expr* expr, std::ostream &os)
 	expr->accept(visitor);
 }
 
-void	printExprTree(const Expr* expr, std::ostream &os, int maxDepth)
+// ============================================================================
+// printExprTree : Hierarchical tree display
+// ============================================================================
+
+void	printExprTree(const Expr *expr, std::ostream &os, int maxDepth)
 {
 	if (!expr)
 	{
@@ -46,7 +54,11 @@ void	printExprTree(const Expr* expr, std::ostream &os, int maxDepth)
 	expr->accept(visitor);
 }
 
-void	printExprStats(const Expr* expr, std::ostream &os)
+// ============================================================================
+// printExprStats : Statistics report
+// ============================================================================
+
+void	printExprStats(const Expr *expr, std::ostream &os)
 {
 	if (!expr)
 	{
@@ -58,11 +70,16 @@ void	printExprStats(const Expr* expr, std::ostream &os)
 	visitor.print(os);
 }
 
-} // end namespace ExprDebug
+} // namespace ExprDebug
 
+// ============================================================================
+// Expr::debugRepr : Inline colored representation
+// ============================================================================
+
+// Return a debug-friendly string including name and value, optionally colored.
 std::string	Expr::debugRepr(bool colored) const
 {
-	std::ostringstream	oss;
+	std::ostringstream oss;
 
 	if (!colored)
 		oss << debugName() << ": " << debugValue();
@@ -70,6 +87,9 @@ std::string	Expr::debugRepr(bool colored) const
 		oss << PegDebug::Logger::color(debugName(), COLOR_YELLOW)
 			<< ": "
 			<< PegDebug::Logger::color(debugValue(), COLOR_GREEN);
+
 	return oss.str();
 }
+
 #endif
+

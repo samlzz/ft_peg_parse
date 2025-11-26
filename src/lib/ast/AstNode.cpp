@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/14 08:37:43 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 18:24:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 #include "ast/AstNode.hpp"
 #include "peg/Expr.hpp"
 
-// ---- Ctors ----
+// ============================================================================
+// Construction
+// ============================================================================
 
-AstNode::AstNode(const AstNode& other):
+AstNode::AstNode(const AstNode &other):
 	_type(other.type()),
 	_attrs(other._attrs),
 	_children(),
@@ -28,9 +30,11 @@ AstNode::AstNode(const AstNode& other):
 	replaceChildren(other._children);
 }
 
-// ---- Operators ----
+// ============================================================================
+// Assignment
+// ============================================================================
 
-AstNode&	AstNode::operator=(const AstNode& other)
+AstNode &AstNode::operator=(const AstNode &other)
 {
 	if (this != &other)
 	{
@@ -43,7 +47,9 @@ AstNode&	AstNode::operator=(const AstNode& other)
 	return *this;
 }
 
-// ---- Methods ----
+// ============================================================================
+// Tree management
+// ============================================================================
 
 void	AstNode::replaceChildren(const std::vector<AstNode *> &src)
 {
@@ -61,10 +67,9 @@ void	AstNode::addChild(AstNode *child)
 		_children.push_back(child);
 }
 
-AstNode	*AstNode::popChild()
+AstNode	*AstNode::popChild(void)
 {
 	AstNode *resp = _children[0];
-
 	_children.erase(_children.begin());
 	return resp;
 }
@@ -73,14 +78,28 @@ void	AstNode::stealChildren(AstNode &stolen)
 {
 	_attrs.insert(stolen._attrs.begin(), stolen._attrs.end());
 	stolen._attrs.clear();
+
 	if (!stolen._children.size())
 		return;
+
 	_children.insert(_children.end(),
-				stolen._children.begin(), stolen._children.end());
+		stolen._children.begin(), stolen._children.end());
 	stolen._children.clear();
 }
 
-// ---- Accessors ----
+// ============================================================================
+// Accessors
+// ============================================================================
+
+void	AstNode::setSpan(size_t start, size_t end)
+{
+	_span.start = start;
+	_span.end = end;
+}
+
+// ============================================================================
+// Attribute management
+// ============================================================================
 
 void	AstNode::setAttr(const std::string &key, const std::string &val)
 {
@@ -92,21 +111,14 @@ void	AstNode::setAttr(const std::string &key, const std::string &val)
 bool	AstNode::hasAttr(const std::string &key) const
 {
 	std::map<std::string, std::string>::const_iterator it = _attrs.find(key);
-
 	return (it != _attrs.end());
 }
 
 std::string	AstNode::getAttr(const std::string &key, const std::string &def) const
 {
 	std::map<std::string, std::string>::const_iterator it = _attrs.find(key);
-
 	if (it == _attrs.end())
 		return def;
-	return (it->second);
+	return it->second;
 }
 
-void	AstNode::setSpan(size_t start, size_t end)
-{
-	_span.start = start;
-	_span.end = end;
-}

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:29:19 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:51:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,19 @@
 
 # include "peg/Expr.hpp"
 
+// ============================================================================
+// ExprContainer (abstract helper class)
+// ============================================================================
+
+/**
+ * @brief Base class for PEG expressions that contain multiple child nodes.
+ *
+ * Provides generic storage and iteration over a list of expressions.
+ * Concrete types such as Sequence or Choice extend it and implement
+ * their parsing logic.
+ */
 class ExprContainer : public Expr {
+
 private:
 	ExprContainer();
 	ExprContainer(const ExprContainer &other);
@@ -28,17 +40,21 @@ public:
 	ExprContainer(enum e_expr_kind kind)
 		: Expr(kind), _elems()
 	{}
+
 	ExprContainer(enum e_expr_kind kind, const t_ExprList &elems)
 		: Expr(kind), _elems(elems)
 	{}
+
 	virtual ~ExprContainer() { deleteAll(_elems); }
 
-	Expr		*operator[](size_t index)		{ return _elems[index]; }
-	const Expr	*operator[](size_t index) const	{ return _elems[index]; }
+	// ---- Element access ----
+	Expr				*operator[](size_t index)		{ return _elems[index]; }
+	const Expr			*operator[](size_t index) const	{ return _elems[index]; }
 
 	virtual size_t		childCount() const			{ return _elems.size(); }
 	virtual const Expr	*child(size_t index) const	{ return _elems[index]; }
 
+	// ---- Container getters ----
 	const t_ExprList&			elems() const	{ return _elems; }
 	t_ExprList&					elems()			{ return _elems; }
 
@@ -47,12 +63,22 @@ public:
 
 	void						add(Expr *e) { if (e) _elems.push_back(e); }
 
+// ---- Debug functions ----
 # if PEG_DEBUG_ANY
 	virtual std::string	debugValue(void) const;
 # endif
 };
 
-class Sequence: public ExprContainer {
+// ============================================================================
+// Sequence
+// ============================================================================
+
+/**
+ * @brief Ordered concatenation of sub-expressions.
+ *
+ * All elements must match sequentially for the sequence to succeed.
+ */
+class Sequence : public ExprContainer {
 
 public:
 	Sequence(): ExprContainer(K_SEQUENCE) {}
@@ -61,13 +87,24 @@ public:
 	virtual ~Sequence() {}
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
-	virtual void		accept(IExprVisitor& visitor) const;
+	virtual void		accept(IExprVisitor &visitor) const;
+
 # if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "Sequence"; }
+	virtual std::string	debugName(void) const { return "Sequence"; }
 # endif
 };
 
-class Choice: public ExprContainer {
+// ============================================================================
+// Choice
+// ============================================================================
+
+/**
+ * @brief Ordered choice between several alternatives.
+ *
+ * Tries each option until one succeeds. Does not fail until all
+ * alternatives fail.
+ */
+class Choice : public ExprContainer {
 
 public:
 	Choice(): ExprContainer(K_CHOICE) {}
@@ -76,10 +113,12 @@ public:
 	virtual ~Choice() {}
 
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
-	virtual void		accept(IExprVisitor& visitor) const;
+	virtual void		accept(IExprVisitor &visitor) const;
+
 # if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "Choice"; }
+	virtual std::string	debugName(void) const { return "Choice"; }
 # endif
 };
 
 #endif
+

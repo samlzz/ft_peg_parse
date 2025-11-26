@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:34:54 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 17:19:27 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,41 +26,44 @@
 namespace ExprDebug {
 
 // ============================================================================
-// StatsVisitor : Collecte de statistiques
+// StatsVisitor
 // ============================================================================
 
-StatsVisitor::StatsVisitor():
-	_totalNodes(0), _currentDepth(0), _maxDepth(0)
+StatsVisitor::StatsVisitor()
+	: _totalNodes(0), _currentDepth(0), _maxDepth(0)
 {}
 
+// Record current node and update stats.
 void	StatsVisitor::recordNode(const Expr &expr)
 {
 	_totalNodes++;
 	_kindCounts[expr.kind()]++;
-	
+
 	if (_currentDepth > _maxDepth)
 		_maxDepth = _currentDepth;
 }
 
+// Explore one child and adjust depth counters.
 void	StatsVisitor::descend(const Expr *child)
 {
 	if (!child)
 		return;
-	
+
 	_currentDepth++;
 	child->accept(*this);
 	_currentDepth--;
 }
 
+// ---- Macro to generate visit methods ----
 # define STATS_VISIT_IMPL(ClassName) \
-	void	StatsVisitor::visit##ClassName(const ClassName &expr) \
+	void StatsVisitor::visit##ClassName(const ClassName &expr) \
 	{ \
 		recordNode(expr); \
 		for (size_t i = 0; i < expr.childCount(); ++i) \
 			descend(expr.child(i)); \
 	}
 
-// ---- Implement visit methods for all Expr child class ----
+// Implementations
 STATS_VISIT_IMPL(Literal)
 STATS_VISIT_IMPL(CharRange)
 STATS_VISIT_IMPL(Any)
@@ -81,6 +84,7 @@ void	StatsVisitor::visitRuleRef(const RuleRef &expr)
 	recordNode(expr);
 }
 
+// Print statistics summary (counts, depths, types).
 void	StatsVisitor::print(std::ostream &os) const
 {
 	os << "\n╔═══════════════════════════════════════╗\n";
@@ -90,15 +94,15 @@ void	StatsVisitor::print(std::ostream &os) const
 	os << "║ Max depth:     " << std::setw(23) << _maxDepth << "║\n";
 	os << "║                                       ║\n";
 	os << "║ Node types:                           ║\n";
-	
-	static const char	*kindNames[] = {
+
+	static const char *kindNames[] = {
 		"Literal", "CharRange", "Sequence", "Choice",
 		"ZeroOrMore", "OneOrMore", "Optional", "Predicate",
 		"RuleRef", "Capture", "Any"
 	};
-	
+
 	for (std::map<Expr::e_expr_kind, size_t>::const_iterator it = _kindCounts.begin();
-		it != _kindCounts.end(); ++it)
+			it != _kindCounts.end(); ++it)
 	{
 		const char	*name = (it->first < 11) ? kindNames[it->first] : "Unknown";
 		os << "║   " << std::setw(20)
@@ -106,10 +110,11 @@ void	StatsVisitor::print(std::ostream &os) const
 			<< std::right << it->second
 			<< "║\n";
 	}
-	
+
 	os << "╚═══════════════════════════════════════╝\n";
 }
 
-} // end namespace ExprDebug
+} // namespace ExprDebug
 
 #endif
+

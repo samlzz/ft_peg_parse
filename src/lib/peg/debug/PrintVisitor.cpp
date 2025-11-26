@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:52:25 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/24 14:22:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 16:06:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,42 +27,50 @@ namespace ExprDebug {
 using namespace PegDebug;
 
 // ============================================================================
-// Static helpers functions
+// Helpers
 // ============================================================================
 
-static const char	*_kindColor(Expr::e_expr_kind k)
+// Map Expr kind to ANSI color code.
+static const char *_kindColor(Expr::e_expr_kind k)
 {
 	switch (k) {
 		case Expr::K_LITERAL:
 		case Expr::K_CHARRANGE:
 		case Expr::K_ANY:
 			return COLOR_YELLOW;
+
 		case Expr::K_SEQUENCE:
 		case Expr::K_CHOICE:
 			return COLOR_RED;
+
 		case Expr::K_ZERO_OR_MORE:
 		case Expr::K_ONE_OR_MORE:
 		case Expr::K_OPTIONAL:
 			return COLOR_MAGENTA;
+
 		case Expr::K_PREDICATE:
 			return COLOR_BLUE;
+
 		case Expr::K_RULEREF:
 			return COLOR_GREEN;
+
 		case Expr::K_CAPTURE:
 			return COLOR_BOLD_WHITE;
+
 		default:
 			return COLOR_RESET;
 	}
 }
 
 // ============================================================================
-// PrintVisitor : Inline display
+// PrintVisitor
 // ============================================================================
 
 PrintVisitor::PrintVisitor(std::ostream &os, bool useColors)
 	: _os(os), _useColors(useColors)
 {}
 
+// Apply ANSI color if enabled.
 std::string	PrintVisitor::color(const std::string &text, const char *code) const
 {
 	if (!_useColors || !code)
@@ -70,15 +78,15 @@ std::string	PrintVisitor::color(const std::string &text, const char *code) const
 	return std::string(code) + text + COLOR_RESET;
 }
 
+// ---- Macro to generate visit methods ----
 # define PRINT_VISIT_IMPL(ClassName) \
-	void	PrintVisitor::visit##ClassName(const ClassName &expr) \
+	void PrintVisitor::visit##ClassName(const ClassName &expr) \
 	{ \
 		_os << color(expr.debugName(), _kindColor(expr.kind())) \
 			<< " " << expr.debugValue(); \
 	}
 
-// ---- Implement visit methods for all Expr child class ----
-
+// Implementations
 PRINT_VISIT_IMPL(Literal)
 PRINT_VISIT_IMPL(CharRange)
 PRINT_VISIT_IMPL(Any)
@@ -93,16 +101,17 @@ PRINT_VISIT_IMPL(Predicate)
 PRINT_VISIT_IMPL(Capture)
 
 # undef PRINT_VISIT_IMPL
-# undef PRINT_VISIT_LEAF_IMPL
 
-void	PrintVisitor::visitRuleRef(const RuleRef& expr)
+void	PrintVisitor::visitRuleRef(const RuleRef &expr)
 {
 	_os << color(expr.debugName(), _kindColor(expr.kind()))
 		<< " " << expr.debugValue();
+
 	if (!expr.resolved())
-		_os << " " << color("(unresolved!)", "\033[1;31m");
+		_os << " " << color("(unresolved!)", COLOR_BOLD_RED);
 }
 
-} // end namespace ExprDebug
+} // namespace ExprDebug
 
 #endif
+

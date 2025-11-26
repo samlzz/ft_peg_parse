@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/24 15:09:01 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:15:06 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,14 @@
 # include <cstddef>
 # include <string>
 
-inline std::string escapeCharDisplay(unsigned char c)
+// ============================================================================
+// Escape helpers
+// ============================================================================
+
+/**
+ * @brief Escape a single char for safe display.
+ */
+inline std::string	escapeCharDisplay(unsigned char c)
 {
 	switch (c)
 	{
@@ -28,6 +35,7 @@ inline std::string escapeCharDisplay(unsigned char c)
 		case '\t': return "\\t";
 		case '\\': return "\\\\";
 		case '"':  return "\\\"";
+
 		default:
 			if (c < 32 || c >= 127)
 			{
@@ -35,58 +43,69 @@ inline std::string escapeCharDisplay(unsigned char c)
 				std::sprintf(buf, "\\x%02X", c);
 				return buf;
 			}
-			else
-			{
-				return std::string(1, c);
-			}
+			return std::string(1, c);
 	}
 }
 
+/**
+ * @brief Escape a string up to maxLen for human display.
+ */
 inline std::string	escapeStringDisplay(const std::string &str, size_t maxLen = 30)
 {
-	std::ostringstream	oss;
+	std::ostringstream oss;
 
 	for (size_t i = 0; i < str.size() && i < maxLen; ++i)
 		oss << escapeCharDisplay(str[i]);
-	
+
 	if (str.size() > maxLen)
 		oss << "...";
 	return oss.str();
 }
 
+/**
+ * @brief Escape a character set represented as a raw string.
+ */
 inline std::string	escapeCharSetDisplay(const std::string &set, size_t maxSegments = 15)
 {
-	std::ostringstream	oss;
-	size_t				count = 0;
-	size_t				seg = 0;
+	std::ostringstream oss;
+	size_t count = 0;
+	size_t seg = 0;
 
 	oss << "[";
 	for (size_t i = 0; i < set.size() && seg < maxSegments; )
 	{
-		uint8_t	start = static_cast<uint8_t>(set[i]);
-		uint8_t	end = start;
-		size_t	j;
+		uint8_t start = static_cast<uint8_t>(set[i]);
+		uint8_t end = start;
+		size_t j;
 
-		for (j = i + 1; j < set.size() && static_cast<uint8_t>(set[j]) == end + 1; ++j)
+		for (j = i + 1; j < set.size()
+				&& static_cast<uint8_t>(set[j]) == end + 1; ++j)
 			end = static_cast<uint8_t>(set[j]);
 
 		if (seg++ > 0)
 			oss << " ";
+
 		oss << escapeCharDisplay(start);
 		if (start != end)
 			oss << '-' << escapeCharDisplay(end);
+
 		count += (end - start + 1);
 		i = j;
 	}
-	
 	if (set.size() > count)
 		oss << "...";
 	oss << "]";
 	return oss.str();
 }
 
+// ============================================================================
+// Unescape helpers
+// ============================================================================
 
-inline char unescapeChar(const std::string &s, size_t &i)
+/**
+ * @brief Unescape a single escaped character in a string literal.
+ */
+inline char	unescapeChar(const std::string &s, size_t &i)
 {
 	if (s[i] != '\\' || i + 1 >= s.size())
 		return s[i];
@@ -94,25 +113,32 @@ inline char unescapeChar(const std::string &s, size_t &i)
 	char c = s[++i];
 	switch (c)
 	{
-		case 'n':	return '\n';
-		case 't':	return '\t';
-		case 'r':	return '\r';
-		case '\\':	return '\\';
-		case '\'':	return '\'';
-		case '"':	return '"';
-		case '0':	return '\0';
-		default:	return c;
+	case 'n':  return '\n';
+	case 't':  return '\t';
+	case 'r':  return '\r';
+	case '\\': return '\\';
+	case '\'': return '\'';
+	case '"':  return '"';
+	case '0':  return '\0';
+	default:   return c;
 	}
 }
 
-inline std::string unescapeString(const std::string &raw)
+/**
+ * @brief Fully unescape a string literal, rewriting classic escapes.
+ */
+inline std::string	unescapeString(const std::string &raw)
 {
-	std::ostringstream	oss;
-	
+	std::ostringstream oss;
+
 	for (size_t i = 0; i < raw.size(); ++i)
 		oss << unescapeChar(raw, i);
 	return oss.str();
 }
+
+// ============================================================================
+// Charset expansion
+// ============================================================================
 
 static inline void	_appendRange(std::ostringstream &dst, char beg, char end)
 {
@@ -122,7 +148,7 @@ static inline void	_appendRange(std::ostringstream &dst, char beg, char end)
 			dst << ch;
 	}
 	else
-		dst << beg << '-' << end;
+		dst << beg << "-" << end;
 }
 
 static inline std::string	_inverseChars(const std::string &src)
@@ -138,7 +164,11 @@ static inline std::string	_inverseChars(const std::string &src)
 	return dst.str();
 }
 
-inline std::string expandCharSet(const std::string &raw)
+/**
+ * @brief Expand a character set definition (e.g. "a-zA-Z") into raw chars.
+ * Expand range (-), negate (^ start) and classic escapes
+ */
+inline std::string	expandCharSet(const std::string &raw)
 {
 	std::ostringstream	resp;
 	bool				negate;
@@ -148,6 +178,7 @@ inline std::string expandCharSet(const std::string &raw)
 	for (size_t i = size_t(negate); i < raw.size(); ++i)
 	{
 		c = unescapeChar(raw, i);
+
 		if (i + 2 < raw.size()
 			&& raw[i + 1] == '-' && (!i || raw[i - 1] != '\\'))
 		{
@@ -157,17 +188,26 @@ inline std::string expandCharSet(const std::string &raw)
 		else
 			resp << c;
 	}
+
 	if (negate)
 		return _inverseChars(resp.str());
 	return resp.str();
 }
 
+// ============================================================================
+// Generic string conversion
+// ============================================================================
+
+/**
+ * @brief Convert any streamable value to std::string.
+ */
 template <typename T>
-std::string toString(T value)
+std::string	toString(T value)
 {
-	std::ostringstream	oss;
+	std::ostringstream oss;
 	oss << value;
 	return oss.str();
 }
 
 #endif
+

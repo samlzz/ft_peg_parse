@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:32:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:29:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:52:31 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,18 @@
 
 # include "peg/Expr.hpp"
 
-class RuleRef: public Expr {
+// ============================================================================
+// RuleRef
+// ============================================================================
+
+/**
+ * @brief Reference to another named PEG rule.
+ *
+ * Stores the textual rule name as parsed from the grammar, and is resolved
+ * later to point to the corresponding Expr instance (via Grammar::resolveRefs).
+ * Parsing delegates entirely to the resolved expression.
+ */
+class RuleRef : public Expr {
 
 private:
 	std::string	_name;
@@ -26,27 +37,32 @@ private:
 
 	RuleRef();
 	RuleRef(const RuleRef &other);
-	RuleRef	&operator=(const RuleRef &other);
+	RuleRef &operator=(const RuleRef &other);
 
 public:
-	RuleRef(const std::string &name):
-		Expr(K_RULEREF), _name(name), _resolved(NULL)
+	RuleRef(const std::string &name)
+		: Expr(K_RULEREF), _name(name), _resolved(NULL)
 	{}
 	virtual ~RuleRef() {}
 
-	void				resolve(const Expr* e)	{ _resolved = e; }
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor &visitor) const;
+
+	// ---- Accessors ----
+	void				resolve(const Expr *e)	{ _resolved = e; }
 	const Expr			*resolved(void) const	{ return _resolved; }
 	const std::string	&name(void) const		{ return _name; }
 
-	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
-	virtual void		accept(IExprVisitor& visitor) const;
-
+	// ---- Children introspection ----
 	virtual size_t		childCount(void) const		{ return _resolved ? 1 : 0; }
 	virtual const Expr	*child(size_t idx) const	{ return idx == 0 ? _resolved : NULL; }
+
+// ---- Debug functions ----
 # if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "RuleRef"; }
-	virtual std::string debugValue(void) const	{ return _name; }
+	virtual std::string	debugValue(void) const	{ return _name; }
 # endif
 };
 
 #endif
+

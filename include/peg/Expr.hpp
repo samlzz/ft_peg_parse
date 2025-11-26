@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 16:27:16 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:51:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,19 +22,26 @@
 # include "utils/DebugConfig.hpp"
 
 // ============================================================================
-// Forward definitions
+// Forward declarations
 // ============================================================================
 class PackratParser;
 class AstNode;
 class IExprVisitor;
 
 // ============================================================================
-// Expr abstract generic Class
+// Expr abstract class
 // ============================================================================
 
+/**
+ * @brief Abstract base class for all PEG expressions.
+ *
+ * Provides a polymorphic interface for parsing rules and visiting
+ * grammar nodes. Each subclass implements `parse()` and `accept()`.
+*/
 class Expr {
 
 private:
+	Expr();
 	Expr(const Expr &other);
 	Expr	&operator=(const Expr &other);
 
@@ -62,14 +69,15 @@ public:
 
 	virtual ~Expr() {}
 
-	enum e_expr_kind	kind(void) const	{ return _kind; }
-	virtual bool		parse(PackratParser &parser, AstNode *parent) const = 0;
+	virtual bool			parse(PackratParser &parser, AstNode *parent) const = 0;
+	virtual void			accept(IExprVisitor &visitor) const = 0;
 
-	virtual void		accept(IExprVisitor &visitor) const = 0;
-
+	// ---- Accessors ----
+	enum e_expr_kind		kind(void) const	{ return _kind; }
 	virtual size_t			childCount(void) const	{ return 0; }
 	virtual const Expr *	child(size_t) const		{ return NULL; }
 
+// ---- Debug functions ---
 # if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const = 0;
 	virtual std::string	debugValue(void) const { return ""; }
@@ -82,7 +90,7 @@ public:
 };
 
 // ============================================================================
-// Heplpers
+// Helpers
 // ============================================================================
 
 // ----- Expr containers types ----
@@ -91,7 +99,7 @@ typedef std::vector<Expr *> 			t_ExprList;
 typedef std::map<std::string, Expr *>	t_ExprDict;
 
 // ---- Delete containers contents ----
-// ? (work on any ptr container)
+// - - (work on any ptr container) - -
 
 template <typename T>
 void	deleteAll(std::vector<T *> &list)

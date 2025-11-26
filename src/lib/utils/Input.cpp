@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Input.cpp                                          :+:      :+:    :+:   */
+/*   Input.cpp                                          :+:      :+:         :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 12:46:56 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 12:40:14 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 20:45:26 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,39 +20,39 @@
 
 #include "utils/Input.hpp"
 
-const char * Input::WHITESPACES = " \n\t\r";
+// ============================================================================
+// Construction
+// ============================================================================
 
 Input	Input::fromFile(const std::string &path)
 {
-	std::ifstream	file(path.c_str(), std::ios::in | std::ios::binary);
+	std::ifstream file(path.c_str(),std::ios::in | std::ios::binary);
 
 	if (!file.is_open())
-		throw FileOpenError(
-			"Input: failed to open file '" + std::string(path) + "'"
-		);
-	
+		throw FileOpenError("Input: failed to open file '" + path + "'");
+
 	std::ostringstream buf;
 	buf << file.rdbuf();
 	if (file.bad())
-		throw FileOpenError(
-			"Input: error while reading file '" + std::string(path) + "'"
-		);
+		throw FileOpenError("Input: error while reading file '" + path + "'");
 
 	return Input(buf.str());
 }
 
 Input	Input::fromText(const std::string &text)
 {
-	return (Input(text));
+	return Input(text);
 }
 
-// *Operators
+// ============================================================================
+// Operators
+// ============================================================================
 
-Input& Input::operator=(const Input& other)
+Input	&Input::operator=(const Input &other)
 {
 	if (this != &other)
 	{
-		_pos = other._pos;
+		_pos  = other._pos;
 		_data = other._data;
 	}
 	return *this;
@@ -74,70 +74,72 @@ Input	&Input::operator++()
 	return *this;
 }
 
-//* Methods
+// ============================================================================
+// Methods
+// ============================================================================
 
-bool		Input::eof(void) const
+// ---- Reading ----
+
+bool	Input::eof(void) const
 {
 	return (_data.empty() || _pos >= _data.size());
 }
 
-bool		Input::match(const std::string &literal)
-{
-	size_t	len = literal.size();
-
-	if (eof() || _pos + len > _data.size() ||
-		std::strncmp(_data.c_str() + _pos, literal.c_str(), len))
-		return false;
-
-	_pos += len;
-	return true;
-}
-
-char		Input::get(void)
+char	Input::get(void)
 {
 	if (eof())
 		throw InputUnexpectedEof();
 	return _data[_pos++];
 }
 
-char		Input::peek(void) const
+char	Input::peek(void) const
 {
 	if (eof())
 		return '\0';
 	return _data[_pos];
 }
 
-size_t		Input::remaining(void) const
+bool	Input::match(const std::string &literal)
 {
-	size_t	size = _data.size();
-	if (_pos >= size) return (0);
-	return size - _pos;
+	size_t len = literal.size();
+
+	if (eof()
+		|| _pos + len > _data.size()
+		|| std::strncmp(_data.c_str() + _pos, literal.c_str(), len)
+	)
+		return false;
+
+	_pos += len;
+	return true;
 }
 
-size_t		Input::line(void) const
-{
-	size_t	i = 0;
-	size_t	ln_count = 1;
+// ---- Position ----
 
-	while (i < _pos)
-	{
+size_t	Input::remaining(void) const
+{
+	if (_pos >= _data.size())
+		return 0;
+	return _data.size() - _pos;
+}
+
+size_t	Input::line(void) const
+{
+	size_t ln = 1;
+	for (size_t i = 0; i < _pos; ++i)
 		if (_data[i] == '\n')
-			++ln_count;
-		++i;
-	}
-	return (ln_count);
+			++ln;
+	return ln;
 }
 
-size_t		Input::column(void) const
+size_t	Input::column(void) const
 {
-	size_t	lst_ln;
-	
-	lst_ln = _data.rfind('\n', _pos == 0 ? 0 : _pos - 1);
-	if (lst_ln == std::string::npos)
+	size_t lastLn = _data.rfind('\n', _pos == 0 ? 0 : _pos - 1);
+	if (lastLn == std::string::npos)
 		return _pos + 1;
-	return _pos - lst_ln;
+	return _pos - lastLn;
 }
 
+// ---- Contextual extraction ----
 std::string	Input::substr(size_t start, size_t end) const
 {
 	return _data.substr(start, end - start);
@@ -145,28 +147,19 @@ std::string	Input::substr(size_t start, size_t end) const
 
 std::string	Input::context(size_t pos, size_t radius) const
 {
-	size_t	start;
-	size_t	end;
-	size_t	size = _data.size();
+	size_t size  = _data.size();
+	size_t start = (pos > radius ? pos - radius : 0);
+	size_t end   = (pos + radius < size ? pos + radius : size);
 
-	if (pos > radius)
-		start = pos - radius;
-	else
-		start = 0;
-	if (pos + radius < size)
-		end = pos + radius;
-	else
-		end = size;
 	return substr(start, end);
 }
 
-void	Input::skipUntil(bool (*until)(char), std::string *skipped)
+void Input::skipUntil(bool (*until)(char), std::string *skipped)
 {
-	char	c;
-
 	while (!eof())
 	{
-		c = peek();
+		char c = peek();
+
 		if (until(c))
 			break;
 		if (skipped)
@@ -174,3 +167,4 @@ void	Input::skipUntil(bool (*until)(char), std::string *skipped)
 		get();
 	}
 }
+

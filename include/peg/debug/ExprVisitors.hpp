@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/21 10:16:51 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 21:20:00 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,15 @@ namespace ExprDebug {
 // ============================================================================
 // PrintVisitor
 // ============================================================================
+
+/**
+ * @brief Visitor producing compact inline debug output.
+ *
+ * Applies color coding based on Expr kind. This visitor does not explore
+ * children and only prints the current node.
+ */
 class PrintVisitor : public IExprVisitor {
+
 private:
 	std::ostream	&_os;
 	bool			_useColors;
@@ -56,7 +64,15 @@ public:
 // ============================================================================
 // TreeVisitor
 // ============================================================================
+
+/**
+ * @brief Visitor displaying expressions as a tree structure.
+ *
+ * Recursively prints children with indentation, branches, and optional
+ * depth restriction. Uses ASCII tree markers and optional coloring.
+ */
 class TreeVisitor : public IExprVisitor {
+
 private:
 	std::ostream	&_os;
 	int				_depth;
@@ -71,7 +87,9 @@ private:
 	std::string	color(const std::string &text, const char *code) const;
 
 public:
-	TreeVisitor(std::ostream &os = std::cerr, int32_t maxDepth = -1, bool useColors = true);
+	TreeVisitor(std::ostream &os = std::cerr,
+				int32_t maxDepth = -1,
+				bool useColors = true);
 
 	virtual void	visitLiteral(const Literal &expr);
 	virtual void	visitCharRange(const CharRange &expr);
@@ -89,7 +107,15 @@ public:
 // ============================================================================
 // StatsVisitor
 // ============================================================================
+
+/**
+ * @brief Visitor collecting structural statistics on an expression tree.
+ *
+ * Tracks total node count, maximum depth reached, and counts per
+ * expression kind. Children are fully explored recursively.
+ */
 class StatsVisitor : public IExprVisitor {
+
 private:
 	size_t								_totalNodes;
 	size_t								_currentDepth;
@@ -102,15 +128,16 @@ private:
 public:
 	StatsVisitor();
 
-	// Accessors
-	size_t	totalNodes() const	{ return _totalNodes; }
+	// ---- Accessors ----
+	size_t	totalNodes() const { return _totalNodes; }
 	size_t	maxDepth() const	{ return _maxDepth; }
-	const std::map<Expr::e_expr_kind, size_t>&
+	const std::map<Expr::e_expr_kind, size_t> &
 			kindCounts() const	{ return _kindCounts; }
 
+	// ---- Output ----
 	void	print(std::ostream &os = std::cerr) const;
 
-	// Visits
+	// ---- Visit overrides ----
 	virtual void	visitCharRange(const CharRange &expr);
 	virtual void	visitAny(const Any &expr);
 	virtual void	visitSequence(const Sequence &expr);
@@ -124,7 +151,8 @@ public:
 	virtual void	visitCapture(const Capture &expr);
 };
 
-} // end ExprDebug namespace
+} // namespace ExprDebug
 
-# endif
+# endif // PEG_DEBUG_ANY
 #endif
+

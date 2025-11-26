@@ -2,11 +2,10 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   TokenDebug.cpp                                     :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/19 12:53:15 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:02:25 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 22:50:00 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +15,10 @@
 
 # include "utils/DebugLogger.hpp"
 # include "peg/PegLexer.hpp"
+
+// ============================================================================
+// Token debug helpers
+// ============================================================================
 
 std::string PegLexer::Token::debugType(void) const
 {
@@ -48,11 +51,16 @@ std::string PegLexer::Token::debugType(void) const
 	}
 }
 
+// --------------------------------------------------------------------------
+// Colored representation (type + optional value)
+// --------------------------------------------------------------------------
+
 std::string PegLexer::Token::debugRepr(bool colored) const
 {
 	using namespace PegDebug;
 
 	std::string typeStr = debugType();
+	std::string valStr = val;
 
 	if (type == T_EOL)
 	{
@@ -60,7 +68,6 @@ std::string PegLexer::Token::debugRepr(bool colored) const
 			return Logger::color(typeStr, COLOR_YELLOW);
 		return typeStr;
 	}
-	std::string valStr = val;
 
 	if (colored)
 	{
@@ -70,7 +77,9 @@ std::string PegLexer::Token::debugRepr(bool colored) const
 	}
 	else
 		valStr = "\"" + valStr + "\"";
+
 	return typeStr + " " + valStr;
 }
 
-#endif
+#endif // PEG_DEBUG_LEXER
+

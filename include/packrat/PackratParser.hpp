@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:53:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 18:57:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,18 @@
 #  include "utils/DebugLogger.hpp"
 # endif
 
+// ============================================================================
+// PackratParser
+// ============================================================================
+
+/**
+ * @brief Packrat PEG parser with memoization.
+ *
+ * Evaluates grammar expressions using a classic packrat strategy:
+ *   - recursive descent
+ *   - memo table for linear-time guarantees
+ *   - optional debug tracing
+ */
 class PackratParser {
 
 private:
@@ -35,32 +47,39 @@ private:
 	PackratCache	_memo;
 	Diag			_err;
 
-	PackratParser(const PackratParser& other);
-	PackratParser& operator=(const PackratParser& other);
+	PackratParser(const PackratParser &other);
+	PackratParser &operator=(const PackratParser &other);
 
 	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *parent);
 
-#if PEG_DEBUG_PACKRAT
-	// trace state
+	// ---- Debug attributes ----
+# if PEG_DEBUG_PACKRAT
 	int32_t	_traceDepth;
 	bool	_traceEnabled;
-	
-	// statistics
+
 	size_t	_evalCount;
 	size_t	_cacheHits;
 	size_t	_backtrackCount;
-	
-	void _traceEnter(const Expr* expr, const Input &in);
-	void _traceExit(const Expr* expr, const Input &in, bool success);
-#endif
+
+	void	_traceEnter(const Expr *expr, const Input &in);
+	void	_traceExit(const Expr *expr, const Input &in, bool success);
+# endif
 
 public:
+
+	// ========================================================================
+	// Error classes
+	// ========================================================================
+
 	class ParseError : public PegException {
 	public:
-		ParseError(const std::string& rule)
-			: PegException("Parse failed: " + rule)
-		{}
+		ParseError(const std::string &rule)
+			: PegException("Parse failed: " + rule) {}
 	};
+
+	// ========================================================================
+	// Construction
+	// ========================================================================
 
 	PackratParser(Input &in, const Grammar &pegGrammar):
 		_input(in), _grammar(pegGrammar), _memo(), _err()
@@ -74,38 +93,49 @@ public:
 # else
 	{}
 # endif
-	~PackratParser() {};
 
-	void		parseRule(const std::string &rootRuleName, AstNode *&out);
-	bool		eval(const Expr *expr, AstNode *parent);
+	~PackratParser() {}
 
+	// ========================================================================
+	// Methods
+	// ========================================================================
+
+	void	parseRule(const std::string &rootRuleName, AstNode *&out);
+	bool	eval(const Expr *expr, AstNode *parent);
+
+	// ---- Accessors ----
 	const Diag	&diag(void) const	{ return _err; }
 	Diag		&diag(void)			{ return _err; }
+
 	const Input	&input(void) const	{ return _input; }
 	Input		&input(void)		{ return _input; }
 
-	void		resetDiag(void)		{ _err.reset(); }
-	void		resetMemo(void)		{ _memo.reset(); }
+	void	resetDiag(void)		{ _err.reset(); }
+	void	resetMemo(void)		{ _memo.reset(); }
 
+	// ---- Debug functions ----
 # if PEG_DEBUG_PACKRAT
+
 	void	enableTrace(bool enable = true) { _traceEnabled = enable; }
-	bool	isTraceEnabled() const			{ return _traceEnabled; }
-	
+	bool	isTraceEnabled(void) const	{ return _traceEnabled; }
+
 	struct Stats {
-		size_t totalEvals;
-		size_t cacheHits;
-		size_t backtrackCount;
-		
-		double cacheHitRate(void) const
-		{
+		size_t	totalEvals;
+		size_t	cacheHits;
+		size_t	backtrackCount;
+
+		double	cacheHitRate(void) const {
 			return totalEvals > 0 ? (double)cacheHits / totalEvals : 0.0;
 		}
 	};
-	
-	Stats 		getStats(void) const;
+
+	Stats		getStats(void) const;
 	void		resetStats(void);
-	static void	printStats(Stats stats, std::ostream& os = std::cerr);
+	static void	printStats(Stats stats, std::ostream &os = std::cerr);
+
 # endif
+
 };
 
 #endif
+

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:42:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 17:02:21 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 17:37:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,40 +20,47 @@
 # include "peg/Expr.hpp"
 # include "peg/debug/ExprDebug.hpp"
 
-void Grammar::print(std::ostream &os, const PrintOptions &opts) const
+// ============================================================================
+// Grammar debug display
+// ============================================================================
+
+void	Grammar::print(std::ostream &os, const PrintOptions &opts) const
 {
 	os << "\n╔═══════════════════════════════════════════════════════════╗\n";
-	os << "║					PEG Grammar							║\n";
+	os << "║                      PEG Grammar                          ║\n";
 	os << "╠═══════════════════════════════════════════════════════════╣\n";
 	os << "║ Start rule: " << std::setw(46) << std::left << _start << "║\n";
 	os << "║ Total rules: " << std::setw(45) << _rules.size() << "║\n";
 	os << "╚═══════════════════════════════════════════════════════════╝\n\n";
-	
-	for (t_ExprDict::const_iterator it = _rules.begin();
-			it != _rules.end(); ++it) {
+
+	for (t_ExprDict::const_iterator it = _rules.begin(); it != _rules.end(); ++it)
+	{
 		os << "\n┌─ Rule: " << it->first;
 		if (it->first == _start)
 			os << " (START)";
 		os << "\n";
-		
+
 		if (opts.expandRules)
 			ExprDebug::printExprTree(it->second, os, opts.maxDepth);
 		else
 			ExprDebug::printExpr(it->second, os);
+
 		os << "└─────────────────────────────────\n";
 	}
 }
 
-void	Grammar::printRule(const std::string &ruleName, std::ostream &os,
-							const PrintOptions &opts) const
+void	Grammar::printRule(const std::string &ruleName,
+						std::ostream &os,
+						const PrintOptions &opts) const
 {
-	const Expr	*expr = get(ruleName);
+	const Expr *expr = get(ruleName);
+
 	if (!expr)
 	{
 		os << "Rule '" << ruleName << "' not found\n";
 		return;
 	}
-	
+
 	os << "\nRule: " << ruleName << "\n";
 	ExprDebug::printExprTree(expr, os, opts.maxDepth);
 }
@@ -61,15 +68,19 @@ void	Grammar::printRule(const std::string &ruleName, std::ostream &os,
 void	Grammar::printStats(std::ostream &os) const
 {
 	os << "\n╔═══════════════════════════════════════╗\n";
-	os << "║	 Grammar Statistics				║\n";
+	os << "║        Grammar Statistics             ║\n";
 	os << "╠═══════════════════════════════════════╣\n";
-	os << "║ Total rules:	" << std::setw(20) << _rules.size() << "║\n";
-	os << "║									   ║\n";
-	os << "║ Expression types:					 ║\n";
-	if (_start.empty())
+	os << "║ Total rules: " << std::setw(20) << _rules.size() << "║\n";
+	os << "║                                       ║\n";
+	os << "║ Expression types:                     ║\n";
+
+	if (!_start.empty())
 		ExprDebug::printExprStats(get(_start), os);
 	else
-		os << "╚═══════════════════════════════════════╝\n";
+		os << "║ (no start rule)                       ║\n";
+
+	os << "╚═══════════════════════════════════════╝\n";
 }
 
-#endif
+#endif // PEG_DEBUG_GRAMMAR
+

@@ -6,12 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/20 18:00:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:11:22 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils/DebugConfig.hpp"
-#include <string>
 
 #if PEG_DEBUG_PACKRAT
 
@@ -23,74 +22,94 @@
 # include "packrat/PackratParser.hpp"
 # include "peg/Expr.hpp"
 
-static inline std::string	_getPos(const Input &in)
-{
-	std::ostringstream	oss;
+// ============================================================================
+// Helpers
+// ============================================================================
 
+static inline std::string _getPos(const Input &in)
+{
+	std::ostringstream oss;
 	oss << "[Ln " << in.line() << ", Col " << in.column() << "]";
 	return oss.str();
 }
 
-void	PackratParser::_traceEnter(const Expr* expr, const Input &in)
+// ============================================================================
+// Trace entry
+// ============================================================================
+
+void	PackratParser::_traceEnter(const Expr *expr, const Input &in)
 {
 	if (!_traceEnabled)
 		return;
-	
-	std::ostringstream	oss;
 
-	oss << "├─" << PegDebug::Logger::color("→ ", COLOR_CYAN)
-		<< *expr << " " << PegDebug::Logger::color(_getPos(in) , COLOR_BLUE);
-	
+	std::ostringstream oss;
+
+	oss << "├─"
+		<< PegDebug::Logger::color("→ ", COLOR_CYAN)
+		<< *expr << " "
+		<< PegDebug::Logger::color(_getPos(in), COLOR_BLUE);
+
 	PegDebug::Logger::log(PegDebug::LOG_TRACE, "PackratParser", oss.str());
 	PegDebug::Logger::indent();
 }
 
-void	PackratParser::_traceExit(const Expr* expr, const Input &in, bool success)
+// ============================================================================
+// Trace exit
+// ============================================================================
+
+void	PackratParser::_traceExit(const Expr *expr, const Input &in, bool success)
 {
 	if (!_traceEnabled)
 		return;
-	
+
 	PegDebug::Logger::unindent();
-	std::ostringstream	oss;
+	std::ostringstream oss;
 
 	oss << "└─";
 	if (success)
 		oss << PegDebug::Logger::color("✓", COLOR_GREEN);
 	else
 		oss << PegDebug::Logger::color("✗", COLOR_RED);
-	oss << " " << *expr << PegDebug::Logger::color(_getPos(in), COLOR_BLUE);
+
+	oss << " " << *expr
+		<< PegDebug::Logger::color(_getPos(in), COLOR_BLUE);
 
 	PegDebug::Logger::log(PegDebug::LOG_TRACE, "PackratParser", oss.str());
 }
 
-PackratParser::Stats 	PackratParser::getStats(void) const
-{
-	Stats	resp;
+// ============================================================================
+// Statistics
+// ============================================================================
 
-	resp.backtrackCount = _backtrackCount;
-	resp.cacheHits = _cacheHits;
-	resp.totalEvals = _evalCount;
-	return resp;
+PackratParser::Stats	PackratParser::getStats(void) const
+{
+	Stats s;
+
+	s.totalEvals = _evalCount;
+	s.cacheHits = _cacheHits;
+	s.backtrackCount = _backtrackCount;
+	return s;
 }
 
 void	PackratParser::resetStats(void)
 {
-	_backtrackCount = 0;
-	_cacheHits = 0;
 	_evalCount = 0;
+	_cacheHits = 0;
+	_backtrackCount = 0;
 }
 
-void	PackratParser::printStats(Stats stats, std::ostream& os)
+void	PackratParser::printStats(Stats stats, std::ostream &os)
 {
 	os << "\n╔═══════════════════════════════════════╗\n";
-	os << "║	  PackratParser Statistics		 ║\n";
-	os << "╠═══════════════════════════════════════╣\n";
-	os << "║ Total evaluations: " << std::setw(18) << stats.totalEvals << " ║\n";
-	os << "║ Cache hits:		" << std::setw(18) << stats.cacheHits << " ║\n";
-	os << "║ Cache hit rate:	" << std::setw(16) << std::fixed
-		<< std::setprecision(1) << (stats.cacheHitRate() * 100) << "% ║\n";
-	os << "║ Backtracks:		" << std::setw(18) << stats.backtrackCount << " ║\n";
-	os << "╚═══════════════════════════════════════╝\n";
+	os <<   "║         PackratParser Statistics      ║\n";
+	os <<   "╠═══════════════════════════════════════╣\n";
+	os <<   "║ Total evaluations: " << std::setw(18) << stats.totalEvals     << " ║\n";
+	os <<   "║ Cache hits:        " << std::setw(18) << stats.cacheHits      << " ║\n";
+	os <<   "║ Cache hit rate:    " << std::setw(16) << std::fixed
+		 << std::setprecision(1) << (stats.cacheHitRate() * 100) << "% ║\n";
+	os <<   "║ Backtracks:        " << std::setw(18) << stats.backtrackCount << " ║\n";
+	os <<   "╚═══════════════════════════════════════╝\n";
 }
 
 #endif
+

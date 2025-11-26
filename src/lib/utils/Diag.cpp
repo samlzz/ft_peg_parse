@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 18:04:21 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 19:26:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,11 @@
 #include "utils/Diag.hpp"
 #include "utils/Input.hpp"
 
-// ---- Operators ----
+// ============================================================================
+// Assignment
+// ============================================================================
 
-Diag& Diag::operator=(const Diag& other)
+Diag	&Diag::operator=(const Diag &other)
 {
 	if (this != &other)
 	{
@@ -29,15 +31,18 @@ Diag& Diag::operator=(const Diag& other)
 	return *this;
 }
 
-// --- Update & combination ---
+// ============================================================================
+// Update & merge
+// ============================================================================
 
-void	Diag::concat_expectation(const std::string &same_far_expct)
+void	Diag::concat_expectation(const std::string &exp)
 {
-	if (_expected.find(same_far_expct) != std::string::npos)
-		return ;
+	if (_expected.find(exp) != std::string::npos)
+		return;
+
 	if (!_expected.empty())
 		_expected += ", ";
-	_expected += same_far_expct;
+	_expected += exp;
 }
 
 void	Diag::update(size_t pos, const std::string &expected)
@@ -62,19 +67,23 @@ void	Diag::reset(void)
 	_expected.clear();
 }
 
-// --- Accessors ---
+// ============================================================================
+// Formatting
+// ============================================================================
 
-std::string	Diag::formatError(const Input &in, bool with_ctx) const
+std::string	Diag::formatError(const Input &in, bool withCtx) const
 {
 	std::ostringstream	oss;
 	Input				tmp(in);
 
 	tmp.setPos(_farthest);
-	oss << "error at line " << tmp.line() << ", column " << tmp.column();
+	oss << "error at line " << tmp.line()
+		<< ", column " << tmp.column();
+
 	if (!_expected.empty())
 		oss << " " << _expected;
 
-	if (with_ctx)
+	if (withCtx)
 	{
 		std::string ctx = in.context(_farthest, 10);
 		if (!ctx.empty())
@@ -82,3 +91,4 @@ std::string	Diag::formatError(const Input &in, bool with_ctx) const
 	}
 	return oss.str();
 }
+

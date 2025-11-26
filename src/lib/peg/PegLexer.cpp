@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/21 19:57:22 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/25 17:56:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,17 +21,26 @@
 # include "utils/DebugLogger.hpp"
 #endif
 
-// ---- Ctors ----
+// ============================================================================
+// Constructors
+// ============================================================================
 
-PegLexer::PegLexer(const std::string &grammar_path):
-	_input(Input::fromFile(grammar_path)),
-	_hasPeeked(false)
+PegLexer::PegLexer(const std::string &grammar_path)
+	: _input(Input::fromFile(grammar_path)),
+	  _peeked(), _hasPeeked(false)
 {}
 
-PegLexer::PegLexer(const PegLexer &other):
-	_input(other._input), _peeked(other._peeked), _hasPeeked(other._hasPeeked)
+PegLexer::PegLexer(const PegLexer &other)
+	: _input(other._input),
+	  _peeked(other._peeked),
+	  _hasPeeked(other._hasPeeked)
 {}
 
+// ============================================================================
+// Helpers
+// ============================================================================
+
+// Static helpers for scanning
 static bool	_until_ln(char c)			{ return c == '\n'; }
 static bool	_until_eobracket(char c)	{ return c == ']'; }
 static bool	_until_eoid(char c)
@@ -39,9 +48,10 @@ static bool	_until_eoid(char c)
 	return !(c == '_' || std::isalnum(static_cast<uint8_t>(c)));
 }
 
-void	PegLexer::skipWhitespaces(void)
+// Skip spaces and comments (starting with '#', until newline).
+void PegLexer::skipWhitespaces(void)
 {
-	char	c;
+	char c;
 
 	while (!_input.eof())
 	{
@@ -55,46 +65,54 @@ void	PegLexer::skipWhitespaces(void)
 	}
 }
 
-PegLexer::Token	PegLexer::lexLiteral(void)
+// ============================================================================
+// Tokenizers
+// ============================================================================
+
+PegLexer::Token PegLexer::lexLiteral(void)
 {
-	char		quote = _input.get();
-	char		c;
-	std::string	val;
+	char quote = _input.get();
+	char c;
+	std::string val;
 
 	while (!_input.eof() && _input.peek() != quote)
 	{
 		if (_input.peek() == '\n')
 			throw PegLexerError("Unexpected newline in string literal");
+
 		c = _input.get();
 		val += c;
+
 		if (c == '\\' && !_input.eof())
 			val += _input.get();
 	}
+
 	if (_input.eof())
 		throw PegLexerError("Unterminated string literal");
+
 	_input.get();
 	return (Token){T_LITERAL, val};
 }
 
-PegLexer::Token	PegLexer::lexIdentifier(void)
+PegLexer::Token PegLexer::lexIdentifier(void)
 {
-	std::string	val(1, _input.get());
-
+	std::string val(1, _input.get());
 	_input.skipUntil(_until_eoid, &val);
 	return (Token){T_ID, val};
 }
 
-PegLexer::Token	PegLexer::lexCharRange(void)
+PegLexer::Token PegLexer::lexCharRange(void)
 {
 	std::string buf;
 
 	_input.skipUntil(_until_eobracket, &buf);
 	if (!_input.match("]"))
 		throw PegLexerError("Unterminated character class: missing ']'");
+
 	return (Token){T_CHARRANGE, buf};
 }
 
-PegLexer::Token	PegLexer::lexOp(char c)
+PegLexer::Token PegLexer::lexOp(char c)
 {
 	switch (c)
 	{
@@ -109,7 +127,9 @@ PegLexer::Token	PegLexer::lexOp(char c)
 		case '[': ++_input; return lexCharRange();
 		case '.': ++_input; return (Token){T_DOT, "."};
 		case ':': ++_input; return (Token){T_COLON, ":"};
-		case '<': {
+
+		case '<':
+		{
 			if (_input[1] == '-')
 			{
 				++_input; ++_input;
@@ -117,32 +137,41 @@ PegLexer::Token	PegLexer::lexOp(char c)
 			}
 			break;
 		}
+
 		default:
 			break;
 	}
 	throw PegLexerError(std::string("Unexpected character: ") + c);
 }
 
-PegLexer::Token	PegLexer::lexOne(void)
+PegLexer::Token PegLexer::lexOne(void)
 {
 	skipWhitespaces();
+
 	if (_input.eof())
 		return (Token){T_END, ""};
+
 	if (_input.match("\n"))
 		return (Token){T_EOL, "\n"};
-	char	c = _input.peek();
+
+	char c = _input.peek();
 
 	if (c == '"' || c == '\'')
 		return lexLiteral();
-	else if (c == '@' || c == '_' || std::isalpha(static_cast<uint8_t>(c)))
+
+	if (c == '@' || c == '_' || std::isalpha(static_cast<uint8_t>(c)))
 		return lexIdentifier();
-	else
-		return lexOp(c);
+
+	return lexOp(c);
 }
 
-PegLexer::Token	PegLexer::next(void)
+// ============================================================================
+// Public token operations
+// ============================================================================
+
+PegLexer::Token PegLexer::next(void)
 {
-	Token	curr;
+	Token curr;
 
 	if (_hasPeeked)
 	{
@@ -150,28 +179,33 @@ PegLexer::Token	PegLexer::next(void)
 		curr = _peeked;
 	}
 	else
+	{
 		curr = lexOne();
+	}
 
 #if PEG_DEBUG_LEXER
 	PegDebug::Logger::dbg_action("PegLexer", "next", &curr);
 #endif
+
 	return curr;
 }
 
-PegLexer::Token	PegLexer::peek(void)
+PegLexer::Token PegLexer::peek(void)
 {
 	if (!_hasPeeked)
 	{
 		_peeked = lexOne();
 		_hasPeeked = true;
 	}
+
 #if PEG_DEBUG_LEXER
 	PegDebug::Logger::dbg_action("PegLexer", "peek", &_peeked);
 #endif
+
 	return _peeked;
 }
 
-bool	PegLexer::match(enum e_tk_type type)
+bool PegLexer::match(enum e_tk_type type)
 {
 	if (peek().type == type)
 	{
@@ -180,3 +214,4 @@ bool	PegLexer::match(enum e_tk_type type)
 	}
 	return false;
 }
+
