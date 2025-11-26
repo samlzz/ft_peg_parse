@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 18:57:42 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 09:39:52 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@
 class PackratParser {
 
 private:
-	Input			&_input;
+	Input			_input;
 	const Grammar	&_grammar;
 	PackratCache	_memo;
 	Diag			_err;
@@ -81,8 +81,8 @@ public:
 	// Construction
 	// ========================================================================
 
-	PackratParser(Input &in, const Grammar &pegGrammar):
-		_input(in), _grammar(pegGrammar), _memo(), _err()
+	PackratParser(const std::string &path, const Grammar &pegGrammar):
+		_input(Input::fromFile(path)), _grammar(pegGrammar), _memo(), _err()
 # if PEG_DEBUG_PACKRAT
 		, _traceDepth(0), _traceEnabled(true)
 		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
