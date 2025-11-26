@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:54:29 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 16:20:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,6 @@ public:
 
 	const Input	&input(void) const	{ return _input; }
 	Input		&input(void)		{ return _input; }
-
-	void		resetDiag(void)		{ _err.reset(); }
 
 	// ---- Debug functions ----
 # if PEG_DEBUG_PACKRAT

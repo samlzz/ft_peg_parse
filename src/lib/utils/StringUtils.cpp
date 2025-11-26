@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:00:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 14:27:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,13 @@ std::string	escapeStringDisplay(const std::string &str, size_t maxLen)
 {
 	std::ostringstream oss;
 
+	oss << "'";
 	for (size_t i = 0; i < str.size() && i < maxLen; ++i)
 		oss << _escapeCharDisplay(str[i]);
 
 	if (str.size() > maxLen)
 		oss << "...";
+	oss << "'";
 	return oss.str();
 }
 
