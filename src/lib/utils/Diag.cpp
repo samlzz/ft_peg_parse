@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 16:24:20 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:15:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,7 @@ bool Diag::Expectation::operator<(const Expectation &other) const
 bool Diag::Expectation::operator==(const Expectation &other) const
 {
 	return priority == other.priority
-		&& message == other.message
-		&& rule_context == other.rule_context;
+		&& message == other.message;
 }
 
 // ============================================================================
@@ -49,23 +48,8 @@ Diag	&Diag::operator=(const Diag &other)
 	{
 		_expectations = other._expectations;
 		_farthest = other._farthest;
-		_current_rule = other._current_rule;
 	}
 	return *this;
-}
-
-// ============================================================================
-// Rule context tracking
-// ============================================================================
-
-void	Diag::enter_rule(const std::string &rule_name)
-{
-	_current_rule = rule_name;
-}
-
-void	Diag::exit_rule(void)
-{
-	_current_rule.clear();
 }
 
 // ============================================================================
@@ -84,7 +68,7 @@ void	Diag::add_expectation(const std::string &msg, enum e_priority prio)
 		}
 	}
 	
-	_expectations.push_back(Expectation(msg, prio, _current_rule));
+	_expectations.push_back(Expectation(msg, prio));
 }
 
 // New farthest position: reset expectations
@@ -106,7 +90,6 @@ void	Diag::reset(void)
 {
 	_farthest = 0;
 	_expectations.clear();
-	_current_rule.clear();
 }
 
 // ============================================================================
@@ -222,12 +205,8 @@ std::string	Diag::formatError(const Input &in, bool withCtx) const
 	Input				tmp(in);
 
 	tmp.setPos(_farthest);
-	oss << "error at line " << tmp.line() << ", column " << tmp.column();
-	
-	if (!_current_rule.empty())
-		oss << " (in rule '" << _current_rule << "')";
-	
-	oss << ": ";
+	oss << "error at line " << tmp.line()
+		<< ", column " << tmp.column() << ": ";
 
 	Diag mutable_copy = *this;
 	mutable_copy.deduplicate_expectations();

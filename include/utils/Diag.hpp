@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 18:06:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 16:24:04 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:14:46 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,11 +47,9 @@ public:
 	struct Expectation {
 		std::string		message;
 		enum e_priority	priority;
-		std::string		rule_context;
 
-		Expectation(const std::string &msg, enum e_priority prio,
-					const std::string &ctx = "")
-			: message(msg), priority(prio), rule_context(ctx) {}
+		Expectation(const std::string &msg, enum e_priority prio)
+			: message(msg), priority(prio) {}
 		
 		bool operator<(const Expectation &other) const;
 		bool operator==(const Expectation &other) const;
@@ -62,7 +60,6 @@ private:
 	// ---- Attributes ----
 	std::vector<Expectation>		_expectations;
 	size_t							_farthest;
-	std::string						_current_rule;
 
 	void		add_expectation(const std::string &msg, enum e_priority prio);
 	void		deduplicate_expectations(void);
@@ -74,11 +71,10 @@ public:
 	// Construction / Assignment
 	// ========================================================================
 
-	Diag(): _expectations(), _farthest(0), _current_rule() {}
+	Diag(): _expectations(), _farthest(0) {}
 	Diag(const Diag &other)
 		: _expectations(other._expectations),
-			_farthest(other._farthest),
-			_current_rule(other._current_rule) {}
+			_farthest(other._farthest) {}
 
 	Diag &operator=(const Diag &other);
 
@@ -92,14 +88,8 @@ public:
 	void		update(size_t pos, const std::string &expected, enum e_priority prio);
 	void		reset(void);
 	
-	// ---- Rule context tracking ----
-	void		enter_rule(const std::string &rule_name);
-	void		exit_rule(void);
-
-
 	// ---- Accessors ----
 	size_t				farthest(void) const	{ return _farthest; }
-	const std::string	&current_rule(void) const { return _current_rule; }
 
 	/**
 	 * @brief Format the diagnostic message as a human-readable error.
