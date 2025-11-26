@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 15:07:16 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/21 10:25:31 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 10:59:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@
 // #  define PEG_DEBUG_LEXER		1
 // #  define PEG_DEBUG_PARSER		1
 // #  define PEG_DEBUG_GRAMMAR		1
-#  define PEG_DEBUG_PACKRAT		1
+// #  define PEG_DEBUG_PACKRAT		1
 // #  define PEG_DEBUG_CACHE		1 // TODO: packrat cache doesn't implemented for now
 #  define PEG_DEBUG_AST			1
 

@@ -5,7 +5,6 @@
 #include "packrat/PackratParser.hpp"
 #include "peg/Grammar.hpp"
 #include "ast/AstNode.hpp"
-#include "utils/Input.hpp"
 
 
 int main(int ac, char **av)
@@ -23,11 +22,10 @@ int main(int ac, char **av)
 	{
 		PegParser	parser(av[1]);
 		Grammar		grammar;
-		Input		toParse = Input::fromFile(av[2]);
 
 		parser.parseGrammar(grammar);
-		PackratParser	exec(toParse, grammar);
-		AstNode		*output = NULL;
+		PackratParser	exec(av[2], grammar);
+		AstNode			*output = NULL;
 		exec.parseRule("config", output);
 		std::cout << "Final AST:" << std::endl;
 		AstNode::PrintTree(output);
