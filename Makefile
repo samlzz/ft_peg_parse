@@ -19,11 +19,10 @@ FILES =	ast/AstNode.cpp \
 		packrat/PackratParser.cpp \
 		packrat/PackratParserDebug.cpp \
 		peg/Grammar.cpp \
-		peg/GrammarDebug.cpp \
 		peg/PegLexer.cpp \
 		peg/PegParser.cpp \
 		peg/debug/ExprDebug.cpp \
-		peg/debug/PrintVisitor.cpp \
+		peg/debug/GrammarDebug.cpp \
 		peg/debug/StatsVisitor.cpp \
 		peg/debug/TokenDebug.cpp \
 		peg/debug/TreeVisitor.cpp \
@@ -33,7 +32,8 @@ FILES =	ast/AstNode.cpp \
 		peg/syntax/RuleRef.cpp \
 		utils/DebugLogger.cpp \
 		utils/Diag.cpp \
-		utils/Input.cpp
+		utils/Input.cpp \
+		utils/StringUtils.cpp
 ### END ###
 ifeq ($(FILES),)
     $(error FILES is empty: please define source files)
