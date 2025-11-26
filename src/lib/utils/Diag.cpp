@@ -38,6 +38,35 @@ bool Diag::Expectation::operator==(const Expectation &other) const
 }
 
 // ============================================================================
+// Checkpoint management
+// ============================================================================
+
+void	Diag::save(void)
+{
+	_checkpoints.push(Checkpoint(_expectations, _farthest));
+}
+
+void	Diag::restore(void)
+{
+	if (_checkpoints.empty())
+		return;
+
+	const Checkpoint &cp = _checkpoints.top();
+	_expectations = cp.expectations;
+	_farthest = cp.farthest;
+	
+	_checkpoints.pop();
+}
+
+void	Diag::commit(void)
+{
+	if (_checkpoints.empty())
+		return;
+
+	_checkpoints.pop();
+}
+
+// ============================================================================
 // Diag
 // ============================================================================
 

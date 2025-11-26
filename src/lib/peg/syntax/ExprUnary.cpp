@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:40:37 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/26 17:47:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
+#include "peg/Expr.hpp"
 #include "peg/IExprVisitor.hpp"
 #include "peg/syntax/ExprUnary.hpp"
+#include "utils/Diag.hpp"
 #include "utils/Input.hpp"
 
 // ============================================================================
@@ -34,6 +36,22 @@ void ExprUnary::setInner(Expr *e)
 }
 
 // ============================================================================
+// Helper for *OrMore
+// ============================================================================
+
+static inline bool	_child_ok(PackratParser &parser, AstNode *parent, Expr *inner)
+{
+	parser.diag().save();
+	if (!parser.eval(inner, parent))
+	{
+		parser.diag().restore();
+		return false;
+	}
+	parser.diag().commit();
+	return true;
+}
+
+// ============================================================================
 // ZeroOrMore
 // ============================================================================
 
@@ -48,8 +66,8 @@ bool ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
 	Input	&in = parser.input();
 	size_t	last = in.pos();
 
-	while (parser.eval(_inner, parent))
-	{
+	while (_child_ok(parser, parent, _inner))
+	{	
 		if (in.pos() == last)
 			break;
 		last = in.pos();
@@ -71,20 +89,19 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
 	size_t	last = in.pos();
-	size_t	occ = 0;
 
-	while (parser.eval(_inner, parent))
-	{
-		occ++;
-		if (in.pos() == last)
-			break;
-		last = in.pos();
-	}
-	if (!occ)
+	if (!parser.eval(_inner, parent))
 	{
 		parser.diag().update(in.pos(),
 			"at least one occurence", Diag::PRIO_MEDIUM);
 		return false;
+	}
+
+	while (_child_ok(parser, parent, _inner))
+	{	
+		if (in.pos() == last)
+			break;
+		last = in.pos();
 	}
 	return true;
 }
@@ -101,7 +118,11 @@ void Optional::accept(IExprVisitor &visitor) const
 // Try the inner expression but never fail.
 bool Optional::parse(PackratParser &parser, AstNode *parent) const
 {
+	Diag	&errs = parser.diag();
+
+	errs.save();
 	parser.eval(_inner, parent);
+	errs.restore();
 	return true;
 }
 
@@ -117,10 +138,13 @@ void Predicate::accept(IExprVisitor &visitor) const
 // Perform a look-ahead evaluation without consuming input.
 bool Predicate::parse(PackratParser &parser, AstNode *parent) const
 {
+	Diag	&errs = parser.diag();
 	Input	&in = parser.input();
 	size_t	start = in.pos();
 
+	errs.save();
 	const bool	ok = parser.eval(_inner, parent);
+	errs.restore();
 	in.setPos(start);
 
 	return _isAnd ? ok : !ok;
