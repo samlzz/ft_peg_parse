@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 17:47:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 09:15:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,14 +41,16 @@ void ExprUnary::setInner(Expr *e)
 
 static inline bool	_child_ok(PackratParser &parser, AstNode *parent, Expr *inner)
 {
-	parser.diag().save();
-	if (!parser.eval(inner, parent))
+	Diag &errs = parser.diag();
+
+	errs.save();
+	if (parser.eval(inner, parent))
 	{
-		parser.diag().restore();
-		return false;
+		errs.commit();
+		return true;
 	}
-	parser.diag().commit();
-	return true;
+	errs.restore();
+	return false;
 }
 
 // ============================================================================
