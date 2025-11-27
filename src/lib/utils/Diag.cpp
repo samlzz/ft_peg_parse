@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 17:15:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 12:37:01 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,21 +210,17 @@ std::string Diag::format_expectations(void) const
 
 static inline void	_append_ctx(const Input &in, size_t farthest, std::ostringstream &oss)
 {
-	const size_t	rad = 10;
+	const size_t	rad = 20;
 	std::string		ctx = in.context(farthest, rad);
 
 	if (!ctx.empty())
 	{
 		size_t		pos = std::min(farthest, rad);
-		std::string	marked;
 
 		if (ctx.size() < pos)
 			pos = ctx.size();
-		marked.resize(ctx.size() + 4);
-		marked.append(ctx.substr(0, pos));
-		marked.append(" >>>");
-		marked.append(ctx.substr(pos));
-		oss << "\n" << marked;
+		oss << "\n" << ctx.substr(0, pos)
+			<< " >>>" << ctx.substr(pos);
 	}
 }
 
