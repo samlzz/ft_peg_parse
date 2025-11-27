@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 16:20:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:53:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <stdint.h>
 
 # include "ast/AstNode.hpp"
-# include "peg/Grammar.hpp"
+# include "peg/grammar/Grammar.hpp"
 # include "utils/DebugConfig.hpp"
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"

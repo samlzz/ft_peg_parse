@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:27:35 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:51:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 # include <cstddef>
 # include <string>
 
-# include "peg/Expr.hpp"
+# include "peg/grammar/Expr.hpp"
 
 // ============================================================================
 // ExprUnary

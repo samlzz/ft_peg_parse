@@ -3,7 +3,7 @@
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
 #include "packrat/PackratParser.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Grammar.hpp""
 #include "test.h"
 
 int main() {

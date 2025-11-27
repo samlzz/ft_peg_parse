@@ -18,7 +18,6 @@ FILES =	 \
 		ast/AstNodeDebug.cpp \
 		packrat/PackratParser.cpp \
 		packrat/PackratParserDebug.cpp \
-		peg/Grammar.cpp \
 		peg/PegLexer.cpp \
 		peg/PegParser.cpp \
 		peg/debug/ExprDebug.cpp \
@@ -26,6 +25,7 @@ FILES =	 \
 		peg/debug/StatsVisitor.cpp \
 		peg/debug/TokenDebug.cpp \
 		peg/debug/TreeVisitor.cpp \
+		peg/grammar/Grammar.cpp \
 		peg/syntax/ExprContainer.cpp \
 		peg/syntax/ExprLeaf.cpp \
 		peg/syntax/ExprUnary.cpp \

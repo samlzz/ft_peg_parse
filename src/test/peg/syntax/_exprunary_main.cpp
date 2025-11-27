@@ -2,7 +2,7 @@
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
 #include "packrat/PackratParser.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Grammar.hpp"
 #include "ast/AstNode.hpp"
 #include "utils/Input.hpp"
 #include "test.h"

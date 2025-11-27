@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 19:08:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:39:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:53:47 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <set>
 #include <string>
 
-#include "peg/Expr.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Expr.hpp"
+#include "peg/grammar/Grammar.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/RuleRef.hpp"

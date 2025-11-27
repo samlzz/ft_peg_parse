@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 00:30:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/04 13:55:10 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:53:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "ast/AstNode.hpp"
 #include "packrat/PackratParser.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Grammar.hpp""
 #include "peg/syntax/ExprLeaf.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 #include "peg/syntax/ExprUnary.hpp"

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:44:46 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:39:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:56:27 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <sstream>
 # include <string>
 
-# include "peg/Expr.hpp"
-# include "peg/ExprDebugVisitors.hpp"
+# include "peg/grammar/Expr.hpp"
+# include "peg/grammar/ExprDebugVisitors.hpp"
 # include "utils/DebugLogger.hpp"
 
 // ============================================================================

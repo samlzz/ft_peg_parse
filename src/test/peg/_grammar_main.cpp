@@ -1,5 +1,5 @@
 #include <iostream>
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Grammar.hpp"
 #include "peg/syntax/RuleRef.hpp"
 #include "test.h"
 

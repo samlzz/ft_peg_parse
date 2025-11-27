@@ -1,7 +1,7 @@
 #include <iostream>
 #include "helper_TmpFile.hpp"
 #include "peg/PegParser.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Grammar.hpp"
 #include "test.h"
 
 int main() {

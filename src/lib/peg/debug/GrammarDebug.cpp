@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:42:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:35:58 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:53:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 
 # include <iomanip>
 
-# include "peg/Grammar.hpp"
-# include "peg/Expr.hpp"
+# include "peg/grammar/Grammar.hpp"
+# include "peg/grammar/Expr.hpp"
 
 // ============================================================================
 // Grammar debug display

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:32:21 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:51:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 #  include <string>
 #  include <map>
 
-#  include "peg/IExprVisitor.hpp"
-#  include "peg/Expr.hpp"
+#  include "./IExprVisitor.hpp"
+#  include "./Expr.hpp"
 
 // ============================================================================
 // TreeVisitor

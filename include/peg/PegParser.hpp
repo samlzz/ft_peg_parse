@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 18:46:51 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:50:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@
 # include <stdint.h>
 
 # include "peg/PegLexer.hpp"
-# include "peg/Expr.hpp"
-# include "peg/Grammar.hpp"
+# include "peg/grammar/Expr.hpp"
+# include "peg/grammar/Grammar.hpp"
 # include "utils/PegException.hpp"
 
 // ============================================================================

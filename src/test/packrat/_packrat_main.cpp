@@ -1,7 +1,7 @@
 #include <iostream>
 #include "peg/PegParser.hpp"
 #include "packrat/PackratParser.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Grammar.hpp"
 #include "ast/AstNode.hpp"
 #include "utils/Debug.hpp"
 #include "utils/Input.hpp"

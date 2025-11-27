@@ -6,14 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:35:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 17:53:36 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 
-#include "peg/Expr.hpp"
-#include "peg/Grammar.hpp"
+#include "peg/grammar/Expr.hpp"
+#include "peg/grammar/Grammar.hpp"
 #include "peg/PegLexer.hpp"
 #include "peg/PegParser.hpp"
 #include "peg/syntax/ExprContainer.hpp"
