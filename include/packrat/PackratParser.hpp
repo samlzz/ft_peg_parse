@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:53:35 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 18:29:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ private:
 	const Grammar	&_grammar;
 	Diag			_err;
 
+	PackratParser();
 	PackratParser(const PackratParser &other);
 	PackratParser &operator=(const PackratParser &other);
 
@@ -79,19 +80,8 @@ public:
 	// Construction
 	// ========================================================================
 
-	PackratParser(const std::string &path, const Grammar &pegGrammar):
-		_input(Input::fromFile(path)), _grammar(pegGrammar), _err()
-# if PEG_DEBUG_PACKRAT
-		, _traceDepth(0), _traceEnabled(true)
-		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
-	{
-		PegDebug::Logger::resetIndent();
-		PegDebug::Logger::setIndentValue("│ ");
-	}
-# else
-	{}
-# endif
-
+	PackratParser(const std::string &path, const Grammar &pegGrammar,
+					bool checkLeftRecursion = true);
 	~PackratParser() {}
 
 	// ========================================================================

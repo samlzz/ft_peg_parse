@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:51:49 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 18:27:05 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,21 @@
 #include "utils/DebugLogger.hpp"
 #include "utils/DebugConfig.hpp"
 #include "utils/Input.hpp"
+
+// ============================================================================
+// Construction
+// ============================================================================
+
+#if !PEG_DEBUG_PACKRAT
+
+PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
+								bool checkLeftRecursion)
+	: _input(Input::fromFile(path)), _grammar(pegGrammar), _err()
+{
+	if (checkLeftRecursion)
+		_grammar.checkLeftRecursion();
+}
+#endif
 
 // ============================================================================
 // parseRule: public entry point

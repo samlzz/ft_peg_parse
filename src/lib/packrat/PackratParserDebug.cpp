@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:51:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 18:27:28 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,23 @@
 # include "utils/Input.hpp"
 # include "packrat/PackratParser.hpp"
 # include "peg/grammar/Expr.hpp"
+
+// ============================================================================
+// Construction
+// ============================================================================
+
+
+PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
+								bool checkLeftRecursion)
+	: _input(Input::fromFile(path)), _grammar(pegGrammar), _err()
+		, _traceDepth(0), _traceEnabled(true)
+		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
+{
+	PegDebug::Logger::resetIndent();
+	PegDebug::Logger::setIndentValue("│ ");
+	if (checkLeftRecursion)
+		_grammar.checkLeftRecursion();
+}
 
 // ============================================================================
 // Helpers
