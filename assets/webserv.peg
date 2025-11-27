@@ -1,48 +1,19 @@
-# --- To ignore and capture unknow directives ---
-
-# server_body <- ( server_directive / location / unknow_block / unknown_directive )+
-# location_directive <- methods / root / index / autoindex / error_page / cgi_extension
-#                    / cgi_path / upload_store / return_redirect / unknown_directive
-
-# @unknow_block     <- name:[^;{}\t]+ _ '{' _ unknown_directive* _ '}' _
-# unknown_directive <- unknow:[^;{}]+ ';' _
-
 # ============================================================================
 # PEG grammar for webserv configuration file
 # ============================================================================
 
-@config <- _ server+ _
+# --- Whitespaces and commentary ---
+_       <- (SP / EOL / comment)*      # optionnal space/new line/comment
+__      <- (SP / comment)+            # at least one space/comment
 
-# --- Server Block ---
-@server <- 'server' _ '{' _ server_body _ '}' _
+SP      <- [ \t]+
+EOL     <- '\r\n' / '\n' / '\r'
+comment <- '#' [^\n\r]* EOL?
 
-server_body <- (server_directive / location)+
+# ============================================================================
+# Values
+# ============================================================================
 
-server_directive <- listen / methods / root / index / autoindex / error_page 
-                 / client_max_body_size / cgi_extension / return_redirect
-
-# --- Location Block ---
-@location <- 'location' __ path:(path) _ '{' _ location_directive+ _ '}' _
-
-location_directive <- methods / root / index / autoindex / error_page 
-                   / cgi_extension / cgi_path / upload_store / return_redirect
-
-# --- Server Directives ---
-listen              <- 'listen' __ listen:listen_value _ ';' _
-methods             <- 'methods' __ method:method_list _ ';' _
-root                <- 'root' __ root:path _ ';' _
-index               <- 'index' __ index:path _ ';' _
-autoindex           <- 'autoindex' __ autoindex:bool_value _ ';' _
-error_page          <- 'error_page' __ err_page:error_page_value _ ';' _
-client_max_body_size <- 'client_max_body_size' __ client_max_body_size:size_value _ ';' _
-cgi_extension       <- 'cgi_extension' __ cgi_ext:extension _ ';' _
-return_redirect     <- 'return' __ redirect:redirect_value _ ';' _
-
-# --- Location Directives ---
-cgi_path      <- 'cgi_path' __ cgi_path:path _ ';' _
-upload_store  <- 'upload_store' __ upload_store:path _ ';' _
-
-# --- Values ---
 listen_value      <- host_port / port_only
 host_port         <- [^:\n\r\t ;{}]+ ':' [0-9]+
 port_only         <- [0-9]+
@@ -64,10 +35,47 @@ extension         <- '.' [a-zA-Z0-9]+
 
 redirect_value    <- [0-9]+ __ path
 
-# --- Whitespaces and commentary ---
-_   <- (SP / EOL / comment)*      # optionnal space/new line/comment
-__  <- (SP / comment)+            # at least one space/comment
+# ============================================================================
+# Blocks
+# ============================================================================
 
-SP      <- [ \t]+
-EOL     <- '\r\n' / '\n' / '\r'
-comment <- '#' [^\n\r]* EOL?
+@config <- _ server+ _
+
+# --- Server Block ---
+@server <- 'server' _ '{' _ server_body _ '}' _
+
+server_body <- ~(server_directive / location / fatal_block / fatal_directive)+
+
+server_directive <- (listen / methods / root / index / autoindex / error_page 
+                 / client_max_body_size / cgi_extension / return_redirect)
+
+# --- Location Block ---
+@location <- 'location' __ path:~path _ '{' _ location_body _ '}' _
+
+location_body      <- ~(location_directive / fatal_directive)+
+location_directive <- methods / root / index / autoindex / error_page 
+                   / cgi_extension / cgi_path / upload_store / return_redirect
+
+# ============================================================================
+# Singles Directives
+# ============================================================================
+
+# --- Server Directives ---
+listen              <- 'listen' __ listen:~listen_value _ ';' _
+methods             <- 'methods' __ method:~method_list _ ';' _
+root                <- 'root' __ root:~path _ ';' _
+index               <- 'index' __ index:~path _ ';' _
+autoindex           <- 'autoindex' __ autoindex:~bool_value _ ';' _
+error_page          <- 'error_page' __ err_page:~error_page_value _ ';' _
+client_max_body_size <- 'client_max_body_size' __ client_max_body_size:~size_value _ ';' _
+cgi_extension       <- 'cgi_extension' __ cgi_ext:~extension _ ';' _
+return_redirect     <- 'return' __ redirect:~redirect_value _ ';' _
+
+# --- Location Directives ---
+cgi_path      <- 'cgi_path' __ cgi_path:~path _ ';' _
+upload_store  <- 'upload_store' __ upload_store:~path _ ';' _
+
+# --- Unknow directives (throw error) ---
+fatal_block      <- !~!( [^;{}\t]+ _ '{' _ unknown_directive* _ '}' _ )
+fatal_directive <- !~!( unknown_directive )
+unknown_directive       <- [^;{}]+ ';' _
