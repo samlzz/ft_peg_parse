@@ -25,7 +25,9 @@ FILES =	 \
 		peg/debug/StatsVisitor.cpp \
 		peg/debug/TokenDebug.cpp \
 		peg/debug/TreeVisitor.cpp \
+		peg/grammar/FistSymbolVisitor.cpp \
 		peg/grammar/Grammar.cpp \
+		peg/grammar/ResolutionVisitor.cpp \
 		peg/syntax/ExprContainer.cpp \
 		peg/syntax/ExprLeaf.cpp \
 		peg/syntax/ExprUnary.cpp \
