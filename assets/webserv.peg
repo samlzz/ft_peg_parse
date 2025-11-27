@@ -22,6 +22,9 @@ method_list       <- method (__ method)*
 method            <- 'GET' / 'POST' / 'DELETE' / 'PUT' / 'HEAD' / 'OPTIONS'
 
 path              <- [^;\n\r\t {}]+
+paths             <- (path __)* path
+
+extensions        <- ( ('.' [a-zA-Z0-9]+) __ )* ('.' [a-zA-Z0-9]+)
 
 bool_value        <- 'on' / 'off' / 'true' / 'false' / '1' / '0'
 
@@ -31,9 +34,7 @@ error_codes       <- [0-9]+ (__ [0-9]+)*
 size_value        <- [0-9]+ size_unit?
 size_unit         <- 'K' / 'M' / 'G' / 'k' / 'm' / 'g'
 
-extension         <- '.' [a-zA-Z0-9]+
-
-redirect_value    <- [0-9]+ __ path
+redirect_value    <- ([0-9]+ __)* path
 
 # ============================================================================
 # Blocks
@@ -68,11 +69,11 @@ index               <- 'index' __ index:~path _ ';' _
 autoindex           <- 'autoindex' __ autoindex:~bool_value _ ';' _
 error_page          <- 'error_page' __ err_page:~error_page_value _ ';' _
 client_max_body_size <- 'client_max_body_size' __ client_max_body_size:~size_value _ ';' _
-cgi_extension       <- 'cgi_extension' __ cgi_ext:~extension _ ';' _
 return_redirect     <- 'return' __ redirect:~redirect_value _ ';' _
+cgi_extension       <- 'cgi_ext' __ cgi_ext:~extensions _ ';' _
 
 # --- Location Directives ---
-cgi_path      <- 'cgi_path' __ cgi_path:~path _ ';' _
+cgi_path      <- 'cgi_path' __ cgi_path:~paths _ ';' _
 upload_store  <- 'upload_store' __ upload_store:~path _ ';' _
 
 # --- Unknow directives (throw error) ---
