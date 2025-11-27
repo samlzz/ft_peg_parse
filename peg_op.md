@@ -1,15 +1,18 @@
-| PEG        | Nom                       | Sous-classe `Expr` | Sémantique                    | Exemple PEG                     |
-| ---------- | ------------------------- | ------------------ | ----------------------------- | ------------------------------- |
-| `"abc"`    | **Littéral**              | `Literal`          | Match exact d’une chaîne      | `"root"`                        |
-| `[a-zA-Z]` | **Classe de caractères**  | `CharClass`        | Match 1 caractère du set      | `[0-9]`                         |
-| `A`        | **Référence à une règle** | `RuleRef`          | Appelle la règle `A`          | `path`                          |
-| `A B`      | **Séquence**              | `Sequence`         | Match `A` puis `B`            | `"root" _ PATH ";"`             |
-| `A / B`    | **Choix (alternance)**    | `Choice`           | Tente `A`, sinon `B`          | `BOOL <- "on" / "off"`          |
-| `A*`       | **Répétition 0+**         | `ZeroOrMore`       | Répète tant que succès        | `_ <- (" " / "\n")*`            |
-| `A+`       | **Répétition 1+**         | `OneOrMore`        | Comme `*` mais ≥1             | `methods <- METHOD+`            |
-| `A?`       | **Optionnel**             | `Optional`         | Tente `A` une fois            | `index <- "index" _ PATH? ";"`  |
-| `&A`       | **Lookahead positif**     | `AndPredicate`     | Vérifie `A` sans consommer    | `"server" &"{"`                 |
-| `!A`       | **Lookahead négatif**     | `NotPredicate`     | Vérifie que `A` ne matche pas | `!( "}" / ";" ) .`              |
-| `(...)`    | **Groupement**            | `Group`            | Sous-expression isolée        | `( "a" / "b" )+`                |
-| `@rule`    | **Capture (AST)**         | `Capture`          | Crée un nœud AST              | `@server_block <- "server" ...` |
+| PEG        | Name                           | `Expr` Subclass   | Semantics                                 | PEG Example                           |
+| ---------- | ------------------------------ | ----------------- | ----------------------------------------- | ------------------------------------- |
+| `"abc"`    | **Literal**                    | `Literal`         | Matches an exact string                   | `"root"`                              |
+| `[a-zA-Z]` | **Character class**            | `CharClass`       | Matches one character from the set        | `[0-9]`                               |
+| `.`        | **Any character**              | `Any`             | Matches any single character              | `.`                                   |
+| `A`        | **Rule reference**             | `RuleRef`         | Calls rule `A`                            | `path`                                |
+| `A B`      | **Sequence**                   | `Sequence`        | Matches `A` followed by `B`               | `"root" _ PATH ";"`                   |
+| `(...)`    | **Grouping**                   | `Sequence`        | Parenthesized subexpression               | `( "a" / "b" )+`                      |
+| `A / B`    | **Choice (alternation)**       | `Choice`          | Tries `A`, otherwise `B`                  | `BOOL <- "on" / "off"`                |
+| `A*`       | **Zero-or-more repetition**    | `ZeroOrMore`      | Repeats `A` while it succeeds             | `_ <- (" " / "\n")*`                  |
+| `A+`       | **One-or-more repetition**     | `OneOrMore`       | Same as `*` but requires ≥ 1 match        | `methods <- METHOD+`                  |
+| `A?`       | **Optional**                   | `Optional`        | Attempts `A` once, succeeds on failure    | `index <- "index" _ PATH? ";"`        |
+| `&A`       | **Positive lookahead**         | `AndPredicate`    | Checks `A` without consuming input        | `"server" &"{"`                       |
+| `!A`       | **Negative lookahead**         | `NotPredicate`    | Succeeds only if `A` does not match       | `!( "}" / ";" ) .`                    |
+| `~A`       | **Fatal error (hard fail)**    | `Fatal`           | On failure, stops backtracking and raises an error | `~directives`                |
+| `@rule`    | **Capture (AST node)**         | `Capture`         | Creates an AST node for the rule          | `@server_block <- "server" ...`       |
+| `id:value` | **Capture (property)**         | `Capture`         | Adds an attribute to the parent AST node  | `listen <- "listen" listen:...`       |
 
