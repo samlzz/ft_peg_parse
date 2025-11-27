@@ -1,25 +1,33 @@
+# --- To ignore and capture unknow directives ---
+
+# server_body <- ( server_directive / location / unknow_block / unknown_directive )+
+# location_directive <- methods / root / index / autoindex / error_page / cgi_extension
+#                    / cgi_path / upload_store / return_redirect / unknown_directive
+
+# @unknow_block     <- name:[^;{}\t]+ _ '{' _ unknown_directive* _ '}' _
+# unknown_directive <- unknow:[^;{}]+ ';' _
+
 # ============================================================================
-# Grammaire PEG pour fichier de configuration webserv (style nginx)
+# PEG grammar for webserv configuration file
 # ============================================================================
 
 @config <- _ server+ _
 
-# --- Bloc server ---
+# --- Server Block ---
 @server <- 'server' _ '{' _ server_body _ '}' _
-server_body <- (server_directive / location)*
+
+server_body <- (server_directive / location)+
 
 server_directive <- listen / methods / root / index / autoindex / error_page 
                  / client_max_body_size / cgi_extension / return_redirect
 
-# --- Bloc location ---
-@location <- 'location' __ path:(path) _ '{' _ location_body _ '}' _
-
-location_body <- location_directive*
+# --- Location Block ---
+@location <- 'location' __ path:(path) _ '{' _ location_directive+ _ '}' _
 
 location_directive <- methods / root / index / autoindex / error_page 
                    / cgi_extension / cgi_path / upload_store / return_redirect
 
-# --- Directives server ---
+# --- Server Directives ---
 listen              <- 'listen' __ listen:listen_value _ ';' _
 methods             <- 'methods' __ method:method_list _ ';' _
 root                <- 'root' __ root:path _ ';' _
@@ -30,7 +38,7 @@ client_max_body_size <- 'client_max_body_size' __ client_max_body_size:size_valu
 cgi_extension       <- 'cgi_extension' __ cgi_ext:extension _ ';' _
 return_redirect     <- 'return' __ redirect:redirect_value _ ';' _
 
-# --- Directives location ---
+# --- Location Directives ---
 cgi_path      <- 'cgi_path' __ cgi_path:path _ ';' _
 upload_store  <- 'upload_store' __ upload_store:path _ ';' _
 
@@ -57,9 +65,9 @@ extension         <- '.' [a-zA-Z0-9]+
 redirect_value    <- [0-9]+ __ path
 
 # --- Whitespaces and commentary ---
-_   <- (SP / EOL / comment)*      # Espaces/retours/commentaires optionnels
-__  <- (SP / EOL / comment)+      # Au moins un espace/retour/commentaire
+_   <- (SP / EOL / comment)*      # optionnal space/new line/comment
+__  <- (SP / comment)+            # at least one space/comment
 
-SP      <- [ \t]+                 # Espaces horizontaux
-EOL     <- '\r\n' / '\n' / '\r'   # Retours à la ligne
-comment <- '#' [^\n\r]* EOL?      # Commentaire jusqu'à fin de ligne
+SP      <- [ \t]+
+EOL     <- '\r\n' / '\n' / '\r'
+comment <- '#' [^\n\r]* EOL?
