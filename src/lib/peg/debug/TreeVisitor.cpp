@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:39:42 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:32:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ TREE_VISIT_IMPL(OneOrMore)
 TREE_VISIT_IMPL(Optional)
 TREE_VISIT_IMPL(Predicate)
 TREE_VISIT_IMPL(Capture)
+TREE_VISIT_IMPL(Fatal)
 
 # undef TREE_VISIT_IMPL
 

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 11:12:20 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:33:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ public:
 	enum e_tk_type {
 		T_ID, T_LITERAL,
 		T_SLASH, T_STAR, T_PLUS, T_QMARK,
-		T_AND, T_NOT,
+		T_AND, T_NOT, T_TILD,
 		T_LPAREN, T_RPAREN,
 		T_CHARRANGE, T_DOT,
 		T_COLON, T_ASSIGN,

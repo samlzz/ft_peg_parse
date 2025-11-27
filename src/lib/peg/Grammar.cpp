@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 19:08:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 17:39:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:39:13 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ static void	resolveExpr(Expr *expr, const t_ExprDict &rules)
 	case Expr::K_OPTIONAL:
 	case Expr::K_PREDICATE:
 	case Expr::K_CAPTURE:
+	case Expr::K_FATAL:
 	{
 		ExprUnary *u = static_cast<ExprUnary *>(expr);
 		resolveExpr(u->inner(), rules);
@@ -168,6 +169,7 @@ static bool	firstSymbolIs(
 	case Expr::K_OPTIONAL:
 	case Expr::K_PREDICATE:
 	case Expr::K_CAPTURE:
+	case Expr::K_FATAL:
 	{
 		ExprUnary *u = static_cast<ExprUnary *>(expr);
 		return firstSymbolIs(u->inner(), target, visited);

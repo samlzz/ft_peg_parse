@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 18:48:49 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:35:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,6 +144,8 @@ Expr	*PegParser::parsePrefix(void)
 		return new Predicate(parsePrefix(), false);
 	if (_lex.match(PegLexer::T_AND))
 		return new Predicate(parsePrefix(), true);
+	if (_lex.match(PegLexer::T_TILD))
+		return new Fatal(parsePrefix());
 	return parseSuffix();
 }
 

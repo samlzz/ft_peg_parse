@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:38:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:32:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ public:
 	virtual void	visitPredicate(const Predicate &expr);
 	virtual void	visitRuleRef(const RuleRef &expr);
 	virtual void	visitCapture(const Capture &expr);
+	virtual void	visitFatal(const Fatal &expr);
 };
 
 // ============================================================================
@@ -113,6 +114,7 @@ public:
 	virtual void	visitPredicate(const Predicate &expr);
 	virtual void	visitRuleRef(const RuleRef &expr);
 	virtual void	visitCapture(const Capture &expr);
+	virtual void	visitFatal(const Fatal &expr);
 };
 
 # endif // PEG_DEBUG_ANY

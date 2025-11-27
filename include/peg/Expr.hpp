@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:26:37 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:26:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ public:
 		K_PREDICATE,
 		K_RULEREF,
 		K_CAPTURE,
+		K_FATAL
 	};
 
 protected:

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 09:15:04 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:31:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 // ============================================================================
 
 // Replace the current inner expression, deleting the previous one.
-void ExprUnary::setInner(Expr *e)
+void	ExprUnary::setInner(Expr *e)
 {
 	if (_inner != e)
 	{
@@ -57,13 +57,13 @@ static inline bool	_child_ok(PackratParser &parser, AstNode *parent, Expr *inner
 // ZeroOrMore
 // ============================================================================
 
-void ZeroOrMore::accept(IExprVisitor &visitor) const
+void	ZeroOrMore::accept(IExprVisitor &visitor) const
 {
 	visitor.visitZeroOrMore(*this);
 }
 
 // Repeatedly evaluate the inner expression until it stops consuming input.
-bool ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
+bool	ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
 	size_t	last = in.pos();
@@ -81,13 +81,13 @@ bool ZeroOrMore::parse(PackratParser &parser, AstNode *parent) const
 // OneOrMore
 // ============================================================================
 
-void OneOrMore::accept(IExprVisitor &visitor) const
+void	OneOrMore::accept(IExprVisitor &visitor) const
 {
 	visitor.visitOneOrMore(*this);
 }
 
 // Evaluate at least once, then behave like ZeroOrMore.
-bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
+bool	OneOrMore::parse(PackratParser &parser, AstNode *parent) const
 {
 	Input	&in = parser.input();
 	size_t	last = in.pos();
@@ -112,13 +112,13 @@ bool OneOrMore::parse(PackratParser &parser, AstNode *parent) const
 // Optional
 // ============================================================================
 
-void Optional::accept(IExprVisitor &visitor) const
+void	Optional::accept(IExprVisitor &visitor) const
 {
 	visitor.visitOptional(*this);
 }
 
 // Try the inner expression but never fail.
-bool Optional::parse(PackratParser &parser, AstNode *parent) const
+bool	Optional::parse(PackratParser &parser, AstNode *parent) const
 {
 	Diag	&errs = parser.diag();
 
@@ -132,13 +132,13 @@ bool Optional::parse(PackratParser &parser, AstNode *parent) const
 // Predicate
 // ============================================================================
 
-void Predicate::accept(IExprVisitor &visitor) const
+void	Predicate::accept(IExprVisitor &visitor) const
 {
 	visitor.visitPredicate(*this);
 }
 
 // Perform a look-ahead evaluation without consuming input.
-bool Predicate::parse(PackratParser &parser, AstNode *parent) const
+bool	Predicate::parse(PackratParser &parser, AstNode *parent) const
 {
 	Diag	&errs = parser.diag();
 	Input	&in = parser.input();
@@ -156,13 +156,13 @@ bool Predicate::parse(PackratParser &parser, AstNode *parent) const
 // Capture
 // ============================================================================
 
-void Capture::accept(IExprVisitor &visitor) const
+void	Capture::accept(IExprVisitor &visitor) const
 {
 	visitor.visitCapture(*this);
 }
 
 // Parse a property capture: store substring directly into parent attributes.
-bool Capture::parseProperty(PackratParser &parser, AstNode *parent) const
+bool	Capture::parseProperty(PackratParser &parser, AstNode *parent) const
 {
 	if (!parent)
 		throw PackratParser::ParseError("Property capture outside of node context");
@@ -184,7 +184,7 @@ bool Capture::parseProperty(PackratParser &parser, AstNode *parent) const
 }
 
 // Standard capture: build a child AST node with inner parse content.
-bool Capture::parse(PackratParser &parser, AstNode *parent) const
+bool	Capture::parse(PackratParser &parser, AstNode *parent) const
 {
 	if (_isProp)
 		return parseProperty(parser, parent);
@@ -204,3 +204,23 @@ bool Capture::parse(PackratParser &parser, AstNode *parent) const
 	return true;
 }
 
+// ============================================================================
+// Fatal
+// ============================================================================
+
+void	Fatal::accept(IExprVisitor &visitor) const
+{
+	visitor.visitFatal(*this);
+}
+
+// Fatal failure: throw immediately with current diagnostic
+bool	Fatal::parse(PackratParser &parser, AstNode *parent) const
+{
+	if (!parser.eval(_inner, parent))
+	{
+		throw PackratParser::ParseError(
+			parser.diag().formatError(parser.input(), true)
+		);
+	}
+	return true;
+}

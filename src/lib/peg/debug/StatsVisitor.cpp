@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:39:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:32:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ STATS_VISIT_IMPL(OneOrMore)
 STATS_VISIT_IMPL(Optional)
 STATS_VISIT_IMPL(Predicate)
 STATS_VISIT_IMPL(Capture)
+STATS_VISIT_IMPL(Fatal)
 
 # undef STATS_VISIT_IMPL
 

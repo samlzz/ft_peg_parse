@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 15:43:07 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:27:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,6 +183,30 @@ public:
 # if PEG_DEBUG_ANY
 	virtual std::string	debugName(void) const	{ return "Capture"; }
 	virtual std::string	debugValue(void) const	{ return (_isProp ? ": " : "@") + _tag; }
+# endif
+};
+
+// ============================================================================
+// Fatal
+// ============================================================================
+
+/**
+ * @brief Fatal expression: commits to a parsing path.
+ * 
+ * If the inner expression fails after a FatalExpr has been entered,
+ * parsing stops immediately with the current diagnostic state.
+ */
+class Fatal : public ExprUnary {
+
+public:
+	Fatal(Expr *inner) : ExprUnary(K_FATAL, inner) {}
+	virtual ~Fatal() {}
+
+	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
+	virtual void		accept(IExprVisitor &visitor) const;
+
+# if PEG_DEBUG_ANY
+	virtual std::string	debugName(void) const	{ return "Fatal"; }
 # endif
 };
 

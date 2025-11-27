@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 20:28:06 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 17:22:26 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/27 15:29:51 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ class Optional;
 class Predicate;
 class RuleRef;
 class Capture;
+class Fatal;
 
 // ============================================================================
 // IExprVisitor
@@ -55,6 +56,7 @@ public:
 	virtual void	visitPredicate(const Predicate &expr) = 0;
 	virtual void	visitRuleRef(const RuleRef &expr) = 0;
 	virtual void	visitCapture(const Capture &expr) = 0;
+	virtual void	visitFatal(const Fatal &expr) = 0;
 };
 
 #endif
