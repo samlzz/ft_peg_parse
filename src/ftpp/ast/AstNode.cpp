@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:51:41 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:14:27 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <string>
 #include <vector>
 
-#include "ast/AstNode.hpp"
-#include "peg/grammar/Expr.hpp"
+#include "AstNode.hpp"
+#include "peg/core/Expr.hpp"
 
 // ============================================================================
 // Construction

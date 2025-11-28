@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:34:41 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 03:24:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,9 @@
 # include <stdint.h>
 # include <string>
 
-# include "./Expr.hpp"
-# include "utils/DebugConfig.hpp"
-# include "utils/PegException.hpp"
+# include "peg/core/Expr.hpp"
+# include "DebugConfig.hpp"
+# include "PegException.hpp"
 
 # if PEG_DEBUG_GRAMMAR
 #  include <iostream>

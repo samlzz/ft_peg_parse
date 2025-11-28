@@ -6,11 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/24 21:55:12 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:14:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils/DebugLogger.hpp"
+#include "DebugConfig.hpp"
 
 #if PEG_DEBUG_AST
 
@@ -18,7 +18,7 @@
 # include <map>
 # include <string>
 
-# include "ast/AstNode.hpp"
+# include "AstNode.hpp"
 
 // ============================================================================
 // Display

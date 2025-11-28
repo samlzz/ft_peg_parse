@@ -1,19 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ExprDebugVisitors.hpp                              :+:      :+:    :+:   */
+/*   DebugVisitors.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:51:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:12:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef EXPRVISITORS_HPP
 # define EXPRVISITORS_HPP
 
-# include "utils/DebugConfig.hpp"
+# include "DebugConfig.hpp"
 
 # if PEG_DEBUG_ANY
 
@@ -22,8 +22,8 @@
 #  include <string>
 #  include <map>
 
-#  include "./IExprVisitor.hpp"
-#  include "./Expr.hpp"
+#  include "peg/core/Expr.hpp"
+#  include "peg/core/IExprVisitor.hpp"
 
 // ============================================================================
 // TreeVisitor

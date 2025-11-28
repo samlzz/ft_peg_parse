@@ -6,17 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 18:27:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 13:16:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstddef>
 
-#include "packrat/PackratParser.hpp"
-#include "peg/grammar/Expr.hpp"
-#include "ast/AstNode.hpp"
+#include "AstNode.hpp"
+#include "DebugConfig.hpp"
+#include "PackratParser.hpp"
+#include "peg/core/Expr.hpp"
 #include "utils/DebugLogger.hpp"
-#include "utils/DebugConfig.hpp"
 #include "utils/Input.hpp"
 
 // ============================================================================

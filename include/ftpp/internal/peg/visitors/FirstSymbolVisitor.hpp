@@ -1,50 +1,53 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ResolutionVisitor.hpp                              :+:      :+:    :+:   */
+/*   FirstSymbolVisitor.hpp                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/26 20:17:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 18:09:40 by sliziard         ###   ########.fr       */
+/*   Created: 2025/11/26 20:45:00 by sliziard          #+#    #+#             */
+/*   Updated: 2025/11/28 13:13:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RESOLUTIONVISITOR_HPP
-# define RESOLUTIONVISITOR_HPP
+#ifndef FIRSTSYMBOLVISITOR_HPP
+# define FIRSTSYMBOLVISITOR_HPP
 
 # include <set>
+# include <string>
 
-# include "peg/grammar/IExprVisitor.hpp"
-# include "peg/grammar/Expr.hpp"
+# include "peg/core/Expr.hpp"
+# include "peg/core/IExprVisitor.hpp"
 
 // ============================================================================
-// ResolutionVisitor
+// FirstSymbolVisitor
 // ============================================================================
 
 /**
- * @brief Visitor used to resolve RuleRef nodes to actual grammar expressions.
+ * @brief Detects whether the first symbol of an expression is a given rule name.
  *
- * Performs a DFS over the expression tree and resolves rule references
- * by consulting the rule dictionary provided to the visitor.
+ * Traverses the expression structure to check if the first reachable
+ * RuleRef encountered matches the target name. Used for left-recursion detection.
  */
-class ResolutionVisitor : public IExprVisitor {
+class FirstSymbolVisitor : public IExprVisitor {
 
 private:
-	const t_ExprDict		 &_rules;
+	const std::string		&_target;
 	std::set<const Expr *>	_visited;
+	bool					_match;
 
-	ResolutionVisitor();
-	ResolutionVisitor &operator=(const ResolutionVisitor &other);
 	// ---- Helpers ----
-	void	visitChild(const Expr *child);
+	void	visitNode(const Expr *expr);
+
+	FirstSymbolVisitor();
+	FirstSymbolVisitor &operator=(const FirstSymbolVisitor &other);
 
 public:
 	// ---- Construction ----
-	ResolutionVisitor(const t_ExprDict &rules);
+	FirstSymbolVisitor(const std::string &target);
 
 	// ---- API ----
-	void			resolve(Expr *root);
+	bool			matches(const Expr *expr);
 
 	// ---- Visitor methods ----
 	virtual void	visitLiteral(const Literal &);

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:49:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 03:23:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # include <string>
 # include <vector>
 
-# include "peg/grammar/Expr.hpp"
-# include "utils/PegException.hpp"
-# include "utils/DebugConfig.hpp"
+# include "peg/core/Expr.hpp"
+# include "PegException.hpp"
+# include "DebugConfig.hpp"
 
 // ============================================================================
 // Span

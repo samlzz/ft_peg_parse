@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:33:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 03:25:30 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 # include <string>
 
 # include "utils/Input.hpp"
-# include "utils/PegException.hpp"
-# include "utils/DebugConfig.hpp"
+# include "PegException.hpp"
+# include "DebugConfig.hpp"
 
 # if PEG_DEBUG_LEXER
 #  include <ostream>

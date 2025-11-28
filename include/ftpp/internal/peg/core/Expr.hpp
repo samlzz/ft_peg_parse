@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:26:20 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 03:19:05 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include <string>
 # include <vector>
 
-# include "utils/DebugConfig.hpp"
+# include "DebugConfig.hpp"
 
 # if PEG_DEBUG_ANY
 #  include <iostream>

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 18:29:29 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 03:24:59 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 # include <stdint.h>
 
-# include "ast/AstNode.hpp"
-# include "peg/grammar/Grammar.hpp"
-# include "utils/DebugConfig.hpp"
+# include "AstNode.hpp"
+# include "DebugConfig.hpp"
+# include "Grammar.hpp"
+# include "PegException.hpp"
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"
-# include "utils/PegException.hpp"
 
 # if PEG_DEBUG_PACKRAT
 #  include "utils/DebugLogger.hpp"
