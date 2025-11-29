@@ -6,33 +6,37 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:16:12 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 00:23:19 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <cstddef>
+// IWYU pragma: keep
+
+#include "ft_log/ft_log.hpp"
 
 #include "AstNode.hpp"
 #include "DebugConfig.hpp"
 #include "PackratParser.hpp"
 #include "peg/core/Expr.hpp"
-#include "utils/DebugLogger.hpp"
 #include "utils/Input.hpp"
+#include "utils/StringUtils.hpp"
 
 // ============================================================================
 // Construction
 // ============================================================================
 
-#if !PEG_DEBUG_PACKRAT
 
 PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
 								bool checkLeftRecursion)
 	: _input(Input::fromFile(path)), _grammar(pegGrammar), _err()
+#if PEG_DEBUG_PACKRAT
+		, _traceDepth(0), _traceEnabled(true)
+		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
+#endif
 {
 	if (checkLeftRecursion)
 		_grammar.checkLeftRecursion();
 }
-#endif
 
 // ============================================================================
 // parseRule: public entry point
@@ -40,16 +44,14 @@ PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
 
 void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 {
-	out = NULL;
 	const Expr *start = _grammar.get(rootRuleName);
 	if (!start)
-		throw ParseError("at rule '" + rootRuleName
-				+ "': " + _err.formatError(_input, false));
+		throw ParseError("root rule ' " + rootRuleName + "' not found in grammar");
 
-	PEG_LOG_TRACE_C(PACKRAT, "PackratParser",
-		"Begin parsing with rule :" + rootRuleName);
+	ft_log::log(FTPP_LOG_PACKRAT, ft_log::LOG_INFO)
+		<< "Begin parsing with rule : " << rootRuleName << std::endl;
 
-	AstNode		*root = new AstNode(rootRuleName);
+	AstNode		*root = new AstNode("_root");
 	const bool	ok = eval(start, root);
 
 	if (!ok || !_input.eof())
@@ -64,7 +66,12 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 		delete root;
 	}
 	else
+	{
+		ft_log::log("peg.packrat.parser", ft_log::LOG_WARN)
+			<< "Multiples nodes detected at root, added one 'ftpp_root' node at root"
+			<< std::endl;
 		out = root;
+	}
 }
 
 // ============================================================================
@@ -73,27 +80,28 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 
 bool	PackratParser::eval(const Expr *expr, AstNode *parent)
 {
-	size_t pos = _input.pos();
-
 # if PEG_DEBUG_PACKRAT
 	_evalCount++;
-	_traceEnter(expr, _input);
 # endif
 
-	// TODO: retrieve from cache
-
-	const bool ok = expr->parse(*this, parent);
-
+	size_t	pos = _input.pos();
+	bool	ok;
+	{
+		ft_log::LogScope _(FTPP_LOG_PACKRAT, expr->debugRepr().c_str());
+		ok = expr->parse(*this, parent);
+	}
+	if (ok)
+		ft_log::indentedLog(FTPP_LOG_PACKRAT)
+			<< "[OK] nextPos=" + toString(_input.pos()) + "\n";
+	else
+	{
+		ft_log::indentedLog(FTPP_LOG_PACKRAT) << "[FAIL]\n";
+		_input.setPos(pos);
 # if PEG_DEBUG_PACKRAT
-	_traceExit(expr, _input, ok);
-	if (!ok)
 		_backtrackCount++;
 # endif
+	}
 
-	// TODO: append to cache
-
-	if (!ok)
-		_input.setPos(pos);
 	return ok;
 }
 

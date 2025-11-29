@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:16:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/28 21:48:30 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,84 +15,9 @@
 #if PEG_DEBUG_PACKRAT
 
 # include <iomanip>
-# include <sstream>
 
-# include "utils/DebugLogger.hpp"
-# include "utils/Input.hpp"
-# include "packrat/PackratParser.hpp"
-# include "peg/grammar/Expr.hpp"
-
-// ============================================================================
-// Construction
-// ============================================================================
-
-
-PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
-								bool checkLeftRecursion)
-	: _input(Input::fromFile(path)), _grammar(pegGrammar), _err()
-		, _traceDepth(0), _traceEnabled(true)
-		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
-{
-	PegDebug::Logger::resetIndent();
-	PegDebug::Logger::setIndentValue("│ ");
-	if (checkLeftRecursion)
-		_grammar.checkLeftRecursion();
-}
-
-// ============================================================================
-// Helpers
-// ============================================================================
-
-static inline std::string _getPos(const Input &in)
-{
-	std::ostringstream oss;
-	oss << "[Ln " << in.line() << ", Col " << in.column() << "]";
-	return oss.str();
-}
-
-// ============================================================================
-// Trace entry
-// ============================================================================
-
-void	PackratParser::_traceEnter(const Expr *expr, const Input &in)
-{
-	if (!_traceEnabled)
-		return;
-
-	std::ostringstream oss;
-
-	oss << "├─"
-		<< PegDebug::Logger::color("→ ", COLOR_CYAN)
-		<< *expr << " "
-		<< PegDebug::Logger::color(_getPos(in), COLOR_BLUE);
-
-	PegDebug::Logger::log(PegDebug::LOG_TRACE, "PackratParser", oss.str());
-	PegDebug::Logger::indent();
-}
-
-// ============================================================================
-// Trace exit
-// ============================================================================
-
-void	PackratParser::_traceExit(const Expr *expr, const Input &in, bool success)
-{
-	if (!_traceEnabled)
-		return;
-
-	PegDebug::Logger::unindent();
-	std::ostringstream oss;
-
-	oss << "└─";
-	if (success)
-		oss << PegDebug::Logger::color("✓", COLOR_GREEN);
-	else
-		oss << PegDebug::Logger::color("✗", COLOR_RED);
-
-	oss << " " << *expr
-		<< PegDebug::Logger::color(_getPos(in), COLOR_BLUE);
-
-	PegDebug::Logger::log(PegDebug::LOG_TRACE, "PackratParser", oss.str());
-}
+# include "PackratParser.hpp"
+# include "peg/core/Expr.hpp"
 
 // ============================================================================
 // Statistics

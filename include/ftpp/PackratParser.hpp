@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 03:24:59 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 00:32:59 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,8 @@
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"
 
-# if PEG_DEBUG_PACKRAT
-#  include "utils/DebugLogger.hpp"
-# endif
+// ---- Log Categ ----
+# define FTPP_LOG_PACKRAT	"ftpp.packrat.parser"
 
 // ============================================================================
 // PackratParser
@@ -59,9 +58,6 @@ private:
 	size_t	_evalCount;
 	size_t	_cacheHits;
 	size_t	_backtrackCount;
-
-	void	_traceEnter(const Expr *expr, const Input &in);
-	void	_traceExit(const Expr *expr, const Input &in, bool success);
 # endif
 
 public:
