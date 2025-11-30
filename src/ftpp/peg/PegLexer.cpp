@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 15:35:10 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:37:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,9 @@
 
 #include "peg/PegLexer.hpp"
 #include "config.h"
+#include "ft_log/ft_log.hpp"
 #include "utils/Input.hpp"
 
-#if PEG_DEBUG_LEXER
-# include "utils/DebugLogger.hpp"
-#endif
 // ============================================================================
 // Tokens representation
 // ============================================================================
@@ -218,14 +216,10 @@ PegLexer::Token PegLexer::next(void)
 		curr = _peeked;
 	}
 	else
-	{
 		curr = lexOne();
-	}
 
-#if PEG_DEBUG_LEXER
-	PegDebug::Logger::dbg_action("PegLexer", "next", &curr);
-#endif
-
+	ft_log::log(FTPP_LOG_LEXER, ft_log::LOG_TRACE)
+		<< ft_log::color("next", FT_LOG_COLOR_MAGENTA) << " " << curr.repr();
 	return curr;
 }
 
@@ -237,10 +231,8 @@ PegLexer::Token PegLexer::peek(void)
 		_hasPeeked = true;
 	}
 
-#if PEG_DEBUG_LEXER
-	PegDebug::Logger::dbg_action("PegLexer", "peek", &_peeked);
-#endif
-
+	ft_log::log(FTPP_LOG_LEXER, ft_log::LOG_TRACE)
+		<< ft_log::color("peek", FT_LOG_COLOR_MAGENTA) << " " << _peeked.repr();
 	return _peeked;
 }
 

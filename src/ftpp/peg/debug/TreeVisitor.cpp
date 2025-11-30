@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "config.h"
+#include "ft_log/LogOp.hpp"
 
 #if FTPP_DEBUG_EXPR
 
@@ -37,7 +38,7 @@ void	TreeVisitor::printNode(const Expr &expr)
 	if (_depth > 0)
 		_os << (_isLast ? "└─ " : "├─ ");
 
-	_os << expr.debugRepr(_useColors) << "\n";
+	_os << expr.repr() << "\n";
 }
 
 // Visit all children, respecting maxDepth and prefixes.
@@ -48,7 +49,7 @@ void	TreeVisitor::visitChildren(const Expr &parent)
 	{
 		_os << _prefix
 			<< (_isLast ? "   " : "│  ")
-			<< color("...", "\033[2m") << "\n";
+			<< ft_log::color("...", "\033[2m") << "\n";
 		return;
 	}
 
@@ -118,7 +119,7 @@ void	TreeVisitor::visitRuleRef(const RuleRef &expr)
 		return;
 
 	_os << _prefix << (_isLast ? "   " : "│  ")
-		<< color("↳ resolves to:", "\033[2m") << "\n";
+		<< ft_log::color("↳ resolves to:", "\033[2m") << "\n";
 
 	std::string oldPrefix = _prefix;
 	_prefix += (_isLast ? "   " : "│  ");

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:14:43 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 02:07:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <string>
 
 # include "AstNode.hpp"
+# include "ft_log/LogOp.hpp"
 
 // ============================================================================
 // Display
@@ -27,7 +28,7 @@
 void	AstNode::print(std::ostream &os, int32_t depth,
 						const PrintOptions &opts) const
 {
-	os << PegDebug::Logger::color(_type, "\033[1;36m");
+	os << ft_log::color(_type, "\033[1;36m");
 
 	if (opts.showSpan && _span.length() > 0)
 		os << " [" << _span.start << ":" << _span.end << "]";
@@ -46,7 +47,7 @@ void	AstNode::print(std::ostream &os, int32_t depth,
 				os << opts.indentStr;
 
 			os << it->first << "="
-				<< PegDebug::Logger::color("\"" + it->second + "\"", "\033[33m")
+				<< ft_log::color("\"" + it->second + "\"", "\033[33m")
 				<< "\n";
 		}
 

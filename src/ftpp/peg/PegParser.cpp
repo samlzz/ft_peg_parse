@@ -6,23 +6,26 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:53:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 21:37:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 
-#include "peg/grammar/Expr.hpp"
-#include "peg/grammar/Grammar.hpp"
+#include "Grammar.hpp"
+#include "config.h"
+#include "ft_log/LogScope.hpp"
+#include "peg/core/Expr.hpp"
 #include "peg/PegLexer.hpp"
 #include "peg/PegParser.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/ExprLeaf.hpp"
 #include "peg/syntax/RuleRef.hpp"
-#include "utils/DebugLogger.hpp"
 
-// ---- Ctors ----
+// ============================================================================
+// Constructors
+// ============================================================================
 
 PegParser::PegParser(const std::string &grammar_path)
 	: _lex(grammar_path), _rules()
@@ -32,7 +35,7 @@ PegParser::PegParser(const std::string &grammar_path)
 // Primary
 // ============================================================================
 
-// ---- Helpers ----------------------------------------------------------------
+// ---- Helpers ----
 
 static inline bool	_isRuleBegin(PegLexer lex)
 {
@@ -63,7 +66,7 @@ Expr	*PegParser::parseSubExpr(void)
 
 Expr	*PegParser::parsePrimary(void)
 {
-	PEG_LOG_PARSER_FN("parsePrimary");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parsePrimary");
 
 	if (_isRuleBegin(_lex))
 		return NULL;
@@ -98,7 +101,7 @@ Expr	*PegParser::parsePrimary(void)
 
 Expr	*PegParser::parseSuffix(void)
 {
-	PEG_LOG_PARSER_FN("parseSuffix");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parseSuffix");
 
 	Expr *expr = parsePrimary();
 	if (!expr)
@@ -138,10 +141,8 @@ Expr	*PegParser::parseSuffix(void)
 
 Expr	*PegParser::parsePrefix(void)
 {
-	PEG_LOG_PARSER_FN("parsePrefix");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parsePrefix");
 
-	if (_lex.match(PegLexer::T_NOT))
-		return new Predicate(parsePrefix(), false);
 	if (_lex.match(PegLexer::T_AND))
 		return new Predicate(parsePrefix(), true);
 	if (_lex.match(PegLexer::T_TILD))
@@ -155,7 +156,7 @@ Expr	*PegParser::parsePrefix(void)
 
 Expr	*PegParser::parseSequence(void)
 {
-	PEG_LOG_PARSER_FN("parseSequence");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parseSequence");
 
 	t_ExprList seq;
 	Expr *e;
@@ -190,7 +191,7 @@ Expr	*PegParser::parseSequence(void)
 
 Expr	*PegParser::parseChoice(void)
 {
-	PEG_LOG_PARSER_FN("parseChoice");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parseChoice");
 
 	t_ExprList choices;
 
@@ -210,7 +211,7 @@ Expr	*PegParser::parseChoice(void)
 
 void	PegParser::parseRule(void)
 {
-	PEG_LOG_PARSER_FN("parseRule");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parseRule");
 
 	PegLexer::Token id = _lex.next();
 	if (id.type != PegLexer::T_ID)
@@ -225,10 +226,6 @@ void	PegParser::parseRule(void)
 	Expr *expr = parseChoice();
 	if (captureRule)
 		expr = new Capture(expr, ruleName);
-
-	PEG_LOG_INFO_C(PARSER, "PegParser",
-		"Parsed rule " + ruleName + " " + expr->debugRepr()
-	);
 
 	if (_rules.find(ruleName) != _rules.end())
 	{
@@ -245,7 +242,7 @@ void	PegParser::parseRule(void)
 
 void	PegParser::parseGrammar(Grammar &out)
 {
-	PEG_LOG_PARSER_FN("parseGrammar");
+	ft_log::LogScope _(FTPP_LOG_PARSER, "parseGrammar");
 
 	PegLexer::Token tk;
 
