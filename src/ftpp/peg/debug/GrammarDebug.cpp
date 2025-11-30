@@ -10,14 +10,14 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils/DebugConfig.hpp"
+#include "config.h"
 
-#if PEG_DEBUG_GRAMMAR
+#if FTPP_DEBUG_GRAMMAR
 
 # include <iomanip>
 
-# include "peg/grammar/Grammar.hpp"
-# include "peg/grammar/Expr.hpp"
+# include "Grammar.hpp"
+# include "peg/core/Expr.hpp"
 
 // ============================================================================
 // Grammar debug display

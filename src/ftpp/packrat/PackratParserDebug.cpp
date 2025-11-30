@@ -6,13 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 21:48:30 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:15:06 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "DebugConfig.hpp"
+#include "config.h"
 
-#if PEG_DEBUG_PACKRAT
+#if FTPP_DEBUG_PACKRAT
 
 # include <iomanip>
 

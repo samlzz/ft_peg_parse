@@ -6,17 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 19:08:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 18:16:16 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:31:29 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <cstddef>
 #include <string>
 
-#include "peg/grammar/Expr.hpp"
-#include "peg/grammar/Grammar.hpp"
-#include "peg/grammar/FirstSymbolVisitor.hpp"
-#include "peg/grammar/ResolutionVisitor.hpp"
+#include "peg/core/Expr.hpp"
+#include "Grammar.hpp"
+#include "peg/visitors/FirstSymbolVisitor.hpp"
+#include "peg/visitors/ResolutionVisitor.hpp"
 
 // ============================================================================
 // Constructors / assignment

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 03:23:35 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 02:06:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,9 @@
 # include <string>
 # include <vector>
 
+#include "config.h"
 # include "peg/core/Expr.hpp"
 # include "PegException.hpp"
-# include "DebugConfig.hpp"
 
 // ============================================================================
 // Span
@@ -111,7 +111,7 @@ public:
 	std::string	getAttr(const std::string &key, const std::string &def) const;
 
 // ---- Debug functions ---
-# if PEG_DEBUG_AST
+# if FTPP_DEBUG_AST
 	struct PrintOptions {
 		bool		showSpan;
 		bool		showAttributes;

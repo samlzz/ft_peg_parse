@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 00:32:59 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 22:11:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,11 @@
 # include <stdint.h>
 
 # include "AstNode.hpp"
-# include "DebugConfig.hpp"
+# include "config.h"
 # include "Grammar.hpp"
 # include "PegException.hpp"
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"
-
-// ---- Log Categ ----
-# define FTPP_LOG_PACKRAT	"ftpp.packrat.parser"
 
 // ============================================================================
 // PackratParser
@@ -51,10 +48,7 @@ private:
 	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *parent);
 
 	// ---- Debug attributes ----
-# if PEG_DEBUG_PACKRAT
-	int32_t	_traceDepth;
-	bool	_traceEnabled;
-
+# if FTPP_DEBUG_PACKRAT
 	size_t	_evalCount;
 	size_t	_cacheHits;
 	size_t	_backtrackCount;
@@ -95,11 +89,7 @@ public:
 	Input		&input(void)		{ return _input; }
 
 	// ---- Debug functions ----
-# if PEG_DEBUG_PACKRAT
-
-	void	enableTrace(bool enable = true) { _traceEnabled = enable; }
-	bool	isTraceEnabled(void) const	{ return _traceEnabled; }
-
+# if FTPP_DEBUG_PACKRAT
 	struct Stats {
 		size_t	totalEvals;
 		size_t	cacheHits;

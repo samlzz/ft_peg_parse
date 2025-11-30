@@ -15,7 +15,6 @@
 #include "ft_log/ft_log.hpp"
 
 #include "AstNode.hpp"
-#include "DebugConfig.hpp"
 #include "PackratParser.hpp"
 #include "peg/core/Expr.hpp"
 #include "utils/Input.hpp"
@@ -29,8 +28,7 @@
 PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
 								bool checkLeftRecursion)
 	: _input(Input::fromFile(path)), _grammar(pegGrammar), _err()
-#if PEG_DEBUG_PACKRAT
-		, _traceDepth(0), _traceEnabled(true)
+#if FTPP_DEBUG_PACKRAT
 		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
 #endif
 {
@@ -80,7 +78,7 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 
 bool	PackratParser::eval(const Expr *expr, AstNode *parent)
 {
-# if PEG_DEBUG_PACKRAT
+# if FTPP_DEBUG_PACKRAT
 	_evalCount++;
 # endif
 
@@ -97,7 +95,7 @@ bool	PackratParser::eval(const Expr *expr, AstNode *parent)
 	{
 		ft_log::indentedLog(FTPP_LOG_PACKRAT) << "[FAIL]\n";
 		_input.setPos(pos);
-# if PEG_DEBUG_PACKRAT
+# if FTPP_DEBUG_PACKRAT
 		_backtrackCount++;
 # endif
 	}

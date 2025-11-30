@@ -10,9 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "DebugConfig.hpp"
+#include "config.h"
 
-#if PEG_DEBUG_AST
+#if FTPP_DEBUG_AST
 
 # include <ostream>
 # include <map>
