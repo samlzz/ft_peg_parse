@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:32:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:14:03 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:09:45 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,11 +57,9 @@ public:
 	virtual size_t		childCount(void) const		{ return _resolved ? 1 : 0; }
 	virtual const Expr	*child(size_t idx) const	{ return idx == 0 ? _resolved : NULL; }
 
-// ---- Debug functions ----
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "RuleRef"; }
-	virtual std::string	debugValue(void) const	{ return _name; }
-# endif
+	// ---- Representation ----
+	virtual std::string	reprKind(void) const	{ return "RuleRef"; }
+	virtual std::string	reprValue(void) const	{ return _name; }
 };
 
 #endif

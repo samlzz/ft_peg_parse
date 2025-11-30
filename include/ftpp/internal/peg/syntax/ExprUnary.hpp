@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:14:00 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:09:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,9 +71,7 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const { return "ZeroOrMore"; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "ZeroOrMore"; }
 };
 
 // ============================================================================
@@ -92,9 +90,7 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const { return "OneOrMore"; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "OneOrMore"; }
 };
 
 // ============================================================================
@@ -113,9 +109,7 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const { return "Optional"; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "Optional"; }
 };
 
 // ============================================================================
@@ -144,10 +138,8 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "Predicate"; }
-	virtual std::string	debugValue(void) const	{ return _isAnd ? "&" : "!"; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "Predicate"; }
+	virtual std::string	reprValue(void) const	{ return _isAnd ? "&" : "!"; }
 };
 
 // ============================================================================
@@ -180,10 +172,8 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "Capture"; }
-	virtual std::string	debugValue(void) const	{ return (_isProp ? ": " : "@") + _tag; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "Capture"; }
+	virtual std::string	reprValue(void) const	{ return (_isProp ? ": " : "@") + _tag; }
 };
 
 // ============================================================================
@@ -205,9 +195,7 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "Fatal"; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "Fatal"; }
 };
 
 #endif

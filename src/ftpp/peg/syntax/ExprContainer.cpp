@@ -6,28 +6,29 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:55:14 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 22:22:12 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <sstream>
 
-#include "ast/AstNode.hpp"
-#include "packrat/PackratParser.hpp"
-#include "peg/grammar/IExprVisitor.hpp"
+#include "AstNode.hpp"
+#include "PackratParser.hpp"
+#include "peg/core/IExprVisitor.hpp"
 #include "peg/syntax/ExprContainer.hpp"
-#include "utils/DebugConfig.hpp"
 
-// ---- Generic debug function ----
-#if PEG_DEBUG_ANY
-std::string ExprContainer::debugValue(void) const
+// ============================================================================
+// ExprContainer
+// ============================================================================
+
+// Generic debug function
+std::string ExprContainer::reprValue(void) const
 {
 	std::ostringstream	oss;
 
 	oss << "(" << _elems.size() << " elem" << (_elems.size() > 1 ? "s" : "") << ")";
 	return oss.str();
 }
-#endif
 
 // ============================================================================
 // Sequence

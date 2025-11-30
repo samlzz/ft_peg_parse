@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 00:23:19 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 22:12:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
 	else
 	{
 		ft_log::log("peg.packrat.parser", ft_log::LOG_WARN)
-			<< "Multiples nodes detected at root, added one 'ftpp_root' node at root"
+			<< "Multiples nodes detected at root, added one '_root' node."
 			<< std::endl;
 		out = root;
 	}
@@ -85,7 +85,7 @@ bool	PackratParser::eval(const Expr *expr, AstNode *parent)
 	size_t	pos = _input.pos();
 	bool	ok;
 	{
-		ft_log::LogScope _(FTPP_LOG_PACKRAT, expr->debugRepr().c_str());
+		ft_log::LogScope _(FTPP_LOG_PACKRAT, expr->repr().c_str());
 		ok = expr->parse(*this, parent);
 	}
 	if (ok)

@@ -6,43 +6,41 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 20:44:46 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:56:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 02:11:14 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils/DebugConfig.hpp"
+#include "config.h"
+#include "ft_log/AnsiColor.hpp"
+#include "ft_log/LogOp.hpp"
 
-#if PEG_DEBUG_ANY
+#if FTPP_DEBUG_EXPR
 
 # include <ostream>
 # include <sstream>
 # include <string>
 
-# include "peg/grammar/Expr.hpp"
-# include "peg/grammar/ExprDebugVisitors.hpp"
-# include "utils/DebugLogger.hpp"
+# include "peg/core/Expr.hpp"
+# include "peg/visitors/DebugVisitors.hpp"
 
 // ============================================================================
 // Expr display functions
 // ============================================================================
 
-// Return a debug-friendly inline colored representation, optionally colored.
-std::string	Expr::debugRepr(bool colored) const
+// Return a debug-friendly inline colored representation
+std::string	Expr::repr(void) const
 {
 	std::ostringstream oss;
 
-	if (!colored)
-		oss << debugName() << ": " << debugValue();
-	else
-		oss << PegDebug::Logger::color(debugName(), COLOR_YELLOW)
-			<< ": "
-			<< PegDebug::Logger::color(debugValue(), COLOR_GREEN);
+	oss << ft_log::color(reprKind(), FT_LOG_COLOR_YELLOW)
+		<< ": "
+		<< ft_log::color(reprValue(), FT_LOG_COLOR_GREEN);
 
 	return oss.str();
 }
 
 // Use TreeVisitor to perform the print of expressions
-void	Expr::printTree(const Expr *root, std::ostream &os, int32_t maxDepth)
+void	Expr::dumpTree(const Expr *root, std::ostream &os, int32_t maxDepth)
 {
 	if (!root)
 	{
@@ -54,7 +52,7 @@ void	Expr::printTree(const Expr *root, std::ostream &os, int32_t maxDepth)
 }
 
 // Use StatsVisitor to collect and print expressions statistiques
-void	Expr::printStats(const Expr *root, std::ostream &os)
+void	Expr::dumpStats(const Expr *root, std::ostream &os)
 {
 	if (!root)
 	{

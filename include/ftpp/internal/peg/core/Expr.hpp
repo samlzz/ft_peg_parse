@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 03:19:05 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:09:59 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,11 @@
 # include <string>
 # include <vector>
 
-# include "DebugConfig.hpp"
+# include "config.h"
 
-# if PEG_DEBUG_ANY
+# if FTPP_DEBUG_EXPR
 #  include <iostream>
 # endif
-
 
 // ============================================================================
 // Forward declarations
@@ -83,28 +82,32 @@ public:
 	virtual size_t			childCount(void) const	{ return 0; }
 	virtual const Expr *	child(size_t) const		{ return NULL; }
 
-// ---- Debug functions ---
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const = 0;
-	virtual std::string	debugValue(void) const { return ""; }
+	// ---- Representation ----
+	/**
+	 * @brief Returns the symbolic name of the expression kind (literal, choice...).
+	 */
+	virtual std::string		reprKind(void) const = 0;
+	/**
+	 * @brief Returns the optional value associated with the expression.
+	 */
+	virtual std::string		reprValue(void) const { return ""; }
+	/**
+	 * @brief Returns a compact representation used for logging and tracing.
+	 */
+	std::string				repr(void) const;
+
+# if FTPP_DEBUG_EXPR
+	// ---- Debug functions ---
 
 	/**
-	 * @brief Print a compact inline representation of an expression.
+	 * @brief Dumps the expression tree into a human-readable structure.
 	 */
-	std::string			debugRepr(bool colored = true) const;
-
-	/**
-	 * @brief Print an expression as a tree structure.
-	 */
-	static void	printTree(const Expr *root, std::ostream &os = std::cerr,
+	static void	dumpTree(const Expr *root, std::ostream &os = std::cerr,
 							int32_t maxDepth = -1);
 	/**
-	 * @brief Compute and print statistics about an expression tree.
+	 * @brief Dumps aggregated statistics about an expression tree.
 	 */
-	static void	printStats(const Expr *root, std::ostream &os = std::cerr);
-
-
-	friend std::ostream& operator<<(std::ostream& os, const Expr& e) { return os << e.debugRepr(); }
+	static void	dumpStats(const Expr *root, std::ostream &os = std::cerr);
 # endif
 };
 

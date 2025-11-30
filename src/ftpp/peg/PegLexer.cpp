@@ -14,12 +14,55 @@
 #include <string>
 
 #include "peg/PegLexer.hpp"
+#include "config.h"
 #include "utils/Input.hpp"
-#include "utils/DebugConfig.hpp"
 
 #if PEG_DEBUG_LEXER
 # include "utils/DebugLogger.hpp"
 #endif
+// ============================================================================
+// Tokens representation
+// ============================================================================
+
+std::string PegLexer::Token::reprType(void) const
+{
+	switch (type)
+	{
+		case T_ID:         return "ID";
+		case T_LITERAL:    return "LITERAL";
+		case T_CHARRANGE:  return "CHARRANGE";
+
+		case T_SLASH:      return "SLASH";
+		case T_STAR:       return "STAR";
+		case T_PLUS:       return "PLUS";
+		case T_QMARK:      return "QMARK";
+
+		case T_AND:        return "AND";
+		case T_NOT:        return "NOT";
+
+		case T_LPAREN:     return "LPAREN";
+		case T_RPAREN:     return "RPAREN";
+
+		case T_DOT:        return "DOT";
+		case T_COLON:      return "COLON";
+		case T_ASSIGN:     return "ASSIGN";
+
+		case T_EOL:        return "EOL";
+		case T_END:        return "END";
+
+		default:
+			return "UNKNOWN";
+	}
+}
+
+std::string PegLexer::Token::repr(void) const
+{
+	std::string	rep = ft_log::color(reprType(), FT_LOG_COLOR_YELLOW);
+	if (!val.empty())
+		rep += ft_log::color("\"" + val + "\"", FT_LOG_COLOR_GREEN);
+
+	return rep;
+}
 
 // ============================================================================
 // Constructors

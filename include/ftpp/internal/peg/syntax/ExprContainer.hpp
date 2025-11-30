@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:13:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:06:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,22 +51,17 @@ public:
 	Expr				*operator[](size_t index)		{ return _elems[index]; }
 	const Expr			*operator[](size_t index) const	{ return _elems[index]; }
 
-	virtual size_t		childCount() const			{ return _elems.size(); }
-	virtual const Expr	*child(size_t index) const	{ return _elems[index]; }
+	virtual size_t		childCount() const				{ return _elems.size(); }
+	virtual const Expr	*child(size_t index) const		{ return _elems[index]; }
 
 	// ---- Container getters ----
-	const t_ExprList&			elems() const	{ return _elems; }
-	t_ExprList&					elems()			{ return _elems; }
+	const t_ExprList&			elems() const			{ return _elems; }
+	t_ExprList&					elems()					{ return _elems; }
 
-	t_ExprList::const_iterator	begin() const	{ return _elems.begin(); }
-	t_ExprList::const_iterator	end() const		{ return _elems.end(); }
+	t_ExprList::const_iterator	begin() const			{ return _elems.begin(); }
+	t_ExprList::const_iterator	end() const				{ return _elems.end(); }
 
-	void						add(Expr *e) { if (e) _elems.push_back(e); }
-
-// ---- Debug functions ----
-# if PEG_DEBUG_ANY
-	virtual std::string	debugValue(void) const;
-# endif
+	virtual std::string			reprValue(void) const;
 };
 
 // ============================================================================
@@ -89,9 +84,7 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const { return "Sequence"; }
-# endif
+	virtual std::string	reprKind(void) const { return "Sequence"; }
 };
 
 // ============================================================================
@@ -115,9 +108,7 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const { return "Choice"; }
-# endif
+	virtual std::string	reprKind(void) const { return "Choice"; }
 };
 
 #endif

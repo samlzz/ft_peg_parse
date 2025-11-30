@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:13:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:08:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,10 +43,6 @@ public:
 	const std::string&	value() const					{ return _value; }
 	void				setValue(const std::string &v)	{ _value = v; }
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugValue(void) const			{ return escapeStringDisplay(_value); }
-# endif
-
 private:
 	ExprLeaf();
 	ExprLeaf(const ExprLeaf &other);
@@ -73,9 +69,8 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const { return "Literal"; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "Literal"; }
+	virtual std::string reprValue(void) const	{ return escapeStringDisplay(_value); }
 };
 
 // ============================================================================
@@ -98,10 +93,8 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "CharRange"; }
-	virtual std::string	debugValue(void) const	{ return escapeCharSetDisplay(_value); }
-# endif
+	virtual std::string	reprKind(void) const	{ return "CharRange"; }
+	virtual std::string	reprValue(void) const	{ return escapeCharSetDisplay(_value); }
 };
 
 // ============================================================================
@@ -119,10 +112,8 @@ public:
 	virtual bool		parse(PackratParser &parser, AstNode *parent) const;
 	virtual void		accept(IExprVisitor &visitor) const;
 
-# if PEG_DEBUG_ANY
-	virtual std::string	debugName(void) const	{ return "CharAny"; }
-	virtual std::string	debugValue(void) const	{ return "."; }
-# endif
+	virtual std::string	reprKind(void) const	{ return "CharAny"; }
+	virtual std::string	reprValue(void) const	{ return "."; }
 };
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 03:25:30 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:17:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,6 @@
 
 # include "utils/Input.hpp"
 # include "PegException.hpp"
-# include "DebugConfig.hpp"
-
-# if PEG_DEBUG_LEXER
-#  include <ostream>
-# endif
 
 // ============================================================================
 // PegLexer
@@ -41,7 +36,8 @@ public:
 	// Token definitions
 	// ========================================================================
 
-	enum e_tk_type {
+	enum e_tk_type
+	{
 		T_ID, T_LITERAL,
 		T_SLASH, T_STAR, T_PLUS, T_QMARK,
 		T_AND, T_NOT, T_TILD,
@@ -51,17 +47,13 @@ public:
 		T_EOL, T_END
 	};
 
-	struct Token {
+	struct Token
+	{
 		enum e_tk_type	type;
 		std::string		val;
 
-# if PEG_DEBUG_LEXER
-		std::string	debugType(void) const;
-		std::string	debugRepr(bool colored = true) const;
-
-		friend std::ostream &operator<<(std::ostream &os, const Token &tk)
-		{ return os << tk.debugRepr(); }
-# endif
+		std::string	reprType(void) const;
+		std::string repr(void) const;
 	};
 
 	// ========================================================================

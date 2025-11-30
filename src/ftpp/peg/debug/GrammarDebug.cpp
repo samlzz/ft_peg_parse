@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:42:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:53:37 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 22:13:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ void	Grammar::print(std::ostream &os, const PrintOptions &opts) const
 		os << "\n";
 
 		if (opts.expandRules)
-			Expr::printTree(it->second, os, opts.maxDepth);
+			Expr::dumpTree(it->second, os, opts.maxDepth);
 		else
-			os << it->second->debugRepr(opts.colored);
+			os << it->second->repr();
 
 		os << "└─────────────────────────────────\n";
 	}
@@ -61,7 +61,7 @@ void	Grammar::printRule(const std::string &ruleName,
 	}
 
 	os << "\nRule: " << ruleName << "\n";
-	Expr::printTree(expr, os, opts.maxDepth);
+	Expr::dumpTree(expr, os, opts.maxDepth);
 }
 
 void	Grammar::printStats(std::ostream &os) const
@@ -74,7 +74,7 @@ void	Grammar::printStats(std::ostream &os) const
 	os << "║ Expression types:                     ║\n";
 
 	if (!_start.empty())
-		Expr::printStats(get(_start), os);
+		Expr::dumpStats(get(_start), os);
 	else
 		os << "║ (no start rule)                       ║\n";
 
