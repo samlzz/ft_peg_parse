@@ -6,11 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 20:45:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 18:08:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:39:39 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "peg/grammar/FirstSymbolVisitor.hpp"
+#include "peg/visitors/FirstSymbolVisitor.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/RuleRef.hpp"

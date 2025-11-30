@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 20:17:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 18:10:47 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:39:48 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "peg/grammar/Grammar.hpp"
-#include "peg/grammar/ResolutionVisitor.hpp"
+#include "Grammar.hpp"
+#include "peg/visitors/ResolutionVisitor.hpp"
 #include "peg/syntax/ExprContainer.hpp"
 #include "peg/syntax/ExprUnary.hpp"
 #include "peg/syntax/RuleRef.hpp"

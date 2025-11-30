@@ -6,15 +6,15 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/27 17:56:54 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:43:21 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils/DebugConfig.hpp"
+#include "config.h"
 
-#if PEG_DEBUG_ANY
+#if FTPP_DEBUG_EXPR
 
-# include "peg/grammar/ExprDebugVisitors.hpp"
+# include "peg/visitors/DebugVisitors.hpp"
 # include "peg/syntax/ExprContainer.hpp"
 # include "peg/syntax/ExprLeaf.hpp"
 # include "peg/syntax/ExprUnary.hpp"
@@ -24,18 +24,10 @@
 // TreeVisitor
 // ============================================================================
 
-TreeVisitor::TreeVisitor(std::ostream &os, int32_t maxDepth, bool useColors)
+TreeVisitor::TreeVisitor(std::ostream &os, int32_t maxDepth)
 	: _os(os), _depth(0), _maxDepth(maxDepth),
-		_prefix(""), _isLast(true), _useColors(useColors)
+		_prefix(""), _isLast(true)
 {}
-
-// Apply ANSI color if enabled.
-std::string TreeVisitor::color(const std::string &text, const char *code) const
-{
-	if (!_useColors || !code)
-		return text;
-	return std::string(code) + text + "\033[0m";
-}
 
 // Print the current node with prefix and branch symbols.
 void	TreeVisitor::printNode(const Expr &expr)

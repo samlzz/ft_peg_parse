@@ -6,16 +6,16 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:12:55 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/11/30 01:42:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPRVISITORS_HPP
-# define EXPRVISITORS_HPP
+#ifndef DEBUGVISITORS_HPP
+# define DEBUGVISITORS_HPP
 
-# include "DebugConfig.hpp"
+# include "config.h"
 
-# if PEG_DEBUG_ANY
+# if FTPP_DEBUG_EXPR
 
 #  include <iostream>
 #  include <ostream>
@@ -43,17 +43,14 @@ private:
 	int				_maxDepth;
 	std::string		_prefix;
 	bool			_isLast;
-	bool			_useColors;
 
 	void		printNode(const Expr &expr);
 	void		visitChildren(const Expr &parent);
 	void		descend(const Expr *child, bool isLast);
-	std::string	color(const std::string &text, const char *code) const;
 
 public:
 	TreeVisitor(std::ostream &os = std::cerr,
-				int32_t maxDepth = -1,
-				bool useColors = true);
+				int32_t maxDepth = -1);
 
 	virtual void	visitLiteral(const Literal &expr);
 	virtual void	visitCharRange(const CharRange &expr);
@@ -117,6 +114,6 @@ public:
 	virtual void	visitFatal(const Fatal &expr);
 };
 
-# endif // PEG_DEBUG_ANY
+# endif // FTPP_DEBUG_EXPR
 #endif
 
