@@ -1,35 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   RuleRef.cpp                                        :+:      :+:    :+:   */
+/*   UnaryPredicate.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/31 20:10:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:54:48 by sliziard         ###   ########.fr       */
+/*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
+/*   Updated: 2025/12/01 12:00:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <cstddef>
 
 #include "AstNode.hpp"
 #include "PackratParser.hpp"
 #include "peg/core/IExprVisitor.hpp"
-#include "peg/syntax/RuleRef.hpp"
+#include "peg/syntax/UnaryPredicate.hpp"
+#include "utils/Diag.hpp"
+#include "utils/Input.hpp"
 
 // ============================================================================
-// RuleRef
+// Predicate
 // ============================================================================
 
-void RuleRef::accept(IExprVisitor &visitor) const
+void	Predicate::accept(IExprVisitor &visitor) const
 {
-	visitor.visitRuleRef(*this);
+	visitor.visitPredicate(*this);
 }
 
-// Delegate parsing to the resolved expression.
-// Fails with a parse error if the reference has not been resolved.
-bool RuleRef::parse(PackratParser &parser, AstNode *parent) const
+// Perform a look-ahead evaluation without consuming input.
+bool	Predicate::parse(PackratParser &parser, AstNode *parent) const
 {
-	if (!_resolved)
-		throw PackratParser::ParseError("Unresolved rule: " + _name);
+	Diag	&errs = parser.diag();
+	Input	&in = parser.input();
+	size_t	start = in.pos();
 
-	return parser.eval(_resolved, parent);
+	errs.save();
+	const bool	ok = parser.eval(_inner, parent);
+	errs.restore();
+	in.setPos(start);
+
+	return _isAnd ? ok : !ok;
 }

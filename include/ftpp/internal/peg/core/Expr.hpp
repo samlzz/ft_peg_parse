@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:09:59 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 11:45:58 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ public:
 	/**
 	 * @brief Returns the optional value associated with the expression.
 	 */
-	virtual std::string		reprValue(void) const { return ""; }
+	virtual std::string		reprValue(void) const	{ return ""; }
 	/**
 	 * @brief Returns a compact representation used for logging and tracing.
 	 */
@@ -145,6 +145,19 @@ void	deleteVals(std::map<K, V*> &dict)
 		}
 	}
 	dict.clear();
+}
+
+/// ---- Replace unary ptr ----
+
+template <typename T>
+void	replaceOne(T *srcPtr, T *&destPtr)
+{
+	if (srcPtr != destPtr)
+	{
+		if (destPtr)
+			delete destPtr;
+		destPtr = srcPtr;
+	}
 }
 
 #endif

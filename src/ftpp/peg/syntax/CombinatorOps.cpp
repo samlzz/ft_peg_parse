@@ -1,34 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ExprContainer.cpp                                  :+:      :+:    :+:   */
+/*   CombinatorOps.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:37:18 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 22:22:12 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 11:54:11 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-#include <sstream>
 
 #include "AstNode.hpp"
 #include "PackratParser.hpp"
 #include "peg/core/IExprVisitor.hpp"
-#include "peg/syntax/ExprContainer.hpp"
-
-// ============================================================================
-// ExprContainer
-// ============================================================================
-
-// Generic debug function
-std::string ExprContainer::reprValue(void) const
-{
-	std::ostringstream	oss;
-
-	oss << "(" << _elems.size() << " elem" << (_elems.size() > 1 ? "s" : "") << ")";
-	return oss.str();
-}
+#include "peg/syntax/CombinatorOps.hpp"
 
 // ============================================================================
 // Sequence
@@ -79,4 +64,3 @@ bool Choice::parse(PackratParser &parser, AstNode *parent) const
 	parser.diag().update(start, "one of the alternatives", Diag::PRIO_LOW);
 	return false;
 }
-

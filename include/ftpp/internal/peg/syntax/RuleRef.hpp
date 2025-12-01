@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:32:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:09:45 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 11:55:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RULEREF_HPP
-# define RULEREF_HPP
+#ifndef RULE_REF_HPP
+# define RULE_REF_HPP
 
 # include <cstddef>
 # include <string>
@@ -63,4 +63,3 @@ public:
 };
 
 #endif
-

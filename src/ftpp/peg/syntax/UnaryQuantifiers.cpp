@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ExprUnary.cpp                                      :+:      :+:    :+:   */
+/*   UnaryQuantifiers.cpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:11:30 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 12:01:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,13 @@
 
 #include "AstNode.hpp"
 #include "PackratParser.hpp"
-#include "peg/core/Expr.hpp"
 #include "peg/core/IExprVisitor.hpp"
-#include "peg/syntax/ExprUnary.hpp"
+#include "peg/syntax/UnaryQuantifiers.hpp"
 #include "utils/Diag.hpp"
 #include "utils/Input.hpp"
 
 // ============================================================================
-// ExprUnary
-// ============================================================================
-
-// Replace the current inner expression, deleting the previous one.
-void	ExprUnary::setInner(Expr *e)
-{
-	if (_inner != e)
-	{
-		delete _inner;
-		_inner = e;
-	}
-}
-
-// ============================================================================
-// Helper for *OrMore
+// Helper to handle diagnostics in while
 // ============================================================================
 
 static inline bool	_child_ok(PackratParser &parser, AstNode *parent, Expr *inner)
@@ -125,102 +110,5 @@ bool	Optional::parse(PackratParser &parser, AstNode *parent) const
 	errs.save();
 	parser.eval(_inner, parent);
 	errs.restore();
-	return true;
-}
-
-// ============================================================================
-// Predicate
-// ============================================================================
-
-void	Predicate::accept(IExprVisitor &visitor) const
-{
-	visitor.visitPredicate(*this);
-}
-
-// Perform a look-ahead evaluation without consuming input.
-bool	Predicate::parse(PackratParser &parser, AstNode *parent) const
-{
-	Diag	&errs = parser.diag();
-	Input	&in = parser.input();
-	size_t	start = in.pos();
-
-	errs.save();
-	const bool	ok = parser.eval(_inner, parent);
-	errs.restore();
-	in.setPos(start);
-
-	return _isAnd ? ok : !ok;
-}
-
-// ============================================================================
-// Capture
-// ============================================================================
-
-void	Capture::accept(IExprVisitor &visitor) const
-{
-	visitor.visitCapture(*this);
-}
-
-// Parse a property capture: store substring directly into parent attributes.
-bool	Capture::parseProperty(PackratParser &parser, AstNode *parent) const
-{
-	if (!parent)
-		throw PackratParser::ParseError("Property capture outside of node context");
-
-	Input	&in = parser.input();
-	size_t	start = in.pos();
-
-	{
-		AstNode	tmp;
-		if (!parser.eval(_inner, &tmp))
-		{
-			return false;
-		}
-		parent->stealChildren(tmp);
-	}
-
-	parent->setAttr(_tag, in.substr(start, in.pos()));
-	return true;
-}
-
-// Standard capture: build a child AST node with inner parse content.
-bool	Capture::parse(PackratParser &parser, AstNode *parent) const
-{
-	if (_isProp)
-		return parseProperty(parser, parent);
-
-	Input	&in = parser.input();
-	size_t	start = in.pos();
-	AstNode	*me = new AstNode(_tag);
-
-	if (!parser.eval(_inner, me))
-	{
-		in.setPos(start);
-		delete me;
-		return false;
-	}
-	me->setSpan(start, in.pos());
-	parent->addChild(me);
-	return true;
-}
-
-// ============================================================================
-// Fatal
-// ============================================================================
-
-void	Fatal::accept(IExprVisitor &visitor) const
-{
-	visitor.visitFatal(*this);
-}
-
-// Fatal failure: throw immediately with current diagnostic
-bool	Fatal::parse(PackratParser &parser, AstNode *parent) const
-{
-	if (!parser.eval(_inner, parent))
-	{
-		throw PackratParser::ParseError(
-			parser.diag().formatError(parser.input(), true)
-		);
-	}
 	return true;
 }

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:42:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 22:13:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 11:49:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,5 @@ void	Grammar::printStats(std::ostream &os) const
 	os << "╚═══════════════════════════════════════╝\n";
 }
 
-#endif // PEG_DEBUG_GRAMMAR
+#endif // FTPP_DEBUG_GRAMMAR
 
