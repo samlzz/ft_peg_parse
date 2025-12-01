@@ -6,16 +6,16 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 17:32:03 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:17:02 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
-#include <ostream>
 
 #if FTPP_DEBUG_PACKRAT
 
 # include <iomanip>
+# include <ostream>
 
 # include "packrat/PackratParser.hpp"
 # include "peg/core/Expr.hpp"
@@ -43,13 +43,6 @@ PackratParser::Stats	PackratParser::getStats(void) const
 	s.cacheHits = _cacheHits;
 	s.backtrackCount = _backtrackCount;
 	return s;
-}
-
-void	PackratParser::resetStats(void)
-{
-	_evalCount = 0;
-	_cacheHits = 0;
-	_backtrackCount = 0;
 }
 
 void	PackratParser::printStats(Stats stats, std::ostream &os)

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:40:43 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:16:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ public:
 	};
 
 	Stats		getStats(void) const;
-	void		resetStats(void);
 	static void	printStats(Stats stats, std::ostream &os = std::cerr);
 
 # endif

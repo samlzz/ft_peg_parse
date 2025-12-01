@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:37 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:53:31 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:36:28 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,35 @@ public:
 	AstNode	*parseString(const std::string &input) const;
 	AstNode	*parseString(const std::string &input,
 						const std::string &ruleName) const;
+
+	// ========================================================================
+	// Debug API
+	// ========================================================================
+
+# if FTPP_DEBUG_GRAMMAR
+	/**
+	 * @brief Print all rules in the grammar.
+	 */
+	void	printGrammar(std::ostream &os = std::cerr) const;
+	/**
+	 * @brief Print a specific rule's expression tree.
+	 */
+	void	printRule(const std::string &ruleName,
+					std::ostream &os = std::cerr) const;
+
+	/**
+	 * @brief Print statistics for a specific rule.
+	 */
+	void	printRuleStats(const std::string &ruleName,
+					std::ostream &os = std::cerr) const;
+# endif
+
+# if FTPP_DEBUG_PACKRAT
+	/**
+	 * @brief Print statistics collected from the latest Packrat parse.
+	 */
+	void	printPackratStats(std::ostream &os = std::cerr) const;
+# endif
 
 private:
 

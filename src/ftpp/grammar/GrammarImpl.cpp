@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 01:12:17 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:55:24 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:14:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,8 +114,12 @@ Grammar::Impl::_parseInput(Input &in, const std::string &ruleName) const
 		throw GrammarError("error: Rule '" + ruleName + "' not found");
 	try
 	{
-		PackratParser mainParser(in);
-		return mainParser.parseRule(start->second);
+		PackratParser	mainParser(in);
+		AstNode			*result = mainParser.parseRule(start->second);
+#if FTPP_DEBUG_PACKRAT
+		_lastStats = mainParser.getStats();
+#endif
+		return result;
 	}
 	catch (const FtppException &)
 	{
