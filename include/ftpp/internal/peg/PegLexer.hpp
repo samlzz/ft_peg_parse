@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:17:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:27:22 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PEGLEXER_HPP
-# define PEGLEXER_HPP
+#ifndef __FTPP_PEG_LEXER_HPP__
+# define __FTPP_PEG_LEXER_HPP__
 
 # include <stdint.h>
 # include <string>
@@ -59,7 +59,7 @@ public:
 	// Constructors / Destructor
 	// ========================================================================
 
-	PegLexer(const std::string &grammar_path);
+	PegLexer(Input &rawGrammar);
 	PegLexer(const PegLexer &other);
 	~PegLexer() {}
 
@@ -73,12 +73,9 @@ public:
 	bool	match(enum e_tk_type type);
 	void	skipWhitespaces(void);
 
-	// ---- Input accessors ----
-	const Input	&input(void) const	{ return _input; }
-
 private:
 
-	Input	_input;
+	Input	&_input;
 	Token	_peeked;
 	bool	_hasPeeked;
 
@@ -93,5 +90,4 @@ private:
 	Token	lexOne(void);
 };
 
-#endif
-
+#endif /* __FTPP_PEG_LEXER_HPP__ */

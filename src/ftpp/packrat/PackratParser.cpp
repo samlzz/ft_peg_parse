@@ -6,70 +6,64 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 22:12:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:57:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// IWYU pragma: keep
-
-#include "ft_log/ft_log.hpp"
-
 #include "AstNode.hpp"
-#include "PackratParser.hpp"
+#include "FtppException.hpp"
+#include "ft_log/ft_log.hpp"
+#include "packrat/PackratParser.hpp"
 #include "peg/core/Expr.hpp"
 #include "utils/Input.hpp"
-#include "utils/StringUtils.hpp"
 
 // ============================================================================
-// Construction
+// Construction / Destruction
 // ============================================================================
 
-
-PackratParser::PackratParser(const std::string &path, const Grammar &pegGrammar,
-								bool checkLeftRecursion)
-	: _input(Input::fromFile(path)), _grammar(pegGrammar), _err()
+PackratParser::PackratParser(Input &raw): _input(raw), _err()
 #if FTPP_DEBUG_PACKRAT
-		, _evalCount(0), _cacheHits(0), _backtrackCount(0)
+	, _evalCount(0), _cacheHits(0), _backtrackCount(0)
 #endif
-{
-	if (checkLeftRecursion)
-		_grammar.checkLeftRecursion();
-}
+{}
+
+PackratParser::~PackratParser() {}
 
 // ============================================================================
 // parseRule: public entry point
 // ============================================================================
 
-void	PackratParser::parseRule(const std::string &rootRuleName, AstNode *&out)
+AstNode	*PackratParser::parseRule(Expr *rule)
 {
-	const Expr *start = _grammar.get(rootRuleName);
-	if (!start)
-		throw ParseError("root rule ' " + rootRuleName + "' not found in grammar");
-
-	ft_log::log(FTPP_LOG_PACKRAT, ft_log::LOG_INFO)
-		<< "Begin parsing with rule : " << rootRuleName << std::endl;
-
 	AstNode		*root = new AstNode("_root");
-	const bool	ok = eval(start, root);
+	bool		ok;
+
+	try
+	{
+		ok = eval(rule, root);
+	}
+	catch (...)
+	{
+		delete root;
+		throw;
+	}
 
 	if (!ok || !_input.eof())
 	{
 		delete root;
-		throw ParseError(_err.formatError(_input, true));
+		throw ConfigError(_err.formatError(_input, true));
 	}
 	if (root->children().size() < 2)
 	{
-		if (root->children().size() == 1)
-			out = root->popChild();
+		AstNode	*tmp = root->popChild();
 		delete root;
+		root = tmp;
 	}
 	else
-	{
 		ft_log::log("peg.packrat.parser", ft_log::LOG_WARN)
 			<< "Multiples nodes detected at root, added one '_root' node."
 			<< std::endl;
-		out = root;
-	}
+	return root;
 }
 
 // ============================================================================
@@ -90,7 +84,7 @@ bool	PackratParser::eval(const Expr *expr, AstNode *parent)
 	}
 	if (ok)
 		ft_log::indentedLog(FTPP_LOG_PACKRAT)
-			<< "[OK] nextPos=" + toString(_input.pos()) + "\n";
+			<< "[OK] nextPos=" <<_input.pos() << '\n';
 	else
 	{
 		ft_log::indentedLog(FTPP_LOG_PACKRAT) << "[FAIL]\n";
@@ -102,4 +96,3 @@ bool	PackratParser::eval(const Expr *expr, AstNode *parent)
 
 	return ok;
 }
-

@@ -6,18 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 23:19:37 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 23:23:22 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PEG_PARSER_HPP
-# define PEG_PARSER_HPP
+#ifndef __FTPP_PEG_PARSER_HPP__
+# define __FTPP_PEG_PARSER_HPP__
 
 # include <stdint.h>
 
 # include "./PegLexer.hpp"
 # include "peg/core/Expr.hpp"
-# include "Grammar.hpp"
 
 // ============================================================================
 // PegParser
@@ -32,15 +31,34 @@
  */
 class PegParser {
 
-private:
-	PegLexer	_lex;
-	t_ExprDict	_rules;
+public:
+	// ========================================================================
+	// Construction / Destruction
+	// ========================================================================
 
+	PegParser(PegLexer &lexer);
+	~PegParser();
+
+	// ========================================================================
+	// Parsing API
+	// ========================================================================
+
+	/**
+	 * @brief Parse the grammar file and store result in grammar.
+	 *
+	 * Builds Expr trees for each rule, mapped to it's name.
+	 */
+	void	build(t_ExprDict &grammar);
+
+private:
+	PegLexer	&_lex;
+
+	PegParser();
 	PegParser(const PegParser &other);
 	PegParser &operator=(const PegParser &other);
 
 	// ---- Internal parsing steps ----
-	void	parseRule(void);
+	void	parseRule(t_ExprDict &rules);
 	Expr	*parseChoice(void);
 	Expr	*parseSequence(void);
 	Expr	*parsePrefix(void);
@@ -49,24 +67,6 @@ private:
 	Expr	*parseIdentifier(std::string &id);
 	Expr	*parseSubExpr(void);
 
-public:
-	// ========================================================================
-	// Construction
-	// ========================================================================
-
-	PegParser(const std::string &grammar_path);
-	~PegParser() { deleteVals(_rules); }
-
-	// ========================================================================
-	// Parsing API
-	// ========================================================================
-
-	/**
-	 * @brief Parse the grammar file and store result in out.
-	 *
-	 * Builds Expr trees for each rule and outputs a resolved Grammar.
-	 */
-	void	parseGrammar(Grammar &out);
 };
 
-#endif
+#endif /* __FTPP_PEG_PARSER_HPP__ */

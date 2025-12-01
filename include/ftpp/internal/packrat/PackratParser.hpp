@@ -6,19 +6,17 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 22:11:43 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:40:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PACKRATPARSER_HPP
-# define PACKRATPARSER_HPP
+#ifndef __FTPP_PACKRAT_PARSER_HPP__
+# define __FTPP_PACKRAT_PARSER_HPP__
 
 # include <stdint.h>
 
 # include "AstNode.hpp"
 # include "config.h"
-# include "Grammar.hpp"
-# include "PegException.hpp"
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"
 
@@ -27,59 +25,28 @@
 // ============================================================================
 
 /**
- * @brief Packrat PEG parser with memoization.
+ * @brief Packrat PEG parser
  *
  * Evaluates grammar expressions using a classic packrat strategy:
  *   - recursive descent
- *   - memo table for linear-time guarantees
- *   - optional debug tracing
+ *   - memo table for linear-time guarantees *not implemented yet)
  */
 class PackratParser {
 
-private:
-	Input			_input;
-	const Grammar	&_grammar;
-	Diag			_err;
-
-	PackratParser();
-	PackratParser(const PackratParser &other);
-	PackratParser &operator=(const PackratParser &other);
-
-	bool	retrieveExpr(const Expr *e, size_t pos, AstNode *parent);
-
-	// ---- Debug attributes ----
-# if FTPP_DEBUG_PACKRAT
-	size_t	_evalCount;
-	size_t	_cacheHits;
-	size_t	_backtrackCount;
-# endif
-
 public:
-
-	// ========================================================================
-	// Error classes
-	// ========================================================================
-
-	class ParseError : public PegException {
-	public:
-		ParseError(const std::string &rule)
-			: PegException("Parse failed: " + rule) {}
-	};
-
 	// ========================================================================
 	// Construction
 	// ========================================================================
 
-	PackratParser(const std::string &path, const Grammar &pegGrammar,
-					bool checkLeftRecursion = true);
-	~PackratParser() {}
+	PackratParser(Input &raw);
+	~PackratParser();
 
 	// ========================================================================
 	// Methods
 	// ========================================================================
 
-	void	parseRule(const std::string &rootRuleName, AstNode *&out);
-	bool	eval(const Expr *expr, AstNode *parent);
+	AstNode		*parseRule(Expr *rule);
+	bool		eval(const Expr *expr, AstNode *parent);
 
 	// ---- Accessors ----
 	const Diag	&diag(void) const	{ return _err; }
@@ -88,16 +55,30 @@ public:
 	const Input	&input(void) const	{ return _input; }
 	Input		&input(void)		{ return _input; }
 
-	// ---- Debug functions ----
+private:
+	Input	&_input;
+	Diag	_err;
+
+	PackratParser();
+	PackratParser(const PackratParser &other);
+	PackratParser &operator=(const PackratParser &other);
+
 # if FTPP_DEBUG_PACKRAT
-	struct Stats {
+	// ---- Debug attributes ----
+	size_t	_evalCount;
+	size_t	_cacheHits;
+	size_t	_backtrackCount;
+
+public:
+	// ---- Debug functions ----
+
+	struct Stats
+	{
 		size_t	totalEvals;
 		size_t	cacheHits;
 		size_t	backtrackCount;
 
-		double	cacheHitRate(void) const {
-			return totalEvals > 0 ? (double)cacheHits / totalEvals : 0.0;
-		}
+		double	cacheHitRate(void) const;
 	};
 
 	Stats		getStats(void) const;
@@ -105,8 +86,6 @@ public:
 	static void	printStats(Stats stats, std::ostream &os = std::cerr);
 
 # endif
-
 };
 
-#endif
-
+#endif /* __FTPP_PACKRAT_PARSER_HPP__ */

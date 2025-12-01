@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:37:34 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:30:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,62 +20,16 @@
 #include "utils/Input.hpp"
 
 // ============================================================================
-// Tokens representation
-// ============================================================================
-
-std::string PegLexer::Token::reprType(void) const
-{
-	switch (type)
-	{
-		case T_ID:         return "ID";
-		case T_LITERAL:    return "LITERAL";
-		case T_CHARRANGE:  return "CHARRANGE";
-
-		case T_SLASH:      return "SLASH";
-		case T_STAR:       return "STAR";
-		case T_PLUS:       return "PLUS";
-		case T_QMARK:      return "QMARK";
-
-		case T_AND:        return "AND";
-		case T_NOT:        return "NOT";
-
-		case T_LPAREN:     return "LPAREN";
-		case T_RPAREN:     return "RPAREN";
-
-		case T_DOT:        return "DOT";
-		case T_COLON:      return "COLON";
-		case T_ASSIGN:     return "ASSIGN";
-
-		case T_EOL:        return "EOL";
-		case T_END:        return "END";
-
-		default:
-			return "UNKNOWN";
-	}
-}
-
-std::string PegLexer::Token::repr(void) const
-{
-	std::string	rep = ft_log::color(reprType(), FT_LOG_COLOR_YELLOW);
-	if (!val.empty())
-		rep += ft_log::color("\"" + val + "\"", FT_LOG_COLOR_GREEN);
-
-	return rep;
-}
-
-// ============================================================================
 // Constructors
 // ============================================================================
 
-PegLexer::PegLexer(const std::string &grammar_path)
-	: _input(Input::fromFile(grammar_path)),
-	  _peeked(), _hasPeeked(false)
+PegLexer::PegLexer(Input &rawGrammar)
+	: _input(rawGrammar), _peeked(), _hasPeeked(false)
 {}
 
 PegLexer::PegLexer(const PegLexer &other)
-	: _input(other._input),
-	  _peeked(other._peeked),
-	  _hasPeeked(other._hasPeeked)
+	: _input(other._input)
+	, _peeked(other._peeked), _hasPeeked(other._hasPeeked)
 {}
 
 // ============================================================================
@@ -247,3 +201,46 @@ bool PegLexer::match(enum e_tk_type type)
 	return false;
 }
 
+// ============================================================================
+// Tokens representation
+// ============================================================================
+
+std::string PegLexer::Token::reprType(void) const
+{
+	switch (type)
+	{
+		case T_ID:         return "ID";
+		case T_LITERAL:    return "LITERAL";
+		case T_CHARRANGE:  return "CHARRANGE";
+
+		case T_SLASH:      return "SLASH";
+		case T_STAR:       return "STAR";
+		case T_PLUS:       return "PLUS";
+		case T_QMARK:      return "QMARK";
+
+		case T_AND:        return "AND";
+		case T_NOT:        return "NOT";
+
+		case T_LPAREN:     return "LPAREN";
+		case T_RPAREN:     return "RPAREN";
+
+		case T_DOT:        return "DOT";
+		case T_COLON:      return "COLON";
+		case T_ASSIGN:     return "ASSIGN";
+
+		case T_EOL:        return "EOL";
+		case T_END:        return "END";
+
+		default:
+			return "UNKNOWN";
+	}
+}
+
+std::string PegLexer::Token::repr(void) const
+{
+	std::string	rep = ft_log::color(reprType(), FT_LOG_COLOR_YELLOW);
+	if (!val.empty())
+		rep += ft_log::color("\"" + val + "\"", FT_LOG_COLOR_GREEN);
+
+	return rep;
+}

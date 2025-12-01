@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 12:12:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:37:15 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "config.h"
 #include "FtppException.hpp"
 #include "ft_log/LogScope.hpp"
-#include "Grammar.hpp"
 #include "peg/core/Expr.hpp"
 #include "peg/PegLexer.hpp"
 #include "peg/PegParser.hpp"
@@ -27,12 +26,12 @@
 #include "peg/syntax/UnaryQuantifiers.hpp"
 
 // ============================================================================
-// Constructors
+// Construction / Destruction
 // ============================================================================
 
-PegParser::PegParser(const std::string &grammar_path)
-	: _lex(grammar_path), _rules()
-{}
+PegParser::PegParser(PegLexer &lexer): _lex(lexer) {}
+
+PegParser::~PegParser() {}
 
 // ============================================================================
 // Primary
@@ -212,7 +211,7 @@ Expr	*PegParser::parseChoice(void)
 // Rule
 // ============================================================================
 
-void	PegParser::parseRule(void)
+void	PegParser::parseRule(t_ExprDict &rules)
 {
 	ft_log::LogScope _(FTPP_LOG_PARSER, "parseRule");
 
@@ -230,20 +229,20 @@ void	PegParser::parseRule(void)
 	if (captureRule)
 		expr = new Capture(expr, ruleName);
 
-	if (_rules.find(ruleName) != _rules.end())
+	if (rules.find(ruleName) != rules.end())
 	{
 		delete expr;
 		throw GrammarError("parsing failed: Duplicate rule for identifier '" + ruleName + "'");
 	}
 
-	_rules[ruleName] = expr;
+	rules[ruleName] = expr;
 }
 
 // ============================================================================
-// Grammar
+// Build grammar rules
 // ============================================================================
 
-void	PegParser::parseGrammar(Grammar &out)
+void	PegParser::build(t_ExprDict &grammar)
 {
 	ft_log::LogScope _(FTPP_LOG_PARSER, "parseGrammar");
 
@@ -253,12 +252,9 @@ void	PegParser::parseGrammar(Grammar &out)
 	{
 		if (_lex.match(PegLexer::T_EOL))
 			continue;
-		parseRule();
+		parseRule(grammar);
 	}
 
-	if (_rules.empty())
+	if (grammar.empty())
 		throw GrammarError("parsing failed: Empty grammar file");
-
-	Grammar tmp(_rules);
-	out = tmp;
 }

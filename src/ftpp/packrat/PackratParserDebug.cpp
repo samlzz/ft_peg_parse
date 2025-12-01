@@ -6,21 +6,33 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:15:06 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 17:32:03 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
+#include <ostream>
 
 #if FTPP_DEBUG_PACKRAT
 
 # include <iomanip>
 
-# include "PackratParser.hpp"
+# include "packrat/PackratParser.hpp"
 # include "peg/core/Expr.hpp"
 
 // ============================================================================
-// Statistics
+// Stats struct
+// ============================================================================
+
+double	PackratParser::Stats::cacheHitRate(void) const
+{
+	if (totalEvals > 0)
+		return (double)cacheHits / totalEvals;
+	return 0.0;
+}
+
+// ============================================================================
+// PackratParser Statistics
 // ============================================================================
 
 PackratParser::Stats	PackratParser::getStats(void) const
