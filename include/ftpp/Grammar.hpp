@@ -36,7 +36,9 @@ public:
 	// Construction / Destruction
 	// ========================================================================
 
-	explicit Grammar(const std::string &grammarPath, bool checkLeftRecursion = true);
+	explicit Grammar(
+		const std::string &grammarPath, bool checkLeftRecursion = true
+	);
 	~Grammar();
 
 	// ========================================================================
