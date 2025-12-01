@@ -6,22 +6,24 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 21:37:55 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 12:12:39 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <string>
 
-#include "Grammar.hpp"
 #include "config.h"
 #include "ft_log/LogScope.hpp"
+#include "Grammar.hpp"
 #include "peg/core/Expr.hpp"
 #include "peg/PegLexer.hpp"
 #include "peg/PegParser.hpp"
-#include "peg/syntax/ExprContainer.hpp"
-#include "peg/syntax/ExprUnary.hpp"
-#include "peg/syntax/ExprLeaf.hpp"
+#include "peg/syntax/CombinatorOps.hpp"
 #include "peg/syntax/RuleRef.hpp"
+#include "peg/syntax/TerminalOps.hpp"
+#include "peg/syntax/UnaryActions.hpp"
+#include "peg/syntax/UnaryPredicate.hpp"
+#include "peg/syntax/UnaryQuantifiers.hpp"
 
 // ============================================================================
 // Constructors

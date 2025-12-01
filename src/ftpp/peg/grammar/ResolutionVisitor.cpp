@@ -6,14 +6,16 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 20:17:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:39:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 12:21:43 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Grammar.hpp"
 #include "peg/visitors/ResolutionVisitor.hpp"
-#include "peg/syntax/ExprContainer.hpp"
-#include "peg/syntax/ExprUnary.hpp"
+#include "peg/syntax/CombinatorOps.hpp"
+#include "peg/syntax/UnaryActions.hpp"
+#include "peg/syntax/UnaryPredicate.hpp"
+#include "peg/syntax/UnaryQuantifiers.hpp"
 #include "peg/syntax/RuleRef.hpp"
 
 // ============================================================================

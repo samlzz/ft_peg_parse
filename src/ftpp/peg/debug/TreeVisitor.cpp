@@ -6,20 +6,22 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:43:21 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 12:16:23 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
-#include "ft_log/LogOp.hpp"
 
 #if FTPP_DEBUG_EXPR
 
-# include "peg/visitors/DebugVisitors.hpp"
-# include "peg/syntax/ExprContainer.hpp"
-# include "peg/syntax/ExprLeaf.hpp"
-# include "peg/syntax/ExprUnary.hpp"
+# include "ft_log/LogOp.hpp"
+# include "peg/syntax/CombinatorOps.hpp"
 # include "peg/syntax/RuleRef.hpp"
+# include "peg/syntax/TerminalOps.hpp"
+# include "peg/syntax/UnaryActions.hpp"
+# include "peg/syntax/UnaryPredicate.hpp"
+# include "peg/syntax/UnaryQuantifiers.hpp"
+# include "peg/visitors/DebugVisitors.hpp"
 
 // ============================================================================
 // TreeVisitor

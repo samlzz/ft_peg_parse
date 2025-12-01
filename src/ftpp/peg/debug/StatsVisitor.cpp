@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 02:05:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 12:14:19 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,12 @@
 
 # include "peg/core/Expr.hpp"
 # include "peg/visitors/DebugVisitors.hpp"
-# include "peg/syntax/ExprContainer.hpp"
-# include "peg/syntax/ExprLeaf.hpp"
-# include "peg/syntax/ExprUnary.hpp"
+# include "peg/syntax/CombinatorOps.hpp"
 # include "peg/syntax/RuleRef.hpp"
+# include "peg/syntax/TerminalOps.hpp"
+# include "peg/syntax/UnaryActions.hpp"
+# include "peg/syntax/UnaryPredicate.hpp"
+# include "peg/syntax/UnaryQuantifiers.hpp"
 
 // ============================================================================
 // StatsVisitor
