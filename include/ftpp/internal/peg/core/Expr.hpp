@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:45:58 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:29:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 # include "config.h"
 
-# if FTPP_DEBUG_EXPR
+# if FTPP_DEBUG_GRAMMAR
 #  include <iostream>
 # endif
 
@@ -96,14 +96,14 @@ public:
 	 */
 	std::string				repr(void) const;
 
-# if FTPP_DEBUG_EXPR
+# if FTPP_DEBUG_GRAMMAR
 	// ---- Debug functions ---
 
 	/**
 	 * @brief Dumps the expression tree into a human-readable structure.
 	 */
 	static void	dumpTree(const Expr *root, std::ostream &os = std::cerr,
-							int32_t maxDepth = -1);
+							int32_t maxDepth = -1, bool expandRuleRefs = true);
 	/**
 	 * @brief Dumps aggregated statistics about an expression tree.
 	 */

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 01:12:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 22:09:29 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:43:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,18 @@
 # endif
 
 /**
- * @brief Enable debug/tracing information inside PackratParser.
+ * @brief Enable statistics information of PackratParser in Grammar.
  */
 # ifndef FTPP_DEBUG_PACKRAT
 #  define FTPP_DEBUG_PACKRAT	0
 # endif
 
 /**
- * @brief Enable debug output in Grammar (resolution, validation, visitors).
+ * @brief Enable print and stats functions about expressions in Grammar.
  */
 # ifndef FTPP_DEBUG_GRAMMAR
 #  define FTPP_DEBUG_GRAMMAR	0
 # endif
-
-// ---- automatic ----
-
-# if FTPP_DEBUG_PACKRAT || FTPP_DEBUG_GRAMMAR
-#  define FTPP_DEBUG_EXPR		1
-# endif
-
 
 // ============================================================================
 // Log categories (ft_log)

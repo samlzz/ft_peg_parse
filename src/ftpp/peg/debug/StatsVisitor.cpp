@@ -6,13 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 12:14:19 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:02:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
 
-#if FTPP_DEBUG_EXPR
+#if FTPP_DEBUG_GRAMMAR
 
 # include <iomanip>
 
@@ -97,9 +97,18 @@ void	StatsVisitor::print(std::ostream &os) const
 	os << "║ Node types:                           ║\n";
 
 	static const char *kindNames[] = {
-		"Literal", "CharRange", "Sequence", "Choice",
-		"ZeroOrMore", "OneOrMore", "Optional", "Predicate",
-		"RuleRef", "Capture", "Any"
+		"Literal",
+		"CharRange",
+		"Any",
+		"Sequence",
+		"Choice",
+		"ZeroOrMore",
+		"OneOrMore",
+		"Optional",
+		"Predicate",
+		"RuleRef",
+		"Capture",
+		"Fatal",
 	};
 
 	for (std::map<Expr::e_expr_kind, size_t>::const_iterator it = _kindCounts.begin();

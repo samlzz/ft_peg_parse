@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 01:42:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:27:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "config.h"
 
-# if FTPP_DEBUG_EXPR
+# if FTPP_DEBUG_GRAMMAR
 
 #  include <iostream>
 #  include <ostream>
@@ -43,6 +43,7 @@ private:
 	int				_maxDepth;
 	std::string		_prefix;
 	bool			_isLast;
+	bool			_expandRef;
 
 	void		printNode(const Expr &expr);
 	void		visitChildren(const Expr &parent);
@@ -50,7 +51,7 @@ private:
 
 public:
 	TreeVisitor(std::ostream &os = std::cerr,
-				int32_t maxDepth = -1);
+				int32_t maxDepth = -1, bool expandRuleRefs = true);
 
 	virtual void	visitLiteral(const Literal &expr);
 	virtual void	visitCharRange(const CharRange &expr);
@@ -114,6 +115,6 @@ public:
 	virtual void	visitFatal(const Fatal &expr);
 };
 
-# endif // FTPP_DEBUG_EXPR
+# endif // FTPP_DEBUG_GRAMMAR
 #endif
 

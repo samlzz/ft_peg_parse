@@ -6,13 +6,13 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 12:16:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 00:28:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "config.h"
 
-#if FTPP_DEBUG_EXPR
+#if FTPP_DEBUG_GRAMMAR
 
 # include "ft_log/LogOp.hpp"
 # include "peg/syntax/CombinatorOps.hpp"
@@ -27,9 +27,9 @@
 // TreeVisitor
 // ============================================================================
 
-TreeVisitor::TreeVisitor(std::ostream &os, int32_t maxDepth)
-	: _os(os), _depth(0), _maxDepth(maxDepth),
-		_prefix(""), _isLast(true)
+TreeVisitor::TreeVisitor(std::ostream &os, int32_t maxDepth, bool expandRuleRefs)
+	: _os(os), _depth(0), _maxDepth(maxDepth)
+	, _prefix(""), _isLast(true), _expandRef(expandRuleRefs)
 {}
 
 // Print the current node with prefix and branch symbols.
@@ -117,7 +117,7 @@ void	TreeVisitor::visitRuleRef(const RuleRef &expr)
 {
 	printNode(expr);
 
-	if (!expr.resolved())
+	if (!_expandRef || !expr.resolved())
 		return;
 
 	_os << _prefix << (_isLast ? "   " : "│  ")
