@@ -1,23 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   PegException.hpp                                   :+:      :+:    :+:   */
+/*   FtppException.hpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 19:10:43 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/25 19:10:45 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 19:59:15 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PEGEXCEPTION_HPP
-# define PEGEXCEPTION_HPP
+#ifndef __FTPP_EXCEPTION_HPP__
+# define __FTPP_EXCEPTION_HPP__
 
 # include <stdexcept>
 # include <string>
 
 // ============================================================================
-// PegException
+// FtppException
 // ============================================================================
 
 /**
@@ -25,12 +25,11 @@
  *
  * All parser, lexer and grammar errors derive from this class.
  */
-class PegException : public std::runtime_error {
+class FtppException : public std::runtime_error {
 
 public:
-	PegException(const std::string &msg) : std::runtime_error(msg) {}
-	virtual ~PegException() throw() {}
+	FtppException(const std::string &msg) : std::runtime_error(msg) {}
+	virtual ~FtppException() throw() {}
 };
 
-#endif
-
+#endif /* __FTPP_EXCEPTION_HPP__ */
