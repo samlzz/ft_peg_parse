@@ -14,6 +14,7 @@
 #include <string>
 
 #include "peg/PegLexer.hpp"
+#include "FtppException.hpp"
 #include "config.h"
 #include "ft_log/ft_log.hpp"
 #include "utils/Input.hpp"
@@ -119,7 +120,7 @@ PegLexer::Token PegLexer::lexLiteral(void)
 	while (!_input.eof() && _input.peek() != quote)
 	{
 		if (_input.peek() == '\n')
-			throw PegLexerError("Unexpected newline in string literal");
+			throw GrammarError("lexing failed: Unexpected newline in string literal");
 
 		c = _input.get();
 		val += c;
@@ -129,7 +130,7 @@ PegLexer::Token PegLexer::lexLiteral(void)
 	}
 
 	if (_input.eof())
-		throw PegLexerError("Unterminated string literal");
+		throw GrammarError("lexing failed: Unterminated string literal");
 
 	_input.get();
 	return (Token){T_LITERAL, val};
@@ -148,7 +149,7 @@ PegLexer::Token PegLexer::lexCharRange(void)
 
 	_input.skipUntil(_until_eobracket, &buf);
 	if (!_input.match("]"))
-		throw PegLexerError("Unterminated character class: missing ']'");
+		throw GrammarError("lexing failed: Unterminated character class: missing ']'");
 
 	return (Token){T_CHARRANGE, buf};
 }
@@ -178,7 +179,7 @@ PegLexer::Token PegLexer::lexOp(char c)
 		default:
 			break;
 	}
-	throw PegLexerError(std::string("Unexpected character: ") + c);
+	throw GrammarError(std::string("lexing failed: Unexpected character: ") + c);
 }
 
 PegLexer::Token PegLexer::lexOne(void)

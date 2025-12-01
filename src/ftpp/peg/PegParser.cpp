@@ -13,6 +13,7 @@
 #include <string>
 
 #include "config.h"
+#include "FtppException.hpp"
 #include "ft_log/LogScope.hpp"
 #include "Grammar.hpp"
 #include "peg/core/Expr.hpp"
@@ -61,7 +62,7 @@ Expr	*PegParser::parseSubExpr(void)
 	if (!_lex.match(PegLexer::T_RPAREN))
 	{
 		delete expr;
-		throw PegParserError("Expected ')'");
+		throw GrammarError("parsing failed: Expected ')'");
 	}
 	return expr;
 }
@@ -93,7 +94,7 @@ Expr	*PegParser::parsePrimary(void)
 		return parseSubExpr();
 
 	default:
-		throw PegParserError("Unexpected token: " + tk.val);
+		throw GrammarError("parsing failed: Unexpected token: " + tk.val);
 	}
 }
 
@@ -217,13 +218,13 @@ void	PegParser::parseRule(void)
 
 	PegLexer::Token id = _lex.next();
 	if (id.type != PegLexer::T_ID)
-		throw PegParserError("Expected rule name");
+		throw GrammarError("parsing failed: Expected rule name");
 
 	bool		captureRule = (id.val[0] == '@');
 	std::string	ruleName = captureRule ? id.val.substr(1) : id.val;
 
 	if (!_lex.match(PegLexer::T_ASSIGN))
-		throw PegParserError("Expected assignement after rule name");
+		throw GrammarError("parsing failed: Expected assignement after rule name");
 
 	Expr *expr = parseChoice();
 	if (captureRule)
@@ -232,7 +233,7 @@ void	PegParser::parseRule(void)
 	if (_rules.find(ruleName) != _rules.end())
 	{
 		delete expr;
-		throw PegParserError("Duplicate rule for identifier '" + ruleName + "'");
+		throw GrammarError("parsing failed: Duplicate rule for identifier '" + ruleName + "'");
 	}
 
 	_rules[ruleName] = expr;
@@ -256,9 +257,8 @@ void	PegParser::parseGrammar(Grammar &out)
 	}
 
 	if (_rules.empty())
-		throw PegParserError("Empty grammar file");
+		throw GrammarError("parsing failed: Empty grammar file");
 
 	Grammar tmp(_rules);
 	out = tmp;
 }
-

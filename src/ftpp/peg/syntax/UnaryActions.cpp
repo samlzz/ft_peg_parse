@@ -15,6 +15,7 @@
 
 #include "AstNode.hpp"
 #include "PackratParser.hpp"
+#include "FtppException.hpp"
 #include "peg/core/IExprVisitor.hpp"
 #include "peg/syntax/UnaryActions.hpp"
 #include "utils/Input.hpp"
@@ -32,7 +33,7 @@ void	Capture::accept(IExprVisitor &visitor) const
 bool	Capture::parseProperty(PackratParser &parser, AstNode *parent) const
 {
 	if (!parent)
-		throw PackratParser::ParseError("Property capture outside of node context");
+		throw ConfigError("Property capture outside of node context");
 
 	Input	&in = parser.input();
 	size_t	start = in.pos();
@@ -85,7 +86,7 @@ bool	Fatal::parse(PackratParser &parser, AstNode *parent) const
 {
 	if (!parser.eval(_inner, parent))
 	{
-		throw PackratParser::ParseError(
+		throw ConfigError(
 			parser.diag().formatError(parser.input(), true)
 		);
 	}

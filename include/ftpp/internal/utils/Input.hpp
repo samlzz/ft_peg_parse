@@ -17,8 +17,6 @@
 # include <stdint.h>
 # include <string>
 
-# include "PegException.hpp"
-
 // ============================================================================
 // Input
 // ============================================================================
@@ -43,23 +41,6 @@ private:
 	Input(const std::string &data): _data(data), _pos(0) {}
 
 public:
-
-	// ========================================================================
-	// Error classes
-	// ========================================================================
-
-	class FileOpenError : public PegException {
-	public:
-		FileOpenError(): PegException("Input: unexpected EOF") {}
-		FileOpenError(const std::string &msg): PegException("Input: " + msg) {}
-	};
-
-	class InputUnexpectedEof : public PegException {
-	public:
-		InputUnexpectedEof(): PegException("Input: unexpected EOF") {}
-		InputUnexpectedEof(const std::string &msg): PegException("Input: " + msg) {}
-	};
-
 	// ========================================================================
 	// Construction / Assignment
 	// ========================================================================

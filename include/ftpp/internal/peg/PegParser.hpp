@@ -6,19 +6,18 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 03:25:58 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 23:19:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PEGPARSER_HPP
-# define PEGPARSER_HPP
+#ifndef PEG_PARSER_HPP
+# define PEG_PARSER_HPP
 
 # include <stdint.h>
 
 # include "./PegLexer.hpp"
 # include "peg/core/Expr.hpp"
 # include "Grammar.hpp"
-# include "PegException.hpp"
 
 // ============================================================================
 // PegParser
@@ -51,17 +50,6 @@ private:
 	Expr	*parseSubExpr(void);
 
 public:
-
-	// ========================================================================
-	// Error classes
-	// ========================================================================
-
-	class PegParserError : public PegException {
-	public:
-		PegParserError(const std::string &msg)
-			: PegException("Grammar parser error: " + msg) {}
-	};
-
 	// ========================================================================
 	// Construction
 	// ========================================================================
@@ -82,4 +70,3 @@ public:
 };
 
 #endif
-

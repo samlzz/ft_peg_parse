@@ -19,6 +19,7 @@
 #include <string>
 
 #include "utils/Input.hpp"
+#include "FtppException.hpp"
 
 // ============================================================================
 // Construction
@@ -29,12 +30,12 @@ Input	Input::fromFile(const std::string &path)
 	std::ifstream file(path.c_str(),std::ios::in | std::ios::binary);
 
 	if (!file.is_open())
-		throw FileOpenError("Input: failed to open file '" + path + "'");
+		throw EngineError("Input: failed to open file '" + path + "'");
 
 	std::ostringstream buf;
 	buf << file.rdbuf();
 	if (file.bad())
-		throw FileOpenError("Input: error while reading file '" + path + "'");
+		throw EngineError("Input: error while reading file '" + path + "'");
 
 	return Input(buf.str());
 }
@@ -88,7 +89,7 @@ bool	Input::eof(void) const
 char	Input::get(void)
 {
 	if (eof())
-		throw InputUnexpectedEof();
+		throw EngineError("Input: unexpected EOF");
 	return _data[_pos++];
 }
 

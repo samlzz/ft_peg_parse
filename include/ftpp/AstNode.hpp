@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 02:06:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:39:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,8 @@
 # include <string>
 # include <vector>
 
-#include "config.h"
+# include "config.h"
 # include "peg/core/Expr.hpp"
-# include "PegException.hpp"
 
 // ============================================================================
 // Span
@@ -64,17 +63,6 @@ private:
 	void	replaceChildren(const std::vector<AstNode *> &src);
 
 public:
-
-	// ========================================================================
-	// Error classe
-	// ========================================================================
-
-	class AstNodeAttrEmptyKey : public PegException {
-	public:
-		AstNodeAttrEmptyKey()
-			: PegException("AstNode: empty attribute key") {}
-	};
-
 	// ========================================================================
 	// Construction / Assignment
 	// ========================================================================

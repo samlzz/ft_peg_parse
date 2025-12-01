@@ -15,6 +15,7 @@
 #include <vector>
 
 #include "AstNode.hpp"
+#include "FtppException.hpp"
 #include "peg/core/Expr.hpp"
 
 // ============================================================================
@@ -104,7 +105,7 @@ void	AstNode::setSpan(size_t start, size_t end)
 void	AstNode::setAttr(const std::string &key, const std::string &val)
 {
 	if (key.empty())
-		throw AstNodeAttrEmptyKey();
+		throw EngineError("AstNode: empty attribute key");
 	_attrs[key] = val;
 }
 

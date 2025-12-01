@@ -13,6 +13,7 @@
 #include <string>
 
 #include "PackratParser.hpp"
+#include "FtppException.hpp"
 #include "peg/core/IExprVisitor.hpp"
 #include "utils/Diag.hpp"
 #include "utils/StringUtils.hpp"
@@ -31,7 +32,7 @@ void Literal::accept(IExprVisitor &visitor) const
 bool Literal::parse(PackratParser &parser, AstNode *parent) const
 {
 	if (_value.empty())
-		throw PackratParser::ParseError("Empty literal not allowed");
+		throw ConfigError("Empty literal not allowed");
 
 	Input &in = parser.input();
 	(void)parent;
@@ -57,6 +58,9 @@ void CharRange::accept(IExprVisitor &visitor) const
 // Match a single character belonging to the expanded charset.
 bool CharRange::parse(PackratParser &parser, AstNode *parent) const
 {
+	if (_value.empty())
+		throw ConfigError("Empty character class not allowed");
+
 	Input	&in = parser.input();
 	char	c = in.peek();
 	(void)parent;

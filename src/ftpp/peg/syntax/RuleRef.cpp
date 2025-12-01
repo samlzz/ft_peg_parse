@@ -12,6 +12,7 @@
 
 #include "AstNode.hpp"
 #include "PackratParser.hpp"
+#include "FtppException.hpp"
 #include "peg/core/IExprVisitor.hpp"
 #include "peg/syntax/RuleRef.hpp"
 
@@ -29,7 +30,7 @@ void RuleRef::accept(IExprVisitor &visitor) const
 bool RuleRef::parse(PackratParser &parser, AstNode *parent) const
 {
 	if (!_resolved)
-		throw PackratParser::ParseError("Unresolved rule: " + _name);
+		throw ConfigError("Unresolved rule: " + _name);
 
 	return parser.eval(_resolved, parent);
 }

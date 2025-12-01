@@ -17,7 +17,6 @@
 # include <string>
 
 # include "utils/Input.hpp"
-# include "PegException.hpp"
 
 // ============================================================================
 // PegLexer
@@ -54,16 +53,6 @@ public:
 
 		std::string	reprType(void) const;
 		std::string repr(void) const;
-	};
-
-	// ========================================================================
-	// Error classe
-	// ========================================================================
-
-	class PegLexerError : public PegException {
-	public:
-		PegLexerError(const std::string &msg)
-			: PegException("Grammar lexer: " + msg) {}
 	};
 
 	// ========================================================================
