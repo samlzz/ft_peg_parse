@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:14:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:39:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ void	AstNode::addChild(AstNode *child)
 
 AstNode	*AstNode::popChild(void)
 {
+	if (_children.size() == 0)
+		return NULL;
 	AstNode *resp = _children[0];
 	_children.erase(_children.begin());
 	return resp;
