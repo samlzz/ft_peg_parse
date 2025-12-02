@@ -8,34 +8,36 @@ ifeq ($(NAME),)
 endif
 
 # ? Directory (end with /)
-SRC_DIR   = src/lib/
+SRC_DIR   = src/ftpp/
 OBJ_DIR   = build/
 BIN_DIR   =
 
 ### UFILES_START ###
-FILES =	 \
-		ast/AstNode.cpp \
-		ast/AstNodeDebug.cpp \
-		packrat/PackratParser.cpp \
-		packrat/PackratParserDebug.cpp \
-		peg/PegLexer.cpp \
-		peg/PegParser.cpp \
-		peg/debug/ExprDebug.cpp \
-		peg/debug/GrammarDebug.cpp \
-		peg/debug/StatsVisitor.cpp \
-		peg/debug/TokenDebug.cpp \
-		peg/debug/TreeVisitor.cpp \
-		peg/grammar/FistSymbolVisitor.cpp \
-		peg/grammar/Grammar.cpp \
-		peg/grammar/ResolutionVisitor.cpp \
-		peg/syntax/ExprContainer.cpp \
-		peg/syntax/ExprLeaf.cpp \
-		peg/syntax/ExprUnary.cpp \
-		peg/syntax/RuleRef.cpp \
-		utils/DebugLogger.cpp \
-		utils/Diag.cpp \
-		utils/Input.cpp \
-		utils/StringUtils.cpp
+FILES =	AstNode.cpp \
+		Grammar.cpp \
+		debug/AstNodeDebug.cpp \
+		debug/GrammarDebug.cpp \
+		debug/internal/GrammarImplDebug.cpp \
+		debug/internal/packrat/PackratParserDebug.cpp \
+		debug/internal/peg/ExprDebug.cpp \
+		debug/internal/peg/visitors/StatsVisitor.cpp \
+		debug/internal/peg/visitors/TreeVisitor.cpp \
+		internal/GrammarImpl.cpp \
+		internal/packrat/PackratParser.cpp \
+		internal/peg/PegLexer.cpp \
+		internal/peg/PegParser.cpp \
+		internal/peg/core/BaseRepr.cpp \
+		internal/peg/syntax/CombinatorOps.cpp \
+		internal/peg/syntax/RuleRef.cpp \
+		internal/peg/syntax/TerminalOps.cpp \
+		internal/peg/syntax/UnaryActions.cpp \
+		internal/peg/syntax/UnaryPredicate.cpp \
+		internal/peg/syntax/UnaryQuantifiers.cpp \
+		internal/peg/visitors/FirstSymbolVisitor.cpp \
+		internal/peg/visitors/ResolutionVisitor.cpp \
+		internal/utils/Diag.cpp \
+		internal/utils/Input.cpp \
+		internal/utils/StringUtils.cpp
 ### END ###
 ifeq ($(FILES),)
     $(error FILES is empty: please define source files)
@@ -54,7 +56,7 @@ CXX       = c++
 CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
 DEBUG     ?= 0
 
-INCL_DIRS = include
+INCL_DIRS = include include/ftpp include/ftpp/internal
 # ? Directories & Libraries to link against
 LIB_DIRS  =
 LIB_FILES =
