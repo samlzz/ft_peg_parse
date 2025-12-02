@@ -82,6 +82,31 @@ remove_git_metadata() {
 }
 
 # ================================================================
+# Remove ft_log/internal directory
+# ================================================================
+delete_internal_dir() {
+    local internal_dir;
+    internal_dir=$(find "$TARGET_DIR" -type d -path "*/ft_log/internal" -print -quit)
+
+    if [[ -z "$internal_dir" ]]; then
+        printf "No 'ft_log/internal' directory found under '%s'\n" "$TARGET_DIR"
+        return 0
+    fi
+
+    if [[ ! -d "$internal_dir" ]]; then
+        printf "Path '%s' is not a directory\n" "$internal_dir" >&2
+        return 1
+    fi
+
+    rm -rf "$internal_dir" || {
+        printf "Failed to remove '%s'\n" "$internal_dir" >&2
+        return 1
+    }
+
+    printf "'%s' successfully removed\n" "$internal_dir"
+}
+
+# ================================================================
 # Copy public headers into include directory
 # ================================================================
 copy_public_headers() {
@@ -102,6 +127,7 @@ copy_public_headers() {
         print_error "Failed to copy header files."
         return 1
     }
+	delete_internal_dir
 }
 
 # ================================================================
