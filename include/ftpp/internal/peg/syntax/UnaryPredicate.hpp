@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:56:58 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:31:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UNARY_PREDICATE_HPP
-# define UNARY_PREDICATE_HPP
+#ifndef __FTPP_UNARY_PREDICATE_HPP__
+# define __FTPP_UNARY_PREDICATE_HPP__
 
 # include <string>
 
@@ -48,4 +48,4 @@ public:
 	virtual std::string	reprValue(void) const	{ return _isAnd ? "&" : "!"; }
 };
 
-#endif
+#endif /* __FTPP_UNARY_PREDICATE_HPP__ */

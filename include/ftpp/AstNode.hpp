@@ -6,15 +6,14 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:39:37 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:40:48 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef ASTNODE_HPP
-# define ASTNODE_HPP
+#ifndef __FTPP_ASTNODE_HPP__
+# define __FTPP_ASTNODE_HPP__
 
 # include <cstddef>
-# include <iostream>
 # include <map>
 # include <stdint.h>
 # include <string>
@@ -22,6 +21,10 @@
 
 # include "config.h"
 # include "peg/core/Expr.hpp"
+
+# if FTPP_DEBUG_AST
+#  include <iostream>
+# endif
 
 // ============================================================================
 // Span
@@ -121,11 +124,14 @@ public:
 
 	size_t		nodeCount(void) const;
 	size_t		maxDepth(void) const;
+};
 
-	friend std::ostream &operator<<(std::ostream &os, const AstNode &node);
-# endif
+std::ostream &operator<<(std::ostream &os, const AstNode &node);
+
+# else
 
 };
 
-#endif
+# endif // FTPP_DEBUG_AST
 
+#endif /* __FTPP_ASTNODE_HPP__ */

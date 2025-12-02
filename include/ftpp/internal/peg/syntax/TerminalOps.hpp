@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:56:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:29:59 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef TERMINAL_OPS_HPP
-# define TERMINAL_OPS_HPP
+#ifndef __FTPP_TERMINAL_OPS_HPP__
+# define __FTPP_TERMINAL_OPS_HPP__
 
 # include <string>
 
@@ -86,5 +86,4 @@ public:
 	virtual std::string	reprValue(void) const	{ return "."; }
 };
 
-#endif
-
+#endif /* __FTPP_TERMINAL_OPS_HPP__ */

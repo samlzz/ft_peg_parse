@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:25:23 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:26:53 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPR_COMBINATORS_BASE_HPP
-# define EXPR_COMBINATORS_BASE_HPP
+#ifndef __FTPP_EXPR_COMBINATORS_BASE_HPP__
+# define __FTPP_EXPR_COMBINATORS_BASE_HPP__
 
 # include "peg/core/Expr.hpp"
 
@@ -64,4 +64,4 @@ public:
 	virtual std::string			reprValue(void) const;
 };
 
-#endif
+#endif /* __FTPP_EXPR_COMBINATORS_BASE_HPP__ */

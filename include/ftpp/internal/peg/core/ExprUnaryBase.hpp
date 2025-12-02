@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:55:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:27:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPR_UNARY_BASE_HPP
-# define EXPR_UNARY_BASE_HPP
+#ifndef __FTPP_EXPR_UNARY_BASE_HPP__
+# define __FTPP_EXPR_UNARY_BASE_HPP__
 
 # include <cstddef>
 
@@ -54,4 +54,4 @@ public:
 	virtual Expr		*child(size_t idx) const	{ return idx == 0 ? _inner : NULL; }
 };
 
-#endif
+#endif /* __FTPP_EXPR_UNARY_BASE_HPP__ */

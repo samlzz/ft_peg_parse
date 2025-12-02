@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 20:28:06 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:54:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:28:08 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef IEXPRVISITOR_HPP
-# define IEXPRVISITOR_HPP
+#ifndef __FTPP_IEXPRVISITOR_HPP__
+# define __FTPP_IEXPRVISITOR_HPP__
 
 // ============================================================================
 // Forward declarations
@@ -59,4 +59,4 @@ public:
 	virtual void	visitFatal(const Fatal &expr) = 0;
 };
 
-#endif
+#endif /* __FTPP_IEXPRVISITOR_HPP__ */

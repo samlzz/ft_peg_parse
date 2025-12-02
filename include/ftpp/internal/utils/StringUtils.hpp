@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/26 10:02:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:35:46 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef STRINGUTILS_HPP
-# define STRINGUTILS_HPP
+#ifndef __FTPP_STRING_UTILS_HPP__
+# define __FTPP_STRING_UTILS_HPP__
 
 # include <cstdio>
 # include <sstream>
@@ -61,5 +61,4 @@ inline std::string	toString(T value)
 	return oss.str();
 }
 
-#endif
-
+#endif /* __FTPP_STRING_UTILS_HPP__ */

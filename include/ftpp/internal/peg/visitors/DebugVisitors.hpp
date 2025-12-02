@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 10:16:49 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:27:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:32:10 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DEBUGVISITORS_HPP
-# define DEBUGVISITORS_HPP
+#ifndef __FTPP_DEBUGVISITORS_HPP__
+# define __FTPP_DEBUGVISITORS_HPP__
 
 # include "config.h"
 
@@ -116,5 +116,5 @@ public:
 };
 
 # endif // FTPP_DEBUG_GRAMMAR
-#endif
 
+#endif /* __FTPP_DEBUGVISITORS_HPP__ */

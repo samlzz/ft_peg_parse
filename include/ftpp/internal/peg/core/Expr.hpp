@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:29:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:26:32 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPR_HPP
-# define EXPR_HPP
+#ifndef __FTPP_EXPR_HPP__
+# define __FTPP_EXPR_HPP__
 
 # include <cstddef>
 # include <map>
@@ -108,7 +108,7 @@ public:
 	 * @brief Dumps aggregated statistics about an expression tree.
 	 */
 	static void	dumpStats(const Expr *root, std::ostream &os = std::cerr);
-# endif
+# endif // FTPP_DEBUG_GRAMMAR
 };
 
 // ============================================================================
@@ -160,4 +160,4 @@ void	replaceOne(T *srcPtr, T *&destPtr)
 	}
 }
 
-#endif
+#endif /* __FTPP_EXPR_HPP__ */

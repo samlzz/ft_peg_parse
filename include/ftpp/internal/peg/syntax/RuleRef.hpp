@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:32:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:55:53 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:29:35 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef RULE_REF_HPP
-# define RULE_REF_HPP
+#ifndef __FTPP_RULE_REF_HPP__
+# define __FTPP_RULE_REF_HPP__
 
 # include <cstddef>
 # include <string>
@@ -62,4 +62,4 @@ public:
 	virtual std::string	reprValue(void) const	{ return _name; }
 };
 
-#endif
+#endif /* __FTPP_RULE_REF_HPP__ */

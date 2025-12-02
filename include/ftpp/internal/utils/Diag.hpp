@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 18:06:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 03:03:10 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:35:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef DIAG_HPP
-# define DIAG_HPP
+#ifndef __FTPP_DIAG_HPP__
+# define __FTPP_DIAG_HPP__
 
 # include <cstddef>
 # include <stack>
@@ -124,5 +124,4 @@ public:
 	std::string	formatError(const Input &in, bool withCtx) const;
 };
 
-#endif
-
+#endif /* __FTPP_DIAG_HPP__ */

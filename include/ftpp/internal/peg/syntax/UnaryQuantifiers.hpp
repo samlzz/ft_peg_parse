@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:57:09 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:31:06 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UNARY_QUANTIFIERS_HPP
-# define UNARY_QUANTIFIERS_HPP
+#ifndef __FTPP_UNARY_QUANTIFIERS_HPP__
+# define __FTPP_UNARY_QUANTIFIERS_HPP__
 
 # include <string>
 
@@ -75,4 +75,4 @@ public:
 	virtual std::string	reprKind(void) const	{ return "Optional"; }
 };
 
-#endif
+#endif /* __FTPP_UNARY_QUANTIFIERS_HPP__ */

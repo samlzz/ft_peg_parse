@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 20:45:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 13:13:11 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:33:37 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FIRSTSYMBOLVISITOR_HPP
-# define FIRSTSYMBOLVISITOR_HPP
+#ifndef __FTPP_FIRST_SYMBOL_VISITOR_HPP__
+# define __FTPP_FIRST_SYMBOL_VISITOR_HPP__
 
 # include <set>
 # include <string>
@@ -67,5 +67,4 @@ public:
 	virtual void	visitFatal(const Fatal &expr);
 };
 
-#endif
-
+#endif /* __FTPP_FIRST_SYMBOL_VISITOR_HPP__ */

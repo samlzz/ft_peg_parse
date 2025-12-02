@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 18:54:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:55:36 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:29:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COMBINATOR_OPS_HPP
-# define COMBINATOR_OPS_HPP
+#ifndef __FTPP_COMBINATOR_OPS_HPP__
+# define __FTPP_COMBINATOR_OPS_HPP__
 
 # include "peg/core/Expr.hpp"
 # include "peg/core/ExprCombinatorBase.hpp"
@@ -63,4 +63,4 @@ public:
 	virtual std::string	reprKind(void) const { return "Choice"; }
 };
 
-#endif
+#endif /* __FTPP_COMBINATOR_OPS_HPP__ */

@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:24 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:25:28 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:27:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef EXPR_TERMINAL_BASE_HPP
-# define EXPR_TERMINAL_BASE_HPP
+#ifndef __FTPP_EXPR_TERMINAL_BASE_HPP__
+# define __FTPP_EXPR_TERMINAL_BASE_HPP__
 
 # include <string>
 
@@ -48,4 +48,4 @@ private:
 	ExprTerminalBase &operator=(const ExprTerminalBase &other);
 };
 
-#endif
+#endif /* __FTPP_EXPR_TERMINAL_BASE_HPP__ */

@@ -6,12 +6,12 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:56:39 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:30:30 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UNARY_ACTIONS_HPP
-# define UNARY_ACTIONS_HPP
+#ifndef __FTPP_UNARY_ACTIONS_HPP__
+# define __FTPP_UNARY_ACTIONS_HPP__
 
 # include <string>
 
@@ -74,4 +74,4 @@ public:
 	virtual std::string	reprKind(void) const	{ return "Fatal"; }
 };
 
-#endif
+#endif /* __FTPP_UNARY_ACTIONS_HPP__ */
