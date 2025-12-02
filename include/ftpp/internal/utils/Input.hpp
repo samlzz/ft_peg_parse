@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:34:40 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:34:33 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:00:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,8 @@ private:
 	std::string	_data;
 	size_t		_pos;
 
-	Input(): _data(), _pos(0) {}
-	Input(const std::string &data): _data(data), _pos(0) {}
+	Input();
+	Input(const std::string &data);
 
 public:
 	// ========================================================================
@@ -48,8 +48,8 @@ public:
 	static Input	fromFile(const std::string &path);
 	static Input	fromText(const std::string &text);
 
-	Input(const Input &other): _data(other._data), _pos(other._pos) {}
-	~Input() {}
+	Input(const Input &other);
+	~Input();
 
 	Input	&operator=(const Input &other);
 
@@ -57,9 +57,9 @@ public:
 	// Core functionality
 	// ========================================================================
 
-	char	operator*() const;				// Current char
-	char	operator[](size_t idx) const;	// Char at index relative to current pos
-	Input	&operator++();					// Advance one char
+	char		operator*() const;				// Current char
+	char		operator[](size_t idx) const;	// Char at index relative to current pos
+	Input		&operator++();					// Advance one char
 
 	// ---- Reading ----
 	bool		eof(void) const;
@@ -68,8 +68,8 @@ public:
 	bool		match(const std::string &literal);
 
 	// ---- Position ----
-	size_t		pos(void) const			{ return _pos; }
-	void		setPos(size_t newPos)	{ _pos = newPos; }
+	size_t		pos(void) const;
+	void		setPos(size_t newPos);
 
 	size_t		remaining(void) const;
 	size_t		line(void) const;

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/29 21:40:29 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:26:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:19:16 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 
 # include "config.h"
 
+// debug only
 # if FTPP_DEBUG_GRAMMAR
 #  include <iostream>
 # endif
@@ -33,7 +34,7 @@ class AstNode;
 class IExprVisitor;
 
 // ============================================================================
-// Expr abstract class
+// Expr base abstract class
 // ============================================================================
 
 /**
@@ -68,45 +69,31 @@ public:
 protected:
 	const enum e_expr_kind	_kind;
 
-	Expr(enum e_expr_kind kind): _kind(kind) {}
+	Expr(enum e_expr_kind kind);
 
 public:
 
-	virtual ~Expr() {}
+	virtual ~Expr();
 
 	virtual bool			parse(PackratParser &parser, AstNode *parent) const = 0;
 	virtual void			accept(IExprVisitor &visitor) const = 0;
 
 	// ---- Accessors ----
-	enum e_expr_kind		kind(void) const		{ return _kind; }
-	virtual size_t			childCount(void) const	{ return 0; }
-	virtual const Expr *	child(size_t) const		{ return NULL; }
+	enum e_expr_kind		kind(void) const;
+	virtual size_t			childCount(void) const;
+	virtual const Expr *	child(size_t) const;
 
 	// ---- Representation ----
-	/**
-	 * @brief Returns the symbolic name of the expression kind (literal, choice...).
-	 */
 	virtual std::string		reprKind(void) const = 0;
-	/**
-	 * @brief Returns the optional value associated with the expression.
-	 */
-	virtual std::string		reprValue(void) const	{ return ""; }
-	/**
-	 * @brief Returns a compact representation used for logging and tracing.
-	 */
+	virtual std::string		reprValue(void) const;
+
 	std::string				repr(void) const;
 
 # if FTPP_DEBUG_GRAMMAR
 	// ---- Debug functions ---
 
-	/**
-	 * @brief Dumps the expression tree into a human-readable structure.
-	 */
 	static void	dumpTree(const Expr *root, std::ostream &os = std::cerr,
 							int32_t maxDepth = -1, bool expandRuleRefs = true);
-	/**
-	 * @brief Dumps aggregated statistics about an expression tree.
-	 */
 	static void	dumpStats(const Expr *root, std::ostream &os = std::cerr);
 # endif // FTPP_DEBUG_GRAMMAR
 };
@@ -145,19 +132,6 @@ void	deleteVals(std::map<K, V*> &dict)
 		}
 	}
 	dict.clear();
-}
-
-/// ---- Replace unary ptr ----
-
-template <typename T>
-void	replaceOne(T *srcPtr, T *&destPtr)
-{
-	if (srcPtr != destPtr)
-	{
-		if (destPtr)
-			delete destPtr;
-		destPtr = srcPtr;
-	}
 }
 
 #endif /* __FTPP_EXPR_HPP__ */

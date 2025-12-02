@@ -21,9 +21,17 @@
 #include "utils/Input.hpp"
 #include "FtppException.hpp"
 
-// ============================================================================
-// Construction
-// ============================================================================
+// ========================================================================
+// Construction / Destruction
+// ========================================================================
+
+// ---- Private ----
+Input::Input(): _data(), _pos(0) {}
+Input::Input(const std::string &data): _data(data), _pos(0) {}
+
+// --- Public ----
+Input::Input(const Input &other): _data(other._data), _pos(other._pos) {}
+Input::~Input() {}
 
 Input	Input::fromFile(const std::string &path)
 {
@@ -116,6 +124,10 @@ bool	Input::match(const std::string &literal)
 
 // ---- Position ----
 
+// - - Accessors - -
+size_t	Input::pos(void) const			{ return _pos; }
+void	Input::setPos(size_t newPos)	{ _pos = newPos; }
+
 size_t	Input::remaining(void) const
 {
 	if (_pos >= _data.size())
@@ -168,4 +180,3 @@ void Input::skipUntil(bool (*until)(char), std::string *skipped)
 		get();
 	}
 }
-

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:40:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:16:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:20:03 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@
 # include "config.h"
 # include "utils/Diag.hpp"
 # include "utils/Input.hpp"
+
+// ============================================================================
+// Forward declarations
+// ============================================================================
+class Expr;
 
 // ============================================================================
 // PackratParser
@@ -49,11 +54,11 @@ public:
 	bool		eval(const Expr *expr, AstNode *parent);
 
 	// ---- Accessors ----
-	const Diag	&diag(void) const	{ return _err; }
-	Diag		&diag(void)			{ return _err; }
+	const Diag	&diag(void) const;
+	Diag		&diag(void);
 
-	const Input	&input(void) const	{ return _input; }
-	Input		&input(void)		{ return _input; }
+	const Input	&input(void) const;
+	Input		&input(void);
 
 private:
 	Input	&_input;

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:40:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:21:40 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 # include <vector>
 
 # include "config.h"
-# include "peg/core/Expr.hpp"
 
+// Debug only
 # if FTPP_DEBUG_AST
 #  include <iostream>
 # endif
@@ -39,10 +39,10 @@ struct Span {
 	size_t	start;
 	size_t	end;
 
-	Span(): start(0), end(0) {}
-	Span(const Span &other): start(other.start), end(other.end) {}
+	Span();
+	Span(const Span &other);
 
-	size_t	length(void) const { return (end - start); }
+	size_t	length(void) const;
 };
 
 // ============================================================================
@@ -70,11 +70,11 @@ public:
 	// Construction / Assignment
 	// ========================================================================
 
-	AstNode() {}
-	AstNode(const std::string &type): _type(type) {}
+	AstNode();
+	AstNode(const std::string &type);
 	AstNode(const AstNode &other);
 
-	~AstNode() { deleteAll(_children); }
+	~AstNode();
 
 	AstNode &operator=(const AstNode &other);
 
@@ -88,13 +88,13 @@ public:
 	void		stealChildren(AstNode &stolen);
 
 	// ---- Accessors ----
-	const std::string	&type(void) const					{ return _type; }
-	void				setType(const std::string &type)	{ _type = type; }
-
-	const std::vector<AstNode *>			&children(void) const	{ return _children; }
-	const std::map<std::string, std::string>	&attrs(void) const	{ return _attrs; }
+	const std::string	&type(void) const;
+	void				setType(const std::string &type);
 
 	void				setSpan(size_t start, size_t end);
+
+	const std::vector<AstNode *>				&children(void) const;
+	const std::map<std::string, std::string>	&attrs(void) const;
 
 	// ---- Attribute management ----
 	void		setAttr(const std::string &key, const std::string &val);
@@ -110,9 +110,7 @@ public:
 		int32_t		maxDepth;
 		std::string	indentStr;
 
-		PrintOptions()
-			: showSpan(true), showAttributes(true),
-			compactMode(false), maxDepth(-1), indentStr("  ") {}
+		PrintOptions();
 	};
 
 	void		print(std::ostream &os = std::cerr, int32_t depth = 0,
@@ -124,14 +122,11 @@ public:
 
 	size_t		nodeCount(void) const;
 	size_t		maxDepth(void) const;
-};
-
-std::ostream &operator<<(std::ostream &os, const AstNode &node);
-
-# else
-
-};
-
 # endif // FTPP_DEBUG_AST
+};
+
+# if FTPP_DEBUG_AST
+std::ostream &operator<<(std::ostream &os, const AstNode &node);
+# endif
 
 #endif /* __FTPP_ASTNODE_HPP__ */

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 16:10:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/28 20:54:17 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:25:58 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,18 @@ void	Diag::commit(void)
 // Diag
 // ============================================================================
 
-// Assignment
+// ========================================================================
+// Construction / Assignment
+// ========================================================================
+
+Diag::Diag(): _expectations(), _checkpoints(), _farthest(0) {}
+Diag::Diag(const Diag &other)
+		: _expectations(other._expectations)
+		, _checkpoints(other._checkpoints)
+		, _farthest(other._farthest) {}
+
+Diag::~Diag() {}
+
 Diag	&Diag::operator=(const Diag &other)
 {
 	if (this != &other)
@@ -121,6 +132,9 @@ void	Diag::reset(void)
 	_expectations.clear();
 }
 
+// Getter
+size_t	Diag::farthest(void) const	{ return _farthest; }
+
 // ============================================================================
 // Formatting helpers
 // ============================================================================
@@ -146,7 +160,8 @@ void	Diag::deduplicate_expectations(void)
 
 static inline void	_group_by_priority(
 	const std::vector<Diag::Expectation> &src,
-	std::vector<Diag::Expectation> groups[4])
+	std::vector<Diag::Expectation> groups[4]
+)
 {
 	for (size_t i = 0; i < src.size(); ++i)
 	{
@@ -242,4 +257,3 @@ std::string	Diag::formatError(const Input &in, bool withCtx) const
 
 	return oss.str();
 }
-

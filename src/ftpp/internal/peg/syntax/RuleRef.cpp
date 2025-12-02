@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 20:10:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 23:02:52 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:00:08 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,16 @@ bool RuleRef::parse(PackratParser &parser, AstNode *parent) const
 		throw ConfigError("Unresolved rule: " + _name);
 
 	return parser.eval(_resolved, parent);
+}
+
+// ---- Children introspection ----
+
+size_t	RuleRef::childCount(void) const
+{
+	return _resolved ? 1 : 0;
+}
+
+const Expr	*RuleRef::child(size_t idx) const
+{
+	return idx == 0 ? _resolved : NULL;
 }

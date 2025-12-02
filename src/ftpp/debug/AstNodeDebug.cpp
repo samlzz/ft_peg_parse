@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/11/30 02:07:32 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:21:08 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@
 
 # include "AstNode.hpp"
 # include "ft_log/LogOp.hpp"
+
+// ============================================================================
+// PrintOptions
+// ============================================================================
+
+AstNode::PrintOptions::PrintOptions()
+	: showSpan(true)
+	, showAttributes(true)
+	, compactMode(false)
+	, maxDepth(-1)
+	, indentStr("  ")
+{}
 
 // ============================================================================
 // Display

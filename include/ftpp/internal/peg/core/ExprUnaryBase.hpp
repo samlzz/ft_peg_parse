@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:10:28 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:27:41 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 13:50:26 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@
  * @brief Base class for unary PEG expressions.
  *
  * Wraps a single inner expression and defines a consistent child interface.
- * Concrete subclasses implement repetition, optionality, predicates,
- * or capture behaviors.
  */
 class ExprUnaryBase : public Expr {
 
@@ -39,19 +37,17 @@ protected:
 	Expr *_inner;
 
 public:
-	ExprUnaryBase(enum e_expr_kind kind, Expr *inner)
-		: Expr(kind), _inner(inner)
-	{}
-	virtual ~ExprUnaryBase() { delete _inner; }
+	ExprUnaryBase(enum e_expr_kind kind, Expr *inner);
+	virtual ~ExprUnaryBase();
 
 	// ---- Accessors ----
-	Expr*				inner()				{ return _inner; }
-	const Expr*			inner() const		{ return _inner; }
-	void				setInner(Expr *e)	{ replaceOne(e, _inner); }
+	Expr*				inner();
+	const Expr*			inner() const;
+	void				setInner(Expr *e);
 
 	// ---- Child overrides ----
-	virtual size_t		childCount(void) const		{ return _inner ? 1 : 0; }
-	virtual Expr		*child(size_t idx) const	{ return idx == 0 ? _inner : NULL; }
+	virtual size_t		childCount(void) const;
+	virtual Expr		*child(size_t idx) const;
 };
 
 #endif /* __FTPP_EXPR_UNARY_BASE_HPP__ */

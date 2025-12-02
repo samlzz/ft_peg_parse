@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:32:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:29:35 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:00:00 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ public:
 	const std::string	&name(void) const		{ return _name; }
 
 	// ---- Children introspection ----
-	virtual size_t		childCount(void) const		{ return _resolved ? 1 : 0; }
-	virtual const Expr	*child(size_t idx) const	{ return idx == 0 ? _resolved : NULL; }
+	virtual size_t		childCount(void) const;
+	virtual const Expr	*child(size_t idx) const;
 
 	// ---- Representation ----
 	virtual std::string	reprKind(void) const	{ return "RuleRef"; }

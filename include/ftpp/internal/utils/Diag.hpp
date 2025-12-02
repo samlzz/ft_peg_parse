@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 18:06:54 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:35:04 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:54:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@
 # include <string>
 # include <vector>
 
-# include "./Input.hpp"
+// ============================================================================
+// Forward declarations
+// ============================================================================
+class Input;
 
 // ============================================================================
 // Diag
@@ -80,31 +83,27 @@ public:
 	// Construction / Assignment
 	// ========================================================================
 
-	Diag(): _expectations(), _checkpoints(), _farthest(0) {}
-	Diag(const Diag &other)
-		: _expectations(other._expectations),
-			_checkpoints(other._checkpoints),
-			_farthest(other._farthest) {}
-
+	Diag();
+	Diag(const Diag &other);
 	Diag &operator=(const Diag &other);
 
-	~Diag() {}
+	~Diag();
 
 	// ========================================================================
 	// Checkpoint management
 	// ========================================================================
 	/**
-	 * @brief Save current diagnostic state (before tentative parsing).
+	 * @brief Save current diagnostic state.
 	 */
-	void	save(void);
+	void		save(void);
 	/**
 	 * @brief Restore to last checkpoint (discard errors from failed attempt).
 	 */
-	void	restore(void);
+	void		restore(void);
 	/**
 	 * @brief Commit checkpoint (keep errors, remove save point).
 	 */
-	void	commit(void);
+	void		commit(void);
 
 	// ========================================================================
 	// Methods
@@ -115,7 +114,7 @@ public:
 	void		reset(void);
 	
 	// ---- Accessors ----
-	size_t				farthest(void) const	{ return _farthest; }
+	size_t		farthest(void) const;
 
 	/**
 	 * @brief Format the diagnostic message as a human-readable error.

@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 16:58:58 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:57:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:05:49 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,16 @@ PackratParser::PackratParser(Input &raw): _input(raw), _err()
 {}
 
 PackratParser::~PackratParser() {}
+
+// ============================================================================
+// Accessors (for Expr *::parse)
+// ============================================================================
+
+const Diag	&PackratParser::diag(void) const	{ return _err; }
+Diag		&PackratParser::diag(void)			{ return _err; }
+
+const Input	&PackratParser::input(void) const	{ return _input; }
+Input		&PackratParser::input(void)			{ return _input; }
 
 // ============================================================================
 // parseRule: public entry point

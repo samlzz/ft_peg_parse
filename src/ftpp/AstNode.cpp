@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/31 17:55:13 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:39:07 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 14:18:41 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,31 @@
 #include "peg/core/Expr.hpp"
 
 // ============================================================================
+// Span
+// ============================================================================
+
+Span::Span(): start(0), end(0) {}
+
+Span::Span(const Span &other)
+	: start(other.start), end(other.end)
+{}
+
+size_t	Span::length(void) const
+{
+	return (end - start);
+}
+
+// ============================================================================
 // Construction
 // ============================================================================
+
+AstNode::AstNode()
+	: _type(), _attrs(), _children(), _span()
+{}
+
+AstNode::AstNode(const std::string &type)
+	: _type(type), _attrs(), _children(), _span()
+{}
 
 AstNode::AstNode(const AstNode &other):
 	_type(other.type()),
@@ -29,6 +52,15 @@ AstNode::AstNode(const AstNode &other):
 	_span(other._span)
 {
 	replaceChildren(other._children);
+}
+
+// ============================================================================
+// Destruction
+// ============================================================================
+
+AstNode::~AstNode()
+{
+	deleteAll(_children);
 }
 
 // ============================================================================
@@ -94,11 +126,25 @@ void	AstNode::stealChildren(AstNode &stolen)
 // Accessors
 // ============================================================================
 
+const std::string	&AstNode::type(void) const					{ return _type; }
+void				AstNode::setType(const std::string &type)	{ _type = type; }
+
 void	AstNode::setSpan(size_t start, size_t end)
 {
 	_span.start = start;
 	_span.end = end;
 }
+
+const std::vector<AstNode *>	&AstNode::children(void) const
+{
+	return _children;
+}
+
+const std::map<std::string, std::string>	&AstNode::attrs(void) const
+{
+	return _attrs;
+}
+
 
 // ============================================================================
 // Attribute management
@@ -124,4 +170,3 @@ std::string	AstNode::getAttr(const std::string &key, const std::string &def) con
 		return def;
 	return it->second;
 }
-
