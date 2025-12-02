@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/02 23:22:01 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:18:50 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:20:03 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,31 +64,3 @@ Grammar::parseString(const std::string &input, const std::string &ruleName) cons
 {
 	return _impl->parseString(input, ruleName);
 }
-
-// ============================================================================
-// Public debug API (thin delegation to Impl)
-// ============================================================================
-
-#if FTPP_DEBUG_GRAMMAR
-void Grammar::printRule(const std::string &rule, std::ostream &os) const
-{
-	_impl->debugPrintRule(rule, os);
-}
-
-void Grammar::printGrammar(std::ostream &os) const
-{
-	_impl->debugPrintGrammar(os);
-}
-
-void Grammar::printRuleStats(const std::string &rule, std::ostream &os) const
-{
-	_impl->debugPrintRuleStats(rule, os);
-}
-#endif
-
-#if FTPP_DEBUG_PACKRAT
-void Grammar::printPackratStats(std::ostream &os) const 
-{
-	_impl->debugPrintPackratStats(os);
-}
-#endif

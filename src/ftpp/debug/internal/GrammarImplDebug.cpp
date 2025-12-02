@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 00:58:12 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:35:27 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/02 12:13:17 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 // GrammarImpl debug functions
 // ============================================================================
 
-#if FTPP_DEBUG_GRAMMAR
+# if FTPP_DEBUG_GRAMMAR
 
 void	Grammar::Impl::debugPrintGrammar(std::ostream &os) const
 {
@@ -61,17 +61,17 @@ void	Grammar::Impl::debugPrintRuleStats(const std::string &ruleName,
 	Expr::dumpStats(it->second, os);
 }
 
-#endif // FTPP_DEBUG_GRAMMAR
+# endif // FTPP_DEBUG_GRAMMAR
 
 
-#if FTPP_DEBUG_PACKRAT
+# if FTPP_DEBUG_PACKRAT
 
 void	Grammar::Impl::debugPrintPackratStats(std::ostream &os) const
 {
 	PackratParser::printStats(_lastStats, os);
 }
 
-#endif // FTPP_DEBUG_PACKRAT
+# endif // FTPP_DEBUG_PACKRAT
 
 #endif /* FTPP_DEBUG_GRAMMAR || FTPP_DEBUG_PACKRAT */
 

@@ -6,11 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/26 20:17:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 12:21:43 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/01 22:24:10 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Grammar.hpp"
+#include "FtppException.hpp"
 #include "peg/visitors/ResolutionVisitor.hpp"
 #include "peg/syntax/CombinatorOps.hpp"
 #include "peg/syntax/UnaryActions.hpp"
@@ -101,7 +101,7 @@ void ResolutionVisitor::visitRuleRef(const RuleRef &expr)
 
 	t_ExprDict::const_iterator it = _rules.find(ruleName);
 	if (it == _rules.end())
-		throw Grammar::GrammarResolutionError(ruleName);
+		throw GrammarResolutionError(ruleName);
 
 	mutableExpr.resolve(it->second);
 }
