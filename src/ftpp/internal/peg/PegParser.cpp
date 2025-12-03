@@ -6,15 +6,15 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:37:15 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 14:04:51 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_log/LogScope.hpp>
 #include <string>
 
 #include "config.h"
 #include "FtppException.hpp"
-#include "ft_log/LogScope.hpp"
 #include "peg/core/Expr.hpp"
 #include "peg/PegLexer.hpp"
 #include "peg/PegParser.hpp"

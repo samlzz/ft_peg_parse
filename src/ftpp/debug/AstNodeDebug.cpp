@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 14:21:08 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 10:53:07 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 #if FTPP_DEBUG_AST
 
+# include <ft_log/LogOp.hpp>
 # include <ostream>
 # include <map>
 # include <string>
 
 # include "AstNode.hpp"
-# include "ft_log/LogOp.hpp"
 
 // ============================================================================
 // PrintOptions

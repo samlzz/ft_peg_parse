@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:28:55 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 10:52:56 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 #if FTPP_DEBUG_GRAMMAR
 
-# include "ft_log/LogOp.hpp"
+# include <ft_log/LogOp.hpp>
+
 # include "peg/syntax/CombinatorOps.hpp"
 # include "peg/syntax/RuleRef.hpp"
 # include "peg/syntax/TerminalOps.hpp"

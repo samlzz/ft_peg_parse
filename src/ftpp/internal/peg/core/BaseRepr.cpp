@@ -6,15 +6,15 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 11:47:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 11:50:13 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 10:55:03 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <ft_log/AnsiColor.hpp>
+#include <ft_log/LogOp.hpp>
 #include <sstream>
 #include <string>
 
-#include "ft_log/AnsiColor.hpp"
-#include "ft_log/LogOp.hpp"
 #include "peg/core/Expr.hpp"
 #include "peg/core/ExprCombinatorBase.hpp"
 
