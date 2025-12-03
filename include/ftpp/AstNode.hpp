@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 19:47:11 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 14:21:40 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 14:16:09 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ public:
 	void		print(std::ostream &os = std::cerr, int32_t depth = 0,
 					const PrintOptions &opts = PrintOptions()) const;
 
-	static void	PrintTree(const AstNode *node, std::ostream &os = std::cerr,
+	static void	printTree(const AstNode *node, std::ostream &os = std::cerr,
 					int32_t currentDepth = 0,
 					const PrintOptions &opts = PrintOptions());
 

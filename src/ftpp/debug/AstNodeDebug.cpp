@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 08:36:10 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/03 10:53:07 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 14:16:20 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ void	AstNode::print(std::ostream &os, int32_t depth,
 		os << " (" << _children.size() << " children)";
 }
 
-void	AstNode::PrintTree(const AstNode *node, std::ostream &os,
+void	AstNode::printTree(const AstNode *node, std::ostream &os,
 							int32_t currentDepth, const PrintOptions &opts)
 {
 	for (int i = 0; i < currentDepth; ++i)
