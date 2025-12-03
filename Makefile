@@ -213,6 +213,7 @@ TEST_OBJ_DIR := build/test
 TEST_BIN_DIR := test_bin
 TEST_FILES := 
 
+TEST_ARGS ?=
 TEST_FLAGS := -L$(FTLOG_DIR) -lftlog
 
 TEST_BINS := $(patsubst %.cpp,$(TEST_BIN_DIR)/%,$(notdir $(TEST_FILES)))
@@ -220,18 +221,18 @@ TEST_BINS := $(patsubst %.cpp,$(TEST_BIN_DIR)/%,$(notdir $(TEST_FILES)))
 .PHONY: test
 test: run_all_tests
 
-test_%: $(TEST_BIN_DIR)/_%
+test_%: $(TEST_BIN_DIR)/%
 	@$(call clr_print, $(CYAN),Running test $* ...)
-	$(P)$(VLA) ./$< || { $(call clr_print, $(RED),Test failed: $<); exit 1; }
+	$(P)$(VLA) ./$< $(TEST_ARGS) || { $(call clr_print, $(RED),Test failed: $<); exit 1; }
 
 .PHONY: run_all_tests
 run_all_tests: $(TEST_BINS)
 	$(P)for bin in $^; do \
 		$(call clr_print, $(CYAN),\n\nRunning $$bin ...); \
-		$(VLA) ./$$bin || { $(call clr_print, $(RED),$$bin failed); exit 1; } \
+		$(VLA) ./$$bin $(TEST_ARGS) || { $(call clr_print, $(RED),$$bin failed); exit 1; } \
 	done
 
-$(TEST_BIN_DIR)/%: $(TEST_FILES)
+$(TEST_BIN_DIR)/%: $(TEST_FILES) $(OUT)
 	@mkdir -p $(dir $@)
 	$(P)$(CXX) $(CXXFLAGS) $(CPPFLAGS) $< $(OUT) $(TEST_FLAGS) -o $@
 	@$(call clr_print, $(YELLOW),Compiling test: $<)
