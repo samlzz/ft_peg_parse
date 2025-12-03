@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/03 10:53:48 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:12:02 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,15 @@ void PegLexer::skipWhitespaces(void)
 		else
 			break;
 	}
+}
+
+static inline void	_log_action(
+	const std::string &act, const PegLexer::Token &tk
+)
+{
+	ft_log::log(FTPP_LOG_LEXER, ft_log::LOG_TRACE)
+		<< ft_log::color(act, FT_LOG_COLOR_MAGENTA)
+		<< tk.repr() << std::endl;
 }
 
 // ============================================================================
@@ -173,8 +182,7 @@ PegLexer::Token PegLexer::next(void)
 	else
 		curr = lexOne();
 
-	ft_log::log(FTPP_LOG_LEXER, ft_log::LOG_TRACE)
-		<< ft_log::color("next", FT_LOG_COLOR_MAGENTA) << " " << curr.repr();
+	_log_action("next: ", curr);
 	return curr;
 }
 
@@ -186,8 +194,7 @@ PegLexer::Token PegLexer::peek(void)
 		_hasPeeked = true;
 	}
 
-	ft_log::log(FTPP_LOG_LEXER, ft_log::LOG_TRACE)
-		<< ft_log::color("peek", FT_LOG_COLOR_MAGENTA) << " " << _peeked.repr();
+	_log_action("peek: ", _peeked);
 	return _peeked;
 }
 
@@ -239,8 +246,8 @@ std::string PegLexer::Token::reprType(void) const
 std::string PegLexer::Token::repr(void) const
 {
 	std::string	rep = ft_log::color(reprType(), FT_LOG_COLOR_YELLOW);
-	if (!val.empty())
-		rep += ft_log::color("\"" + val + "\"", FT_LOG_COLOR_GREEN);
+	if (!val.empty() && type != T_EOL)
+		rep += ft_log::color(" \"" + val + "\"", FT_LOG_COLOR_GREEN);
 
 	return rep;
 }
