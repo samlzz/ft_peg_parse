@@ -54,9 +54,11 @@ CFLAGS    = -Wall -Wextra -Werror
 
 CXX       = c++
 CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
-DEBUG     ?= 0
 
-INCL_DIRS = include include/ftpp include/ftpp/internal
+DEBUG     ?= 0
+FTLOG_DIR ?= /home/sliziard/42/off/ft_log
+
+INCL_DIRS = include include/ftpp include/ftpp/internal $(FTLOG_DIR)/include
 # ? Directories & Libraries to link against
 LIB_DIRS  =
 LIB_FILES =
