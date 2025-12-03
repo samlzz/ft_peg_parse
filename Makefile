@@ -26,7 +26,10 @@ FILES =	AstNode.cpp \
 		internal/packrat/PackratParser.cpp \
 		internal/peg/PegLexer.cpp \
 		internal/peg/PegParser.cpp \
-		internal/peg/core/BaseRepr.cpp \
+		internal/peg/core/Expr.cpp \
+		internal/peg/core/ExprCombinatorBase.cpp \
+		internal/peg/core/ExprTerminalBase.cpp \
+		internal/peg/core/ExprUnaryBase.cpp \
 		internal/peg/syntax/CombinatorOps.cpp \
 		internal/peg/syntax/RuleRef.cpp \
 		internal/peg/syntax/TerminalOps.cpp \
@@ -55,8 +58,8 @@ CFLAGS    = -Wall -Wextra -Werror
 CXX       = c++
 CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
 
-DEBUG     ?= 0
-FTLOG_DIR ?= /home/sliziard/42/off/ft_log
+DEBUG     ?= AST
+FTLOG_DIR ?= ../ft_log
 
 INCL_DIRS = include include/ftpp include/ftpp/internal $(FTLOG_DIR)/include
 # ? Directories & Libraries to link against
@@ -100,7 +103,7 @@ COMPILE.cpp =
 
 SRCS      := $(C_SRCS) $(CPP_SRCS)
 OBJS      := $(C_OBJS) $(CPP_OBJS)
-DEPS      = $(OBJS:.o=.d)
+DEPS       = $(OBJS:.o=.d)
 O_DIRS     = $(sort $(dir $(OBJS)))
 
 CPPFLAGS   = $(addprefix -I, $(INCL_DIRS))
@@ -115,7 +118,7 @@ else ifneq ($(CPP_FILES),)
 else ifneq ($(C_FILES),)
 	LD = $(CC)
 else
-	$(error Can't determine which linker to use. Please set LD manually.)
+    $(error Can't determine which linker to use. Please set LD manually.)
 endif
 
 OUT := $(if $(BIN_DIR),$(BIN_DIR),./)$(NAME)
@@ -123,21 +126,21 @@ OUT := $(if $(BIN_DIR),$(BIN_DIR),./)$(NAME)
 export VERBOSE    ?= false
 export P := @
 ifeq ($(VERBOSE),true)
-	P :=
+    P :=
 endif
 
-# ? Tests and Debug adjustement
-ifneq (,$(filter test%,$(MAKECMDGOALS)))
-	INCL_DIRS += src/test
-	ifeq ($(DEBUG),0)
-		DEBUG=1
-	endif
-	CXXFLAGS += -DPEG_DEBUG_LEVEL=$(DEBUG)
+# =============================================================================
+# >> DEBUG FLAGS HANDLING
+# =============================================================================
+
+ifeq ($(strip $(DEBUG)),)
+    FTPP_DEBUG_DEFS :=
+else
+    FTPP_DEBUG_DEFS := $(foreach flag,$(DEBUG),-DFTPP_DEBUG_$(flag)=1)
+    $(info Debug flags enabled: $(DEBUG))
 endif
 
-ifneq (DEBUG,0)
-	CXXFLAGS += -DPEG_DEBUG_LEVEL=$(DEBUG)
-endif
+CXXFLAGS += $(FTPP_DEBUG_DEFS)
 
 # =============================================================================
 # >> RULES
@@ -190,6 +193,11 @@ else
 	@echo "Nothing to run for a static library: $(OUT)"
 endif
 
+# ? Recompile with all debug features
+.PHONY: debug
+debug:
+	$(MAKE) re DEBUG="AST PACKRAT GRAMMAR"
+
 # =============================================================================
 # >> TESTING
 # =============================================================================
@@ -200,38 +208,39 @@ ifeq ($(USE_VLA),true)
 	VLA := valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all --track-fds=yes
 endif
 
-
-TEST_DIR := src/test
+TEST_DIR :=
 TEST_OBJ_DIR := build/test
 TEST_BIN_DIR := test_bin
-TEST_FILES := $(wildcard $(TEST_DIR)/*/*/*_main.cpp $(TEST_DIR)/*/*_main.cpp $(TEST_DIR)/*_main.cpp)
+TEST_FILES := 
 
-TEST_BINS := $(patsubst %_main.cpp,$(TEST_BIN_DIR)/%,$(notdir $(TEST_FILES)))
+TEST_FLAGS := -L$(FTLOG_DIR) -lftlog
+
+TEST_BINS := $(patsubst %.cpp,$(TEST_BIN_DIR)/%,$(notdir $(TEST_FILES)))
 
 .PHONY: test
 test: run_all_tests
 
 test_%: $(TEST_BIN_DIR)/_%
 	@$(call clr_print, $(CYAN),Running test $* ...)
-	$(P)$(VLA) ./$< || { $(call clr_print, $(RED),❌ Test failed: $<); exit 1; }
+	$(P)$(VLA) ./$< || { $(call clr_print, $(RED),Test failed: $<); exit 1; }
 
 .PHONY: run_all_tests
 run_all_tests: $(TEST_BINS)
 	$(P)for bin in $^; do \
 		$(call clr_print, $(CYAN),\n\nRunning $$bin ...); \
-		$(VLA) ./$$bin || { $(call clr_print, $(RED),❌ $$bin failed); exit 1; } \
+		$(VLA) ./$$bin || { $(call clr_print, $(RED),$$bin failed); exit 1; } \
 	done
 
-$(TEST_BIN_DIR)/%: $(TEST_FILES) $(OUT)
+$(TEST_BIN_DIR)/%: $(TEST_FILES)
 	@mkdir -p $(dir $@)
-	$(P)$(CXX) $(CXXFLAGS) $(CPPFLAGS) $< -o $@ $(OUT)
+	$(P)$(CXX) $(CXXFLAGS) $(CPPFLAGS) $< $(OUT) $(TEST_FLAGS) -o $@
 	@$(call clr_print, $(YELLOW),Compiling test: $<)
 
 .PHONY: test_list
 test_list:
 	$(P)for t in $(TEST_BIN_DIR)/*; do \
 		name="$$(basename "$$t")"; \
-		printf "%s\n" "$${name/_/}"; \
+		printf "%s\n" "$${name}"; \
 	done
 
 .PHONY: test_clean
