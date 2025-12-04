@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 01:12:00 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:43:16 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/04 08:51:42 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@
 # define FTPP_LOG_LEXER			"ftpp.lexer"
 # define FTPP_LOG_PARSER		"ftpp.parser"
 # define FTPP_LOG_PACKRAT		"ftpp.packrat"
-# define FTPP_LOG_AST			"ftpp.ast"
 
 #endif /* __FTPP_CONFIG_HPP__ */
 
