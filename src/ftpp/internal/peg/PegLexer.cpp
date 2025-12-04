@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 15:35:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/03 17:12:02 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:38:34 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -250,4 +250,24 @@ std::string PegLexer::Token::repr(void) const
 		rep += ft_log::color(" \"" + val + "\"", FT_LOG_COLOR_GREEN);
 
 	return rep;
+}
+
+// ============================================================================
+// Public state operations
+// ============================================================================
+
+PegLexer::State	PegLexer::save(void) const
+{
+	return (State) {
+		_input.pos(),
+		_hasPeeked,
+		_peeked
+	};
+}
+
+void	PegLexer::restore(const State &st)
+{
+	_input.setPos(st.pos);
+	_hasPeeked = st.hasPeeked;
+	_peeked = st.peeked;
 }
