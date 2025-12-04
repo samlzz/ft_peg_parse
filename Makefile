@@ -242,7 +242,7 @@ test_%: $(TEST_BIN_DIR)/%
 	@$(call clr_print, $(CYAN),Running test $* ...)
 	$(P)$(VLA) ./$< $(TEST_ARGS) || { $(call clr_print, $(RED),Test failed: $<); exit 1; }
 
-$(TEST_BIN_DIR)/%: $(TEST_DIR)/%.cpp $(OUT)
+$(TEST_BIN_DIR)/%: $(TEST_DIR)/%.cpp all
 	@mkdir -p $(dir $@)
 	$(P)$(CXX) $(CXXFLAGS) $(CPPFLAGS) $< $(OUT) $(TEST_FLAGS) -o $@
 	@$(call clr_print, $(YELLOW),Compiling test: $<)
