@@ -216,7 +216,8 @@ TEST_FILES :=
 TEST_ARGS ?=
 TEST_FLAGS := -L$(FTLOG_DIR) -lftlog
 
-TEST_BINS := $(patsubst %.cpp,$(TEST_BIN_DIR)/%,$(notdir $(TEST_FILES)))
+TEST_SOURCES := $(addprefix $(TEST_DIR)/,$(TEST_FILES))
+TEST_BINS    := $(addprefix $(TEST_BIN_DIR)/,$(basename $(notdir $(TEST_SOURCES))))
 
 .PHONY: test
 test: run_all_tests
@@ -238,8 +239,8 @@ $(TEST_BIN_DIR)/%: $(TEST_FILES) $(OUT)
 	@$(call clr_print, $(YELLOW),Compiling test: $<)
 
 .PHONY: test_list
-test_list:
-	$(P)for t in $(TEST_BIN_DIR)/*; do \
+test_list: $(TEST_BINS)
+	$(P)for t in $^; do \
 		name="$$(basename "$$t")"; \
 		printf "%s\n" "$${name}"; \
 	done
