@@ -147,6 +147,8 @@ Expr	*PegParser::parsePrefix(void)
 
 	if (_lex.match(PegLexer::T_AND))
 		return new Predicate(parsePrefix(), true);
+	if (_lex.match(PegLexer::T_NOT))
+		return new Predicate(parsePrefix(), false);
 	if (_lex.match(PegLexer::T_TILD))
 		return new Fatal(parsePrefix());
 	return parseSuffix();
