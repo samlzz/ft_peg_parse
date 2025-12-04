@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/04 08:32:18 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/04 11:43:48 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,35 +54,71 @@ void	StatsVisitor::descend(const Expr *child)
 	_currentDepth--;
 }
 
-// ---- Macro to generate visit methods ----
-# define STATS_VISIT_IMPL(ClassName) \
-	void StatsVisitor::visit##ClassName(const ClassName &expr) \
-	{ \
-		recordNode(expr); \
-		for (size_t i = 0; i < expr.childCount(); ++i) \
-			descend(expr.child(i)); \
-	}
+// ============================================================================
+// Visit methods 
+// ============================================================================
 
-// Implementations
-STATS_VISIT_IMPL(Literal)
-STATS_VISIT_IMPL(CharRange)
-STATS_VISIT_IMPL(Any)
+// ---- Terminals ----
+void	StatsVisitor::visitLiteral(const Literal &expr)		{ recordNode(expr); }
+void	StatsVisitor::visitCharRange(const CharRange &expr)	{ recordNode(expr); }
+void	StatsVisitor::visitAny(const Any &expr)				{ recordNode(expr); }
 
-STATS_VISIT_IMPL(Sequence)
-STATS_VISIT_IMPL(Choice)
+// ---- Combinators ----
+void	StatsVisitor::visitSequence(const Sequence &expr)
+{
+	recordNode(expr);
+	for (size_t i = 0; i < expr.childCount(); ++i)
+		descend(expr[i]);
+}
 
-STATS_VISIT_IMPL(ZeroOrMore)
-STATS_VISIT_IMPL(OneOrMore)
-STATS_VISIT_IMPL(Optional)
-STATS_VISIT_IMPL(Predicate)
-STATS_VISIT_IMPL(Capture)
-STATS_VISIT_IMPL(Fatal)
+void	StatsVisitor::visitChoice(const Choice &expr)
+{
+	recordNode(expr);
+	for (size_t i = 0; i < expr.childCount(); ++i)
+		descend(expr[i]);
+}
 
-# undef STATS_VISIT_IMPL
+// ---- Unary Quantifiers ----
+void	StatsVisitor::visitZeroOrMore(const ZeroOrMore &expr)
+{
+	recordNode(expr);
+	descend(expr.inner());
+}
+void	StatsVisitor::visitOneOrMore(const OneOrMore &expr)
+{
+	recordNode(expr);
+	descend(expr.inner());
+}
+void	StatsVisitor::visitOptional(const Optional &expr)
+{
+	recordNode(expr);
+	descend(expr.inner());
+}
 
+// ---- Unary Predicate ----
+void	StatsVisitor::visitPredicate(const Predicate &expr)
+{
+	recordNode(expr);
+	descend(expr.inner());
+}
+
+// --- Unary Action ----
+void	StatsVisitor::visitCapture(const Capture &expr)
+{
+	recordNode(expr);
+	descend(expr.inner());
+}
+void	StatsVisitor::visitFatal(const Fatal &expr)
+{
+	recordNode(expr);
+	descend(expr.inner());
+}
+
+// ---- RuleRef ----
 void	StatsVisitor::visitRuleRef(const RuleRef &expr)
 {
 	recordNode(expr);
+	descend(expr.resolved());
 }
 
 // Print statistics summary (counts, depths, types).

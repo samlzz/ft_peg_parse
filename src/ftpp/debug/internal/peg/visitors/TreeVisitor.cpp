@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/17 23:56:47 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/03 10:52:56 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/04 11:41:55 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,31 +89,77 @@ void	TreeVisitor::descend(const Expr *child, bool isLast)
 	_depth--;
 }
 
-// ---- Macro to generate visit methods ----
-# define TREE_VISIT_IMPL(ClassName) \
-	void TreeVisitor::visit##ClassName(const ClassName &expr) \
-	{ \
-		printNode(expr); \
-		visitChildren(expr); \
-	}
+// ============================================================================
+// Visit methods
+// ============================================================================
 
-// Implementations
-TREE_VISIT_IMPL(Literal)
-TREE_VISIT_IMPL(CharRange)
-TREE_VISIT_IMPL(Any)
+// ---- Terminals ----
+void	TreeVisitor::visitLiteral(const Literal &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+void	TreeVisitor::visitCharRange(const CharRange &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+void	TreeVisitor::visitAny(const Any &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
 
-TREE_VISIT_IMPL(Sequence)
-TREE_VISIT_IMPL(Choice)
+// ---- Combinators ----
+void	TreeVisitor::visitSequence(const Sequence &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
 
-TREE_VISIT_IMPL(ZeroOrMore)
-TREE_VISIT_IMPL(OneOrMore)
-TREE_VISIT_IMPL(Optional)
-TREE_VISIT_IMPL(Predicate)
-TREE_VISIT_IMPL(Capture)
-TREE_VISIT_IMPL(Fatal)
+void	TreeVisitor::visitChoice(const Choice &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
 
-# undef TREE_VISIT_IMPL
+// ---- Unary Quantifiers ----
+void	TreeVisitor::visitZeroOrMore(const ZeroOrMore &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+void	TreeVisitor::visitOneOrMore(const OneOrMore &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+void	TreeVisitor::visitOptional(const Optional &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
 
+// ---- Unary Predicate ----
+void	TreeVisitor::visitPredicate(const Predicate &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+
+// --- Unary Action ----
+void	TreeVisitor::visitCapture(const Capture &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+void	TreeVisitor::visitFatal(const Fatal &expr)
+{
+	printNode(expr);
+	visitChildren(expr);
+}
+
+// ---- RuleRef ----
 void	TreeVisitor::visitRuleRef(const RuleRef &expr)
 {
 	printNode(expr);
