@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/18 00:01:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:02:55 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/04 08:32:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ void	StatsVisitor::print(std::ostream &os) const
 	{
 		const char	*name = (it->first < 11) ? kindNames[it->first] : "Unknown";
 		os << "║   " << std::setw(20)
-			<< std::left << name << std::setw(15)
+			<< std::left << name << std::setw(16)
 			<< std::right << it->second
 			<< "║\n";
 	}

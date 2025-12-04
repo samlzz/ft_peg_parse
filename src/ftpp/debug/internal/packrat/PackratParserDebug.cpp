@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 18:14:35 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 00:17:02 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/04 08:31:18 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	PackratParser::printStats(Stats stats, std::ostream &os)
 	os <<   "╠═══════════════════════════════════════╣\n";
 	os <<   "║ Total evaluations: " << std::setw(18) << stats.totalEvals     << " ║\n";
 	os <<   "║ Cache hits:        " << std::setw(18) << stats.cacheHits      << " ║\n";
-	os <<   "║ Cache hit rate:    " << std::setw(16) << std::fixed
+	os <<   "║ Cache hit rate:    " << std::setw(17) << std::fixed
 		 << std::setprecision(1) << (stats.cacheHitRate() * 100) << "% ║\n";
 	os <<   "║ Backtracks:        " << std::setw(18) << stats.backtrackCount << " ║\n";
 	os <<   "╚═══════════════════════════════════════╝\n";
