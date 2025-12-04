@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:32:07 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 23:23:22 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 18:04:04 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ private:
 	Expr	*parsePrefix(void);
 	Expr	*parseSuffix(void);
 	Expr	*parsePrimary(void);
-	Expr	*parseIdentifier(std::string &id);
+	Expr	*parseIdentifier(std::string &id, const PegLexer::State &fallback);
 	Expr	*parseSubExpr(void);
 
 };

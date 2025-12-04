@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/30 17:27:44 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 22:27:22 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/03 17:30:33 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,16 @@ public:
 	};
 
 	// ========================================================================
+	// State definitions
+	// ========================================================================
+	struct State
+	{
+		size_t	pos;
+		bool	hasPeeked;
+		Token	peeked;
+	};
+
+	// ========================================================================
 	// Constructors / Destructor
 	// ========================================================================
 
@@ -67,11 +77,16 @@ public:
 	// Methods
 	// ========================================================================
 
-	// ---- Main operations ----
+	void	skipWhitespaces(void);
+
+	// ---- Tokens operations ----
 	Token	peek(void);
 	Token	next(void);
 	bool	match(enum e_tk_type type);
-	void	skipWhitespaces(void);
+
+	// ---- State operations ----
+	State	save() const;
+	void	restore(const State &st);
 
 private:
 

@@ -6,10 +6,11 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/03 01:53:21 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/03 14:04:51 by sliziard         ###   ########.fr       */
+/*   Updated: 2025/12/04 07:50:22 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <cstddef>
 #include <ft_log/LogScope.hpp>
 #include <string>
 
@@ -39,18 +40,19 @@ PegParser::~PegParser() {}
 
 // ---- Helpers ----
 
-static inline bool	_isRuleBegin(PegLexer lex)
+Expr	*PegParser::parseIdentifier(std::string &id,
+										const PegLexer::State &fallback)
 {
-	PegLexer::Token tk = lex.next();
-	return (lex.peek().type == PegLexer::T_ASSIGN);
-}
+	if (_lex.peek().type == PegLexer::T_ASSIGN)
+	{
+		_lex.restore(fallback);
+		return NULL;
+	}
 
-Expr	*PegParser::parseIdentifier(std::string &id)
-{
-	if (!_lex.match(PegLexer::T_COLON))
-		return new RuleRef(id);
+	if (_lex.match(PegLexer::T_COLON))
+		return new Capture(parsePrefix(), id, true);
 
-	return new Capture(parsePrefix(), id, true);
+	return new RuleRef(id);
 }
 
 
@@ -70,10 +72,8 @@ Expr	*PegParser::parsePrimary(void)
 {
 	ft_log::LogScope _(FTPP_LOG_PARSER, "parsePrimary");
 
-	if (_isRuleBegin(_lex))
-		return NULL;
-
-	PegLexer::Token tk = _lex.next();
+	PegLexer::State	st = _lex.save();
+	PegLexer::Token	tk = _lex.next();
 
 	switch (tk.type)
 	{
@@ -87,7 +87,7 @@ Expr	*PegParser::parsePrimary(void)
 		return new Any();
 
 	case PegLexer::T_ID:
-		return parseIdentifier(tk.val);
+		return parseIdentifier(tk.val, st);
 
 	case PegLexer::T_LPAREN:
 		return parseSubExpr();
@@ -147,6 +147,8 @@ Expr	*PegParser::parsePrefix(void)
 
 	if (_lex.match(PegLexer::T_AND))
 		return new Predicate(parsePrefix(), true);
+	if (_lex.match(PegLexer::T_NOT))
+		return new Predicate(parsePrefix(), false);
 	if (_lex.match(PegLexer::T_TILD))
 		return new Fatal(parsePrefix());
 	return parseSuffix();
