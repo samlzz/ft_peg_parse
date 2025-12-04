@@ -58,16 +58,32 @@ CFLAGS    = -Wall -Wextra -Werror
 CXX       = c++
 CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
 
-DEBUG     ?= AST
 FTLOG_DIR ?= ../ft_log
 
-INCL_DIRS = include include/ftpp include/ftpp/internal $(FTLOG_DIR)/include
+INCL_DIRS = include/ftpp include/ftpp/internal $(FTLOG_DIR)/include
 # ? Directories & Libraries to link against
 LIB_DIRS  =
 LIB_FILES =
 
 RM = rm -f
 MD = mkdir -p
+
+# Debug values must be space separated
+# it can be: AST, GRAMMAR and/or PACKRAT
+DEBUG     ?= 
+
+# =============================================================================
+# >> DEBUG FLAGS HANDLING
+# =============================================================================
+
+ifeq ($(strip $(DEBUG)),)
+    FTPP_DEBUG_DEFS :=
+else
+    FTPP_DEBUG_DEFS := $(foreach flag,$(DEBUG),-DFTPP_DEBUG_$(flag)=1)
+    $(info Debug flags enabled: $(DEBUG))
+endif
+
+CXXFLAGS += $(FTPP_DEBUG_DEFS)
 
 # =============================================================================
 # >> COLORS
@@ -130,19 +146,6 @@ ifeq ($(VERBOSE),true)
 endif
 
 # =============================================================================
-# >> DEBUG FLAGS HANDLING
-# =============================================================================
-
-ifeq ($(strip $(DEBUG)),)
-    FTPP_DEBUG_DEFS :=
-else
-    FTPP_DEBUG_DEFS := $(foreach flag,$(DEBUG),-DFTPP_DEBUG_$(flag)=1)
-    $(info Debug flags enabled: $(DEBUG))
-endif
-
-CXXFLAGS += $(FTPP_DEBUG_DEFS)
-
-# =============================================================================
 # >> RULES
 # =============================================================================
 
@@ -185,14 +188,6 @@ fclean: clean
 .PHONY: re
 re: fclean all
 
-.PHONY: run
-run: $(OUT)
-ifneq ($(suffix $(NAME)), .a)
-	$(OUT)
-else
-	@echo "Nothing to run for a static library: $(OUT)"
-endif
-
 # ? Recompile with all debug features
 .PHONY: debug
 debug:
@@ -208,32 +203,37 @@ ifeq ($(USE_VLA),true)
 	VLA := valgrind --leak-check=full --track-origins=yes --show-leak-kinds=all --track-fds=yes
 endif
 
-TEST_DIR :=
-TEST_OBJ_DIR := build/test
+TEST_DIR     := exemples
+TEST_OBJ_DIR := build/tests
 TEST_BIN_DIR := test_bin
-TEST_FILES := 
 
-TEST_ARGS ?=
-TEST_FLAGS := -L$(FTLOG_DIR) -lftlog
+TEST_FILES   := ast_display.cpp     \
+				ast_parse_stats.cpp \
+				grammar_display.cpp \
+				grammar_stats.cpp   \
+				enabled_log.cpp
+
+TEST_ARGS    ?= assets/advanced.peg assets/advanced.conf
+TEST_FLAGS   := -L$(FTLOG_DIR) -lftlog
 
 TEST_SOURCES := $(addprefix $(TEST_DIR)/,$(TEST_FILES))
 TEST_BINS    := $(addprefix $(TEST_BIN_DIR)/,$(basename $(notdir $(TEST_SOURCES))))
 
 .PHONY: test
-test: run_all_tests
+test: $(TEST_BINS)
 
-test_%: $(TEST_BIN_DIR)/%
-	@$(call clr_print, $(CYAN),Running test $* ...)
-	$(P)$(VLA) ./$< $(TEST_ARGS) || { $(call clr_print, $(RED),Test failed: $<); exit 1; }
-
-.PHONY: run_all_tests
-run_all_tests: $(TEST_BINS)
+.PHONY: test_run
+test_run: $(TEST_BINS)
 	$(P)for bin in $^; do \
 		$(call clr_print, $(CYAN),\n\nRunning $$bin ...); \
 		$(VLA) ./$$bin $(TEST_ARGS) || { $(call clr_print, $(RED),$$bin failed); exit 1; } \
 	done
 
-$(TEST_BIN_DIR)/%: $(TEST_FILES) $(OUT)
+test_%: $(TEST_BIN_DIR)/%
+	@$(call clr_print, $(CYAN),Running test $* ...)
+	$(P)$(VLA) ./$< $(TEST_ARGS) || { $(call clr_print, $(RED),Test failed: $<); exit 1; }
+
+$(TEST_BIN_DIR)/%: $(TEST_DIR)/%.cpp $(OUT)
 	@mkdir -p $(dir $@)
 	$(P)$(CXX) $(CXXFLAGS) $(CPPFLAGS) $< $(OUT) $(TEST_FLAGS) -o $@
 	@$(call clr_print, $(YELLOW),Compiling test: $<)
@@ -245,7 +245,10 @@ test_list: $(TEST_BINS)
 		printf "%s\n" "$${name}"; \
 	done
 
-.PHONY: test_clean
+.phony: test_clean
 test_clean:
-	$(P)$(RM) -r $(TEST_BIN_DIR)
-	@$(call clr_print, $(BLUE),Test binaries cleaned!)
+	$(p)$(rm) -r $(test_bin_dir)
+	@$(call clr_print, $(blue),test binaries cleaned!)
+
+.phony: test_re
+test_re: test_clean test
