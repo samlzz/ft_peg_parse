@@ -59,6 +59,7 @@ CXX       = c++
 CXXFLAGS  = -Wall -Wextra -Werror -std=c++98 -g3
 
 FTLOG_DIR ?= ../ft_log
+FTLOG_HDR = $(FTLOG_DIR)/include/ft_log/ft_log.hpp
 
 INCL_DIRS = include/ftpp include/ftpp/internal $(FTLOG_DIR)/include
 # ? Directories & Libraries to link against
@@ -150,7 +151,15 @@ endif
 # =============================================================================
 
 .PHONY: all
-all: $(OUT)
+all: check_ftlog $(OUT)
+
+.PHONY: check_ftlog
+check_ftlog:
+	$(P)if [ ! -f "$(FTLOG_HDR)" ]; then \
+		echo "Error: missing ft_log header: $(FTLOG_HDR)" ; \
+		echo "Please set FTLOG_DIR=/path/to/ft_log"; \
+		exit 1 ; \
+	fi
 
 $(OUT): $(O_DIRS) $(OBJS)
 	$(P)printf "$(GRAY)"
