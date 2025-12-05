@@ -53,7 +53,7 @@ It is lightweight, dependency-free (except for logging via `ft_log`), and cleanl
 Inside your project directory:
 
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/samlzz/ftpp/master/sync_ftpp.sh)
+bash <(curl -s https://raw.githubusercontent.com/samlzz/ft_peg_parse/master/sync_ftpp.sh)
 ```
 
 Installs a clean `ftpp/` directory (or updates an existing one).
