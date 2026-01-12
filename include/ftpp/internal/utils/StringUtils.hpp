@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/09 10:35:09 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/02 12:35:46 by sliziard         ###   ########.fr       */
+/*   Updated: 2026/01/12 13:22:24 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define __FTPP_STRING_UTILS_HPP__
 
 # include <cstdio>
-# include <sstream>
 # include <stdint.h>
 # include <cstddef>
 # include <string>
@@ -45,20 +44,5 @@ std::string	unescapeString(const std::string &raw);
  * Expand range (-), negate (^ start) and classic escapes
  */
 std::string	expandCharSet(const std::string &raw);
-
-// ============================================================================
-// Generic string conversion
-// ============================================================================
-
-/**
- * @brief Convert any streamable value to std::string.
- */
-template <typename T>
-inline std::string	toString(T value)
-{
-	std::ostringstream oss;
-	oss << value;
-	return oss.str();
-}
 
 #endif /* __FTPP_STRING_UTILS_HPP__ */
