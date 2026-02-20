@@ -6,7 +6,7 @@
 /*   By: sliziard <sliziard@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/02 19:39:33 by sliziard          #+#    #+#             */
-/*   Updated: 2025/12/01 23:07:38 by sliziard         ###   ########.fr       */
+/*   Updated: 2026/02/20 15:32:50 by sliziard         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,17 +58,26 @@ bool	Capture::parse(PackratParser &parser, AstNode *parent) const
 
 	Input	&in = parser.input();
 	size_t	start = in.pos();
-	AstNode	*me = new AstNode(_tag);
+	AstNode	*me = NULL;
+	
+	try {
+		me = new AstNode(_tag);
 
-	if (!parser.eval(_inner, me))
-	{
-		in.setPos(start);
-		delete me;
-		return false;
+		if (!parser.eval(_inner, me))
+		{
+			in.setPos(start);
+			delete me;
+			return false;
+		}
+		me->setSpan(start, in.pos());
+		parent->addChild(me);
+		return true;
 	}
-	me->setSpan(start, in.pos());
-	parent->addChild(me);
-	return true;
+	catch (...)
+	{
+		delete me;
+		throw;
+	}
 }
 
 // ============================================================================
