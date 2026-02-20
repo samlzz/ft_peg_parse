@@ -2,7 +2,7 @@
 #* >> USER CONFIGURATION (MANDATORY)
 # =============================================================================
 
-NAME      ?= libftpp.a
+NAME      = libftpp.a
 ifeq ($(NAME),)
     $(error NAME is empty: please define executable name)
 endif
